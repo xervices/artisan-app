@@ -1,0 +1,4 @@
+
+Install Maps
+Install Expo audio
+Install Expo Image Picker
