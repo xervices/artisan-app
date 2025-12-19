@@ -16,7 +16,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: cn(
-          'shadow-black/5 border border-[#CC5600] bg-[#FE6A00] shadow-sm active:bg-primary/90',
+          'shadow-black/5 border border-[#0A0A0B] bg-[#0A0A0B] shadow-sm',
           Platform.select({ web: 'hover:bg-primary/90' })
         ),
         destructive: cn(
@@ -26,7 +26,7 @@ const buttonVariants = cva(
           })
         ),
         outline: cn(
-          'shadow-black/5 border border-[#CC5600] bg-white shadow-sm active:bg-accent',
+          'shadow-black/5 border border-[#0A0A0B] bg-white shadow-sm active:bg-accent',
           Platform.select({
             web: 'hover:bg-accent dark:hover:bg-input/50',
           })

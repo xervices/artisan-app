@@ -44,6 +44,7 @@ export default function RootLayout() {
                   <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
                   <Stack.Screen name="forgot-password-otp" options={{ headerShown: false }} />
                   <Stack.Screen name="new-password" options={{ headerShown: false }} />
+                  <Stack.Screen name="verify" options={{ headerShown: false }} />
                 </Stack.Protected>
 
                 <Stack.Protected guard={!hasCompletedOnboarding}>

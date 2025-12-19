@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import { Text } from '@/components/ui/text';
 import { Layout } from '@/components/layout';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { AuthHeader } from '@/components/auth-header';
 import { OtpInput } from 'react-native-otp-entry';
 import { useTimer } from '@/hooks/use-timer';
 
 export default function Screen() {
-  const { email } = useLocalSearchParams();
+  const { email, phone } = useLocalSearchParams();
 
   const [otpDisabled, setOTPDisabled] = React.useState(false);
   const [timer, setTimer] = React.useState(60);
@@ -24,14 +24,15 @@ export default function Screen() {
     <Layout useBackground>
       <View className="flex-1 gap-6">
         <View className="flex gap-2">
-          <AuthHeader title="Verify Email Address" />
-
-          <Text className="text-center text-[#737381]">A verification code has been sent to</Text>
-
-          {email && <Text className="text-center text-primary">{email}</Text>}
-
+          <AuthHeader title="Verify " />
           <Text className="text-center text-[#737381]">
-            Please check your email to retrieve the code and enter it here.
+            A verification code has been sent to{' '}
+            {email && <Text className="text-center leading-none text-primary">{email}</Text>}{' '}
+            <Text className="text-center leading-none text-[#737381]">and</Text>{' '}
+            {phone && <Text className="text-center leading-none text-primary">{phone}</Text>}{' '}
+            <Text className="text-center leading-none text-[#737381]">
+              Please check your email to retrieve the code and enter it here.
+            </Text>
           </Text>
         </View>
 
@@ -61,7 +62,7 @@ export default function Screen() {
             disabled={otpDisabled}
             onFilled={(value) => {
               setOTPDisabled(true);
-              console.log(value);
+              router.navigate('/verify');
             }}
           />
         </View>

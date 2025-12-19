@@ -15,23 +15,23 @@ const data = [
   {
     id: 1,
     imageSrc: require('@/assets/images/onboarding-1.png'),
-    title: 'Verified professionals',
+    title: 'Reach more clients',
     subtitle:
-      'All service providers are thoroughly vetted to ensure their licenses, certifications, and educational claims are valid and up to date to ensure they have the required expertise.',
+      'Connect with nearby clients and expand your reach by increasing your presence in the areas closest to your business.',
   },
   {
     id: 2,
     imageSrc: require('@/assets/images/onboarding-2.png'),
     title: 'Secure escrow payments',
     subtitle:
-      'You are protected from paying upfront for work that is never started, incomplete, or of poor quality. Funds are only released after you inspect and approve the finished work.',
+      'Provide preferred rates with the assurance of escrow-secured payments, making transactions safer and more reliable for you and your clients',
   },
   {
     id: 3,
     imageSrc: require('@/assets/images/onboarding-3.png'),
-    title: 'Real-time tracking',
+    title: 'Grow your reputation and get more clients',
     subtitle:
-      "Track your provider live and know exactly when they'll reach you. No guessing, no waiting in the dark.",
+      'Build your reputation with verified reviews that highlight your professionalism and credibility, helping you attract more clients and grow your business.',
   },
 ];
 

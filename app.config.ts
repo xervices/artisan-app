@@ -178,6 +178,6 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
     packageName: `${PACKAGE_NAME}.dev`,
     scheme: `${SCHEME}-dev`,
     googleServicesFile: './dev-google-services.json',
-    googleMapsApiKey: 'AIzaSyDA7HnZnWADQ3h1AYCUgCLAccJGPJo67gU',
+    googleMapsApiKey: 'AIzaSyBNpr9SSwSRuUxg9rzYAFhD7CFKqQhN9os',
   };
 };

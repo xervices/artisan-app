@@ -22,7 +22,6 @@ export function Layout({
   paddingHorizontal = 24,
   scrollable = true,
   topPadding = 8,
-  useBackground = false,
   stickyHeader, // NEW
 }: LayoutProps) {
   const insets = useSafeAreaInsets();
