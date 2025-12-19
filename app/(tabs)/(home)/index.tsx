@@ -1,38 +1,34 @@
 import { Layout } from '@/components/layout';
 import { Header } from '@/components/home/header';
-import { ScrollView, View } from 'react-native';
-import { SearchInput } from '@/components/home/search-input';
-import { Text } from '@/components/ui/text';
-import { Image } from 'expo-image';
-import { Promotions } from '@/components/home/promotions';
-import { Services } from '@/components/home/services';
-import { UserOfWeek } from '@/components/home/user-of-week';
-import { ActiveJobs } from '@/components/home/active-jobs';
+import { View } from 'react-native';
+import { Offers } from '@/components/home/offers';
 import EnableLocationDialog from '@/components/enable-location-dialog';
-import { useUsersControllerGetCurrentUser } from '@/api/generated/users/users';
+import { AvailabilityStatus } from '@/components/home/availability-status';
+import { OverviewCard } from '@/components/home/overview-card';
+import { Stats } from '@/components/home/stats';
+import { VerifyAccount } from '@/components/home/verify-account';
 
 export default function Screen() {
   return (
     <Layout
       useBackground
-      horizontalPadding={false}
       stickyHeader={
-        <View className="px-6 pb-4">
+        <View className="pb-4">
           <Header />
         </View>
       }>
       <View className="flex-1 gap-4">
         <EnableLocationDialog />
 
-        <SearchInput />
+        <AvailabilityStatus />
 
-        <Promotions />
+        <OverviewCard />
 
-        <Services />
+        <Stats />
 
-        <UserOfWeek />
+        <VerifyAccount />
 
-        <ActiveJobs />
+        <Offers />
       </View>
     </Layout>
   );

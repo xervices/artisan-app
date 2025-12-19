@@ -18,10 +18,17 @@ export default function Layout() {
         }}
       />
       <Stack.Screen
-        name="services"
+        name="requests"
         options={{
           headerShown: false,
-          title: 'Services',
+          title: 'Requests',
+        }}
+      />
+      <Stack.Screen
+        name="request"
+        options={{
+          headerShown: false,
+          title: 'Requests',
         }}
       />
     </Stack>

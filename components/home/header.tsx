@@ -1,6 +1,6 @@
 import { View, Pressable } from 'react-native';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { Bell } from 'lucide-react-native';
+import { BadgeCheck, Bell } from 'lucide-react-native';
 import { Text } from '../ui/text';
 import { router } from 'expo-router';
 
@@ -17,7 +17,11 @@ export function Header() {
 
         <View>
           <Text className="text-xs leading-none text-[#1B1B1E]">Welcome</Text>
-          <Text className="font-cabinet-bold leading-none text-[#1B1B1E]">Alex Baker</Text>
+          <View className="flex flex-row gap-1">
+            <Text className="font-cabinet-bold leading-none text-[#1B1B1E]">Sarah Rodri</Text>
+
+            <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />
+          </View>
         </View>
       </View>
 
