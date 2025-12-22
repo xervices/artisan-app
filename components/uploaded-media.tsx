@@ -7,9 +7,15 @@ interface UploadedMediaProps {
   url?: string;
   onDelete?: () => void;
   type?: 'photo' | 'video';
+  size?: 'sm' | 'default';
 }
 
-export function UploadedMedia({ url, onDelete, type = 'photo' }: UploadedMediaProps) {
+export function UploadedMedia({
+  url,
+  onDelete,
+  type = 'photo',
+  size = 'default',
+}: UploadedMediaProps) {
   const player = useVideoPlayer(url || '', (player) => {
     // player.loop = true;
     // player.play();
@@ -33,7 +39,9 @@ export function UploadedMedia({ url, onDelete, type = 'photo' }: UploadedMediaPr
     );
 
   return (
-    <View key={url} className="relative aspect-square w-[47%] overflow-hidden rounded-[8px]">
+    <View
+      key={url}
+      className={`relative ${size === 'sm' ? 'aspect-[155/100]' : 'aspect-square'} w-[47%] overflow-hidden rounded-[8px]`}>
       <Image
         source={url}
         style={{
@@ -46,7 +54,7 @@ export function UploadedMedia({ url, onDelete, type = 'photo' }: UploadedMediaPr
       <View className="absolute inset-0 flex h-full w-full items-center justify-center bg-[#FFE6D6]/0 p-4">
         <Pressable
           onPress={onDelete}
-          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#FFF4EA]">
+          className={`absolute flex ${size === 'sm' ? 'right-2 top-2 h-6 w-6' : 'right-4 top-4 h-8 w-8'} items-center justify-center rounded-full bg-[#FFF4EA]`}>
           <Image
             source={require('@/assets/icons/trash.svg')}
             style={{ width: 14, height: 14 }}

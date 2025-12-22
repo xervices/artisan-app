@@ -40,13 +40,7 @@ export default function Screen() {
             <View>
               <View className="flex flex-row items-center">
                 <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">Sarah Rodri</Text>
-
-                <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />
               </View>
-
-              <Text className="text-xs text-[#1B1B1E]">Plumbing Specialist</Text>
-
-              <Text className="text-xs text-[#FF6A00]">4.9 ★ (145)</Text>
             </View>
           </View>
 

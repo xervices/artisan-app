@@ -28,12 +28,12 @@ export default function Screen() {
             style={{
               borderColor: undefined,
               borderWidth: 0,
-              backgroundColor: value === 'progress' ? '#FE6A00' : '#FFF4EA',
+              backgroundColor: value === 'progress' ? '#1B1B1E' : '#F4F4F5',
             }}>
             <Text
               className="font-cabinet-bold text-sm"
               style={{
-                color: value === 'progress' ? '#FFF4EA' : '#522200',
+                color: value === 'progress' ? '#FFF4EA' : '#737381',
               }}>
               In Progress
             </Text>
@@ -44,12 +44,12 @@ export default function Screen() {
             style={{
               borderColor: undefined,
               borderWidth: 0,
-              backgroundColor: value === 'resolved' ? '#FE6A00' : '#FFF4EA',
+              backgroundColor: value === 'resolved' ? '#1B1B1E' : '#F4F4F5',
             }}>
             <Text
               className="font-cabinet-bold text-sm"
               style={{
-                color: value === 'resolved' ? '#FFF4EA' : '#522200',
+                color: value === 'resolved' ? '#FFF4EA' : '#737381',
               }}>
               Resolved
             </Text>
@@ -125,7 +125,7 @@ export default function Screen() {
                 </View>
 
                 <View className="flex h-[26px] items-center justify-center rounded-full bg-[#EAF5FF] px-3">
-                  <Text className="text-sm text-[#004C8D]">In Progress</Text>
+                  <Text className="text-sm text-[#004C8D]">Resolved</Text>
                 </View>
               </View>
 

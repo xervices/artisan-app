@@ -6,6 +6,8 @@ import { AuthHeader } from '@/components/auth-header';
 import { Image } from 'expo-image';
 import { ChevronRight } from 'lucide-react-native';
 import { router } from 'expo-router';
+import * as Haptics from 'expo-haptics';
+import { Switch } from '@/components/ui/switch';
 
 const data = [
   {
@@ -29,18 +31,11 @@ const data = [
     isDestructive: false,
     onPress: () => router.navigate('/profile/disputes'),
   },
-  // {
-  //   name: 'Payment',
-  //   icon: require('@/assets/icons/payment.svg'),
-  //   isLink: true,
-  //   onPress: () => router.navigate('/profile'),
-  // },
   {
-    name: 'Promo',
-    icon: require('@/assets/icons/promo.svg'),
+    name: 'Payment',
+    icon: require('@/assets/icons/payment.svg'),
     isLink: true,
-    isDestructive: false,
-    onPress: () => router.navigate('/profile/promo'),
+    onPress: () => router.navigate('/profile/payment'),
   },
   {
     name: 'Rate Xervices',
@@ -62,6 +57,30 @@ const data = [
     isLink: true,
     isDestructive: false,
     onPress: () => router.navigate('/profile/about'),
+  },
+  {
+    name: 'Your Level',
+    icon: require('@/assets/icons/shield.svg'),
+    isLink: true,
+    isDestructive: false,
+    onPress: () => router.navigate('/profile/level'),
+  },
+  {
+    name: 'Location',
+    icon: require('@/assets/icons/gps.svg'),
+    isLink: false,
+    isDestructive: false,
+    onPress: () => {},
+    rightComponent: () => {
+      const [checked, setChecked] = React.useState(false);
+
+      function onCheckedChange(checked: boolean) {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        setChecked(checked);
+      }
+
+      return <Switch checked={checked} onCheckedChange={onCheckedChange} />;
+    },
   },
   {
     name: 'Logout',
@@ -102,6 +121,8 @@ export default function Screen() {
                 {item.name}
               </Text>
             </View>
+
+            {item.rightComponent && item.rightComponent()}
 
             {item.isLink && <ChevronRight size={20} color={'#B4B4BC'} />}
           </Pressable>
