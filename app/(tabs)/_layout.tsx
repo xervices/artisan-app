@@ -20,9 +20,9 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="book"
+        name="earnings"
         options={{
-          title: 'Book a service',
+          title: 'Earnings',
         }}
       />
       <Tabs.Screen
@@ -51,9 +51,9 @@ function MyTabBar({ state, descriptors, navigation }: MyTabBarProps) {
       icon: require('@/assets/icons/jobs.svg'),
       active: require('@/assets/icons/jobs-active.svg'),
     },
-    book: {
-      icon: require('@/assets/icons/book.svg'),
-      active: require('@/assets/icons/book-active.svg'),
+    earnings: {
+      icon: require('@/assets/icons/earnings.svg'),
+      active: require('@/assets/icons/earnings-active.svg'),
     },
     profile: {
       icon: require('@/assets/icons/profile.svg'),

@@ -129,10 +129,10 @@ export default function Screen() {
 
           <View className="absolute top-7 flex h-[76px] w-[250px] items-center justify-center rounded-full border border-[#DFDFE1] bg-white">
             <Text className="text-center font-cabinet-bold text-xl text-[#1B1B1E]">
-              Tracking Sarah
+              Destination
             </Text>
 
-            <Text className="text-center text-xs text-[#1B1B1E]">Plumber</Text>
+            <Text className="text-center text-xs text-[#1B1B1E]">Your are 2 mins away</Text>
           </View>
         </View>
         {/* <View className="h-[25%] w-full bg-white"></View> */}

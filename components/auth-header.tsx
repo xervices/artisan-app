@@ -7,9 +7,14 @@ import { Text } from './ui/text';
 interface AuthHeaderProps {
   title?: string;
   showBackButton?: boolean;
+  rightComponent?: React.ReactNode;
 }
 
-export function AuthHeader({ title, showBackButton: showBackButton = true }: AuthHeaderProps) {
+export function AuthHeader({
+  title,
+  showBackButton: showBackButton = true,
+  rightComponent,
+}: AuthHeaderProps) {
   return (
     <View className="relative flex w-full flex-row items-center justify-center">
       {router.canGoBack() && showBackButton && (
@@ -19,6 +24,8 @@ export function AuthHeader({ title, showBackButton: showBackButton = true }: Aut
       )}
 
       <Text className="font-cabinet-bold text-xl">{title}</Text>
+
+      {rightComponent && <View className="absolute right-0">{rightComponent}</View>}
     </View>
   );
 }

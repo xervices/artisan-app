@@ -7,9 +7,11 @@ import { Image } from 'expo-image';
 import {
   ArrowUpRight,
   BadgeCheck,
+  Camera,
   ChevronRight,
   Mail,
   MessageCircleMore,
+  Trash2,
 } from 'lucide-react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Button } from '@/components/ui/button';
@@ -105,13 +107,7 @@ export default function Screen() {
             <View>
               <View className="flex flex-row items-center">
                 <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">Sarah Rodri</Text>
-
-                <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />
               </View>
-
-              <Text className="text-xs text-[#1B1B1E]">Plumbing Specialist</Text>
-
-              <Text className="text-xs text-[#FF6A00]">4.9 ★ (145)</Text>
             </View>
           </View>
 
@@ -195,28 +191,31 @@ export default function Screen() {
 
         <View className="flex flex-row flex-wrap gap-2">
           {new Array(4).fill(0).map((_, index) => (
-            <View key={index} className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+            <View
+              key={index}
+              className="relative aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
               <Image
                 source={require('@/assets/images/sample.png')}
                 style={{ width: '100%', height: '100%' }}
                 contentFit="cover"
               />
+
+              <View className="absolute inset-0 flex items-center justify-center">
+                <Pressable className="flex aspect-square w-[26px] items-center justify-center rounded-full bg-[#FFF4EA]">
+                  <Trash2 size={16} color={'#737381'} />
+                </Pressable>
+              </View>
             </View>
           ))}
         </View>
 
-        <View className="flex aspect-[327/100] w-full items-center justify-center rounded-[8px] border-[2px] border-[#E9E9EB]">
-          <Image
-            source={require('@/assets/icons/camera-primary.svg')}
-            style={{ width: 24, height: 24 }}
-            contentFit="contain"
-          />
-
-          <Text className="text-center text-sm text-[#FE6A00]">Add Photos/Videos</Text>
-          <Text className="text-center text-xs text-[#B4B4BC]">Tap to add photos of the issue</Text>
+        <View className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
+          <Camera size={24} color={'#737381'} />
         </View>
 
-        <Button onPress={form.handleSubmit}>Submit Dispute</Button>
+        <Button className="mt-14" onPress={form.handleSubmit}>
+          Submit Dispute
+        </Button>
       </View>
     </Layout>
   );

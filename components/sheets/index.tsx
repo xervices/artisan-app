@@ -7,6 +7,9 @@ import { DeleteImageSheet } from './delete-image-sheet';
 import { CounterOfferSheet } from './counter-offer-sheet';
 import { AddPromoCodeSheet } from './add-promo-code-sheet';
 import { CameraSheet } from './camera-sheet';
+import { WithdrawSheet } from './withdraw-sheet';
+import { PinSheet } from './pin-sheet';
+import { FilterSheet } from './filter-sheet';
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {
@@ -33,6 +36,9 @@ declare module 'react-native-actions-sheet' {
     }>;
     'ongoing-job-sheet': SheetDefinition;
     'counter-offer-sheet': SheetDefinition;
+    'withdraw-sheet': SheetDefinition;
+    'pin-sheet': SheetDefinition;
+    'filter-sheet': SheetDefinition;
     'success-sheet': SheetDefinition<{
       payload: {
         title: string;
@@ -56,6 +62,9 @@ export const Sheets = () => {
         'counter-offer-sheet': CounterOfferSheet,
         'add-promo-code-sheet': AddPromoCodeSheet,
         'camera-sheet': CameraSheet,
+        'withdraw-sheet': WithdrawSheet,
+        'pin-sheet': PinSheet,
+        'filter-sheet': FilterSheet,
       }}
     />
   );

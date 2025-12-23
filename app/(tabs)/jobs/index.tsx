@@ -23,7 +23,7 @@ export default function Screen() {
               style={{
                 borderColor: undefined,
                 borderWidth: 0,
-                backgroundColor: value === 'progress' ? '#FE6A00' : '#FFF4EA',
+                backgroundColor: value === 'progress' ? '#1B1B1E' : '#F4F4F5',
               }}>
               <Text
                 className="font-cabinet-bold text-sm"
@@ -39,7 +39,7 @@ export default function Screen() {
               style={{
                 borderColor: undefined,
                 borderWidth: 0,
-                backgroundColor: value === 'completed' ? '#FE6A00' : '#FFF4EA',
+                backgroundColor: value === 'completed' ? '#1B1B1E' : '#F4F4F5',
               }}>
               <Text
                 className="font-cabinet-bold text-sm"
@@ -100,8 +100,6 @@ export default function Screen() {
                           <Text className="font-cabinet-bold text-sm text-[#737381]">
                             Sarah Rodri
                           </Text>
-
-                          <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />
                         </View>
                       </View>
 
@@ -162,6 +160,10 @@ export default function Screen() {
                       <View className="flex h-[26px] items-center justify-center rounded-full bg-[#EFFBF1] px-3">
                         <Text className="text-sm text-[#1C752E]">Completed</Text>
                       </View>
+
+                      {/* <View className="flex h-[26px] items-center justify-center rounded-full bg-[#F4F4F5] px-3">
+                        <Text className="text-sm text-[#737381]">Pending</Text>
+                      </View> */}
                     </View>
 
                     <Text className="text-sm text-[#737381]">
@@ -181,8 +183,6 @@ export default function Screen() {
                           <Text className="font-cabinet-bold text-sm text-[#737381]">
                             Sarah Rodri
                           </Text>
-
-                          <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />
                         </View>
                       </View>
 
