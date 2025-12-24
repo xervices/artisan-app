@@ -55,10 +55,8 @@ export default function Screen() {
           </TabsList>
 
           {/* Earnings content */}
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}
-            showsVerticalScrollIndicator={false}>
-            <TabsContent value="earnings" className="flex gap-4 pt-4">
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+            <TabsContent value="earnings" className="flex gap-4 pb-16 pt-4">
               <BalanceCard />
 
               <View className="flex flex-row items-center justify-between">
@@ -90,7 +88,7 @@ export default function Screen() {
           <ScrollView
             contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}
             showsVerticalScrollIndicator={false}>
-            <TabsContent value="earnings" className="flex gap-4 pt-4">
+            <TabsContent value="promotions" className="flex gap-4 pt-4">
               <View className="flex gap-1">
                 <Text className="font-cabinet-medium text-xs text-[#737381]">YOUR EARNINGS</Text>
 
@@ -100,12 +98,12 @@ export default function Screen() {
               </View>
 
               <View className="flex w-full flex-row gap-4">
-                <View className="flex h-16 flex-1 items-center justify-center rounded-[8px] border border-[#FFE6D6]">
+                <View className="flex h-16 flex-1 items-center justify-center rounded-[8px] border border-[#DFDFE1]">
                   <Text className="text-center font-cabinet-bold text-xl text-[#737381]">4</Text>
                   <Text className="text-center text-xs text-[#B4B4BC]">Referrals</Text>
                 </View>
 
-                <View className="flex h-16 flex-1 items-center justify-center rounded-[8px] border border-[#FFE6D6]">
+                <View className="flex h-16 flex-1 items-center justify-center rounded-[8px] border border-[#DFDFE1]">
                   <Text className="text-center font-cabinet-bold text-xl text-[#737381]">
                     ₦1000
                   </Text>
@@ -152,7 +150,7 @@ export default function Screen() {
                 <Text className="text-xs uppercase text-[#737381]">My Discounts</Text>
 
                 <View className="flex h-28 w-full items-center justify-center gap-2 rounded-[8px] bg-[#1B1B1E]">
-                  <View className="flex h-5 items-center justify-center rounded-full bg-[#FF9445] px-2">
+                  <View className="flex h-5 items-center justify-center rounded-full bg-[#737381] px-2">
                     <Text className="text-xs font-medium leading-none text-[#FFF4EA]">
                       ACTIVE DISCOUNT
                     </Text>
