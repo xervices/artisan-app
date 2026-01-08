@@ -4,9 +4,7 @@
   "version": "0.1.9",
   "scripts": {
     "dev": "expo start",
-    "generate": "orval",
-    "generate:watch": "orval --watch",
-    "generate:clean": "rm -rf src/api/generated && orval",
+    "generate:schema": "npx openapi-typescript https://server-api-bibv.onrender.com/api/docs-json -o ./api/schema.ts",
     "build": "eas build --platform all",
     "build:android": "eas build --platform android",
     "build:android:dev": "eas build --platform android --profile development",
