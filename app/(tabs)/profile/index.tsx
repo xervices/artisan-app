@@ -8,6 +8,7 @@ import { ChevronRight } from 'lucide-react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Switch } from '@/components/ui/switch';
+import { useAuthStore } from '@/store/auth-store';
 
 const data = [
   {
@@ -87,7 +88,10 @@ const data = [
     icon: require('@/assets/icons/logout.svg'),
     isLink: false,
     isDestructive: true,
-    onPress: () => router.navigate('/profile'),
+    onPress: () => {
+      useAuthStore.getState().resetOnboarding();
+      useAuthStore.getState().setLoginState(false);
+    },
   },
 ];
 
