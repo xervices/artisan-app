@@ -1,93 +1,69 @@
 import * as React from 'react';
-import { Platform, Pressable, View } from 'react-native';
-import { useAuthStore } from '@/store/auth-store';
-import { Text } from '@/components/ui/text';
-import { Layout } from '@/components/layout';
-import { Icon } from '@/components/ui/icon';
+import { Pressable, View } from 'react-native';
 import { router } from 'expo-router';
-import { AuthHeader } from '@/components/auth-header';
 import { useForm } from '@tanstack/react-form';
 import * as z from 'zod';
+import { useMutation } from '@tanstack/react-query';
+
+import { Text } from '@/components/ui/text';
+import { Layout } from '@/components/layout';
+import { AuthHeader } from '@/components/auth-header';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { InputError } from '@/components/ui/input-error';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Image } from 'expo-image';
-import {
-  NativeSelectScrollView,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const formSchema = z.object({
-  fullname: z.string().min(1, 'Fullname is required.'),
-  phone: z.string().min(1, 'Phone number is required.'),
-  email: z.email('Invalid email address').min(1, 'Email is required.'),
-  skill: z.string().min(1, 'Skill is required.'),
-  password: z.string().min(1, 'Password is required.'),
-});
+import { api } from '@/api';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 
-const data = [
-  {
-    id: '1',
-    label: 'Plumber',
-  },
-  {
-    id: '2',
-    label: 'Electrician',
-  },
-  {
-    id: '3',
-    label: 'Carpenter',
-  },
-  {
-    id: '4',
-    label: 'Driver',
-  },
-];
+const formSchema = z
+  .object({
+    fullName: z.string().min(1, 'Your fullname is required.'),
+    phoneNumber: z.string().min(1, 'Phone number is required.'),
+    email: z.email('Invalid email address').min(1, 'Email is required.'),
+    password: z.string().min(1, 'Password is required.'),
+    confirmPassword: z.string().min(1, 'Password confirmation is required.'),
+    role: z.union([z.literal('artisan')]),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
 export default function Screen() {
-  const { login } = useAuthStore();
-
-  const [checked, setChecked] = React.useState(false);
-
-  function onCheckedChange(checked: boolean) {
-    // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setChecked(checked);
-  }
-
-  const insets = useSafeAreaInsets();
-  const contentInsets = {
-    top: insets.top,
-    bottom: Platform.select({ ios: insets.bottom, android: insets.bottom + 24 }),
-    left: 24,
-    right: 24,
-  };
+  const { mutate, isPending } = useMutation({
+    ...api.register(),
+    onError: (err) => {
+      showErrorMessage(err.message);
+    },
+  });
 
   const form = useForm({
     defaultValues: {
-      fullname: '',
-      phone: '',
+      fullName: '',
+      phoneNumber: '',
       email: '',
       password: '',
-      skill: '',
+      confirmPassword: '',
+      role: 'artisan' as const,
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      router.navigate({
-        pathname: '/verify-email',
-        params: {
-          email: value.email,
-          phone: value.phone,
+      const { confirmPassword, ...registerData } = value;
+
+      mutate(registerData, {
+        onSuccess: () => {
+          showSuccessMessage('Account created successfully');
+
+          router.navigate({
+            pathname: '/verify-email',
+            params: {
+              email: value.email,
+              phone: value.phoneNumber,
+            },
+          });
         },
       });
     },
@@ -101,7 +77,7 @@ export default function Screen() {
         </View>
 
         <View className="flex gap-4">
-          <form.Field name="fullname">
+          <form.Field name="fullName">
             {(field) => (
               <View>
                 <Label nativeID="fullname">
@@ -120,7 +96,7 @@ export default function Screen() {
             )}
           </form.Field>
 
-          <form.Field name="phone">
+          <form.Field name="phoneNumber">
             {(field) => (
               <View>
                 <Label nativeID="phone">Phone Number</Label>
@@ -154,7 +130,7 @@ export default function Screen() {
             )}
           </form.Field>
 
-          <form.Field name="skill">
+          {/* <form.Field name="skill">
             {(field) => (
               <View>
                 <Label nativeID="skill">Select skill</Label>
@@ -188,7 +164,7 @@ export default function Screen() {
                 {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
               </View>
             )}
-          </form.Field>
+          </form.Field> */}
 
           <form.Field name="password">
             {(field) => (
@@ -207,7 +183,26 @@ export default function Screen() {
             )}
           </form.Field>
 
-          <Button onPress={form.handleSubmit}>Continue</Button>
+          <form.Field name="confirmPassword">
+            {(field) => (
+              <View>
+                <Label nativeID="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  placeholder="Confirm your password"
+                  secureTextEntry
+                  hasError={!field.state.meta.isValid}
+                />
+                {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
+              </View>
+            )}
+          </form.Field>
+
+          <Button onPress={form.handleSubmit} isLoading={isPending} disabled={isPending}>
+            Continue
+          </Button>
         </View>
 
         <View className="flex flex-row items-center justify-center gap-1.5">

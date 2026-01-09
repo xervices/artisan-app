@@ -22,78 +22,31 @@ import {
 } from '../ui/select';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
+import { useAuthStore } from '@/store/auth-store';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
+import { router } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
+import { NIGERIAN_STATES } from '@/store/data';
 
 const formSchema = z.object({
-  fullname: z.string().min(1, 'Fullname is required.'),
-  phone: z.string().min(1, 'Phone number is required.'),
-  email: z.email('Invalid email address').min(1, 'Email is required.'),
-  state: z.string().min(1, 'State is required.'),
-  address: z.string().min(1, 'Address is required.'),
-  skill: z.string().min(1, 'Skill is required.'),
-  nin: z.string().min(1, 'NIN is required.'),
+  avatarUrl: z.string(),
+  avatarMimeType: z.string(),
+  state: z.string(),
+  city: z.string(),
+  country: z.string(),
+  address: z.string(),
+  postalCode: z.string(),
+  bio: z.string(),
 });
 
-const nigerianStates = [
-  { label: 'Abia', value: 'abia' },
-  { label: 'Adamawa', value: 'adamawa' },
-  { label: 'Akwa Ibom', value: 'akwa-ibom' },
-  { label: 'Anambra', value: 'anambra' },
-  { label: 'Bauchi', value: 'bauchi' },
-  { label: 'Bayelsa', value: 'bayelsa' },
-  { label: 'Benue', value: 'benue' },
-  { label: 'Borno', value: 'borno' },
-  { label: 'Cross River', value: 'cross-river' },
-  { label: 'Delta', value: 'delta' },
-  { label: 'Ebonyi', value: 'ebonyi' },
-  { label: 'Edo', value: 'edo' },
-  { label: 'Ekiti', value: 'ekiti' },
-  { label: 'Enugu', value: 'enugu' },
-  { label: 'Gombe', value: 'gombe' },
-  { label: 'Imo', value: 'imo' },
-  { label: 'Jigawa', value: 'jigawa' },
-  { label: 'Kaduna', value: 'kaduna' },
-  { label: 'Kano', value: 'kano' },
-  { label: 'Katsina', value: 'katsina' },
-  { label: 'Kebbi', value: 'kebbi' },
-  { label: 'Kogi', value: 'kogi' },
-  { label: 'Kwara', value: 'kwara' },
-  { label: 'Lagos', value: 'lagos' },
-  { label: 'Nasarawa', value: 'nasarawa' },
-  { label: 'Niger', value: 'niger' },
-  { label: 'Ogun', value: 'ogun' },
-  { label: 'Ondo', value: 'ondo' },
-  { label: 'Osun', value: 'osun' },
-  { label: 'Oyo', value: 'oyo' },
-  { label: 'Plateau', value: 'plateau' },
-  { label: 'Rivers', value: 'rivers' },
-  { label: 'Sokoto', value: 'sokoto' },
-  { label: 'Taraba', value: 'taraba' },
-  { label: 'Yobe', value: 'yobe' },
-  { label: 'Zamfara', value: 'zamfara' },
-  { label: 'FCT', value: 'fct' },
-];
-
-const data = [
-  {
-    id: '1',
-    label: 'Plumber',
-  },
-  {
-    id: '2',
-    label: 'Electrician',
-  },
-  {
-    id: '3',
-    label: 'Carpenter',
-  },
-  {
-    id: '4',
-    label: 'Driver',
-  },
-];
-
 export function PersonalDetails() {
-  const ref = React.useRef<TriggerRef>(null);
+  const { user } = useAuthStore();
+
+  const { mutate, isPending } = useMutation(api.updateProfile());
+  const { refetch } = useQuery(api.getCurrentUser());
+
   const insets = useSafeAreaInsets();
   const contentInsets = {
     top: insets.top,
@@ -102,153 +55,184 @@ export function PersonalDetails() {
     right: 24,
   };
 
+  const initialValues = React.useMemo(
+    () => ({
+      avatarUrl: user?.profile?.avatarUrl || '',
+      avatarMimeType: '',
+      city: user?.profile?.city || '',
+      state: user?.profile?.state || '',
+      country: user?.profile?.country || '',
+      address: user?.profile?.address || '',
+      postalCode: user?.profile?.postalCode || '',
+      bio: user?.profile?.bio || '',
+    }),
+    [user]
+  );
+
   const form = useForm({
-    defaultValues: {
-      fullname: 'Alex Baker',
-      phone: '8060230023',
-      email: 'alexbaker@gmail.com',
-      state: '',
-      address: '',
-      skill: 'Plumber',
-      nin: '123456789000000',
-    },
+    defaultValues: initialValues,
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      // @ts-ignore
+      mutate(value, {
+        onSuccess: () => {
+          showSuccessMessage('Profile updated successfully');
+          refetch();
+          router.back();
+        },
+        onError: (err) => {
+          showErrorMessage(err.message);
+        },
+      });
     },
   });
 
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const asset = result.assets[0];
+      if (asset.type === 'image') {
+        form.setFieldValue('avatarUrl', asset.uri);
+        form.setFieldValue('avatarMimeType', asset.mimeType || '');
+      }
+    }
+  };
+
   return (
     <View className="flex-1 gap-6">
-      <View className="flex w-full items-center justify-center">
-        <Pressable className="relative h-20 w-20 overflow-hidden rounded-full">
-          <Avatar className="h-full w-full" alt="User's Avatar">
-            <AvatarImage source={{ uri: 'https://github.com/mrzachnugent.png' }} />
-            <AvatarFallback className="bg-primary">
-              <Text className="font-cabinet-bold leading-none">ZN</Text>
-            </AvatarFallback>
-          </Avatar>
+      <form.Subscribe
+        selector={(state) => ({
+          url: state.values.avatarUrl,
+        })}
+        children={({ url }) => {
+          return (
+            <View className="flex w-full items-center justify-center">
+              <Pressable
+                onPress={pickImage}
+                className="relative h-20 w-20 overflow-hidden rounded-full">
+                <Avatar className="h-full w-full" alt="User's Avatar">
+                  <AvatarImage source={{ uri: url }} />
+                  <AvatarFallback className="bg-primary">
+                    <Text className="font-cabinet-bold text-4xl leading-none">
+                      {user?.profile?.fullName?.substring(0, 2) || ''}
+                    </Text>
+                  </AvatarFallback>
+                </Avatar>
 
-          <View className="absolute inset-0 flex h-full w-full items-center justify-center bg-[#1B1B1E]/40">
-            <Image
-              source={require('@/assets/icons/camera.svg')}
-              style={{ width: 24, height: 24 }}
-              contentFit="contain"
-            />
-          </View>
-        </Pressable>
-      </View>
+                <View className="absolute inset-0 flex h-full w-full items-center justify-center bg-[#1B1B1E]/40">
+                  <Image
+                    source={require('@/assets/icons/camera.svg')}
+                    style={{ width: 24, height: 24 }}
+                    contentFit="contain"
+                  />
+                </View>
+              </Pressable>
+            </View>
+          );
+        }}
+      />
 
       <View className="flex gap-4">
-        <form.Field name="fullname">
-          {(field) => (
-            <View>
-              <Label nativeID="fullname">Full name</Label>
-              <Input
-                className="bg-white"
-                id="fullname"
-                value={field.state.value}
-                onChangeText={field.handleChange}
-                placeholder="Enter your name"
-                hasError={!field.state.meta.isValid}
-              />
-              {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
-            </View>
-          )}
-        </form.Field>
+        <View>
+          <Label nativeID="fullname">Full name</Label>
+          <Input
+            className="bg-white"
+            id="fullname"
+            value={user?.profile?.fullName}
+            placeholder="Enter your name"
+            editable={false}
+          />
+        </View>
 
-        <form.Field name="email">
-          {(field) => (
-            <View>
-              <Label nativeID="email">Email</Label>
-              <Input
-                className="bg-white"
-                id="email"
-                value={field.state.value}
-                onChangeText={field.handleChange}
-                placeholder="Enter your email"
-                hasError={!field.state.meta.isValid}
-                keyboardType="email-address"
-              />
-              {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
-            </View>
-          )}
-        </form.Field>
+        <View>
+          <Label nativeID="email">Email</Label>
+          <Input
+            className="bg-white"
+            id="email"
+            value={user?.email}
+            placeholder="Enter your email"
+            keyboardType="email-address"
+            editable={false}
+          />
+        </View>
 
-        <form.Field name="skill">
-          {(field) => (
-            <View>
-              <Label nativeID="skill">Select skill</Label>
-              <Select>
-                <SelectTrigger className="w-full bg-white">
-                  <SelectValue id="skill" placeholder="Select Skill" />
-                </SelectTrigger>
-                <SelectContent
-                  insets={contentInsets}
-                  className="mt-2 w-full bg-white"
-                  style={{ maxHeight: 300 }}>
-                  <NativeSelectScrollView className="h-full">
-                    <SelectGroup>
-                      <SelectLabel>Skills </SelectLabel>
-                      {data.map((type) => (
-                        <SelectItem
-                          onPress={() => {
-                            field.handleChange(type.label);
-                          }}
-                          key={type.id}
-                          label={type.label}
-                          value={type.label}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </NativeSelectScrollView>
-                </SelectContent>
-              </Select>
-
-              {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
-            </View>
-          )}
-        </form.Field>
-
-        <form.Field name="nin">
-          {(field) => (
-            <View>
-              <Label nativeID="nin">NIN Number</Label>
-              <Input
-                className="bg-white"
-                id="nin"
-                value={field.state.value}
-                onChangeText={field.handleChange}
-                placeholder="Enter your NIN"
-                hasError={!field.state.meta.isValid}
-                keyboardType="number-pad"
-              />
-              {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
-            </View>
-          )}
-        </form.Field>
+        <View>
+          <Label nativeID="nin">NIN Number</Label>
+          <Input
+            className="bg-white"
+            id="nin"
+            value={'12323456778'}
+            placeholder="Enter your NIN"
+            keyboardType="number-pad"
+            editable={false}
+          />
+        </View>
       </View>
 
       <View>
         <Text className="font-cabinet-medium text-xs uppercase text-[#737381]">Editable</Text>
 
         <View className="flex gap-4">
-          <form.Field name="phone">
+          <form.Field name="bio">
             {(field) => (
               <View>
-                <Label nativeID="phone">Phone Number</Label>
-                <Input
+                <Label nativeID="bio">Bio</Label>
+                <Textarea
                   className="bg-white"
-                  id="phone"
+                  id="bio"
                   value={field.state.value}
                   onChangeText={field.handleChange}
-                  placeholder="Enter your phone number"
+                  placeholder="Enter your Bio"
                   hasError={!field.state.meta.isValid}
-                  keyboardType="phone-pad"
                 />
+                {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
+              </View>
+            )}
+          </form.Field>
+
+          <form.Field name="country">
+            {(field) => (
+              <View>
+                <Label nativeID="country">Country</Label>
+
+                <Select defaultValue={{ label: field.state.value, value: field.state.value }}>
+                  <SelectTrigger className="w-full bg-white">
+                    <SelectValue id="country" placeholder="Select Country" />
+                  </SelectTrigger>
+                  <SelectContent
+                    insets={contentInsets}
+                    className="mt-2 w-full bg-white"
+                    style={{ maxHeight: 300 }}>
+                    <NativeSelectScrollView className="h-full">
+                      <SelectGroup>
+                        <SelectLabel>Country</SelectLabel>
+
+                        <SelectItem
+                          onPress={() => {
+                            field.handleChange('Nigeria');
+                          }}
+                          label="Nigeria"
+                          value="Nigeria">
+                          Nigeria
+                        </SelectItem>
+                      </SelectGroup>
+                    </NativeSelectScrollView>
+                  </SelectContent>
+                </Select>
+
                 {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
               </View>
             )}
@@ -259,8 +243,8 @@ export function PersonalDetails() {
               <View>
                 <Label nativeID="state">State</Label>
 
-                <Select>
-                  <SelectTrigger ref={ref} className="w-full bg-white">
+                <Select defaultValue={{ label: field.state.value, value: field.state.value }}>
+                  <SelectTrigger className="w-full bg-white">
                     <SelectValue id="state" placeholder="Select State" />
                   </SelectTrigger>
                   <SelectContent
@@ -270,15 +254,15 @@ export function PersonalDetails() {
                     <NativeSelectScrollView className="h-full">
                       <SelectGroup>
                         <SelectLabel>State</SelectLabel>
-                        {nigerianStates.map((state) => (
+                        {NIGERIAN_STATES.map((state) => (
                           <SelectItem
                             onPress={() => {
-                              field.handleChange(state.value);
+                              field.handleChange(state.state);
                             }}
-                            key={state.value}
-                            label={state.label}
-                            value={state.value}>
-                            {state.label}
+                            key={state.state}
+                            label={state.state}
+                            value={state.state}>
+                            {state.state}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -290,6 +274,61 @@ export function PersonalDetails() {
               </View>
             )}
           </form.Field>
+
+          <form.Subscribe
+            selector={(state) => ({
+              state: state.values.state,
+            })}
+            children={({ state }) => {
+              const LGA_DATA = NIGERIAN_STATES.find((i) => i.state === state);
+
+              if (!LGA_DATA) {
+                return null;
+              }
+
+              return (
+                <form.Field name="city">
+                  {(field) => (
+                    <View>
+                      <Label nativeID="city">City</Label>
+
+                      <Select defaultValue={{ label: field.state.value, value: field.state.value }}>
+                        <SelectTrigger className="w-full bg-white">
+                          <SelectValue id="city" placeholder="Select City" />
+                        </SelectTrigger>
+                        <SelectContent
+                          insets={contentInsets}
+                          className="mt-2 w-full bg-white"
+                          style={{ maxHeight: 300 }}>
+                          <NativeSelectScrollView className="h-full">
+                            <SelectGroup>
+                              <SelectLabel>City</SelectLabel>
+                              {LGA_DATA?.lgas?.map((lga) => (
+                                <SelectItem
+                                  onPress={() => {
+                                    field.handleChange(lga.name);
+                                    form.setFieldValue('postalCode', lga.postal_code);
+                                  }}
+                                  key={lga.name}
+                                  label={lga.name}
+                                  value={lga.name}>
+                                  {lga.name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </NativeSelectScrollView>
+                        </SelectContent>
+                      </Select>
+
+                      {!field.state.meta.isValid ? (
+                        <InputError errors={field.state.meta.errors} />
+                      ) : null}
+                    </View>
+                  )}
+                </form.Field>
+              );
+            }}
+          />
 
           <form.Field name="address">
             {(field) => (
@@ -310,7 +349,23 @@ export function PersonalDetails() {
         </View>
       </View>
 
-      <Button onPress={form.handleSubmit}>Save Changes</Button>
+      <form.Subscribe
+        selector={(state) => ({
+          values: state.values,
+        })}>
+        {({ values }) => {
+          const hasChanges = JSON.stringify(values) !== JSON.stringify(initialValues);
+
+          return (
+            <Button
+              onPress={form.handleSubmit}
+              isLoading={isPending}
+              disabled={isPending || !hasChanges}>
+              Save Changes
+            </Button>
+          );
+        }}
+      </form.Subscribe>
     </View>
   );
 }

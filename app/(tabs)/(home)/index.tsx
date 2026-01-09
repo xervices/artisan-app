@@ -7,8 +7,12 @@ import { AvailabilityStatus } from '@/components/home/availability-status';
 import { OverviewCard } from '@/components/home/overview-card';
 import { Stats } from '@/components/home/stats';
 import { VerifyAccount } from '@/components/home/verify-account';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
 
 export default function Screen() {
+  const { data } = useQuery(api.getCurrentArtisanProfile());
+
   return (
     <Layout
       useBackground

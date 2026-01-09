@@ -3,22 +3,29 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { BadgeCheck, Bell } from 'lucide-react-native';
 import { Text } from '../ui/text';
 import { router } from 'expo-router';
+import { useAuthStore } from '@/store/auth-store';
 
 export function Header() {
+  const { user } = useAuthStore();
+
   return (
     <View className="flex w-full flex-row items-end justify-between">
       <View className="flex flex-row items-center gap-2">
         <Avatar alt="User's Avatar">
-          <AvatarImage source={{ uri: 'https://github.com/mrzachnugent.png' }} />
+          <AvatarImage source={{ uri: user?.profile?.avatarUrl }} />
           <AvatarFallback className="bg-primary">
-            <Text className="font-cabinet-bold leading-none">ZN</Text>
+            <Text className="font-cabinet-bold text-sm uppercase leading-none">
+              {user?.profile?.fullName.substring(0, 2)}
+            </Text>
           </AvatarFallback>
         </Avatar>
 
         <View>
           <Text className="text-xs leading-none text-[#1B1B1E]">Welcome</Text>
           <View className="flex flex-row gap-1">
-            <Text className="font-cabinet-bold leading-none text-[#1B1B1E]">Sarah Rodri</Text>
+            <Text className="font-cabinet-bold leading-none text-[#1B1B1E]">
+              {user?.profile?.fullName}
+            </Text>
 
             <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />
           </View>

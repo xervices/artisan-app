@@ -1,6 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { Text } from '../ui/text';
 import { ArrowUpRight } from 'lucide-react-native';
+import { router } from 'expo-router';
 
 export function VerifyAccount() {
   return (
@@ -10,8 +11,10 @@ export function VerifyAccount() {
       <View className="flex flex-row items-center justify-between">
         <Text className="text-sm text-[#737381]">You need to verify your account.</Text>
 
-        <Pressable className="flex flex-row items-center gap-1">
-          <Text className="font-cabinet-bold text-sm text-primary">verify</Text>
+        <Pressable
+          onPress={() => router.navigate('/verify/step-2')}
+          className="flex flex-row items-center gap-1">
+          <Text className="font-cabinet-bold text-sm text-primary">Verify</Text>
 
           <ArrowUpRight size={14} color={'#FE6A00'} />
         </Pressable>

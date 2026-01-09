@@ -9,6 +9,7 @@ import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Switch } from '@/components/ui/switch';
 import { useAuthStore } from '@/store/auth-store';
+import { tokenStorage } from '@/api/token-storage';
 
 const data = [
   {
@@ -88,8 +89,8 @@ const data = [
     icon: require('@/assets/icons/logout.svg'),
     isLink: false,
     isDestructive: true,
-    onPress: () => {
-      useAuthStore.getState().resetOnboarding();
+    onPress: async () => {
+      await tokenStorage.clearTokens();
       useAuthStore.getState().setLoginState(false);
     },
   },

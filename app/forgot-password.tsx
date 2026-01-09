@@ -12,25 +12,42 @@ import { Input } from '@/components/ui/input';
 import { InputError } from '@/components/ui/input-error';
 import { Button } from '@/components/ui/button';
 import { router } from 'expo-router';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/api';
+import { showErrorMessage } from '@/api/helpers';
 
 const formSchema = z.object({
-  email: z.string().min(1, 'Email/Phone number is required.'),
+  emailOrPhone: z.string().min(1, 'Email/Phone number is required.'),
 });
 
 export default function Screen() {
+  const { isPending, mutate } = useMutation({
+    ...api.forgotPassword(),
+    onError: (err) => {
+      showErrorMessage(err.message);
+    },
+  });
+
   const form = useForm({
     defaultValues: {
-      email: '',
+      emailOrPhone: '',
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      toast.success('OTP sent successfully');
-      router.navigate({
-        pathname: '/forgot-password-otp',
-        params: {
-          email: value.email,
+      mutate(value, {
+        onSuccess: (data) => {
+          toast.success(data.message);
+          router.navigate({
+            pathname: '/forgot-password-otp',
+            params: {
+              email: value.emailOrPhone,
+            },
+          });
+        },
+        onError: (err) => {
+          showErrorMessage(err.message);
         },
       });
     },
@@ -65,7 +82,7 @@ export default function Screen() {
 
         <View className="flex gap-6 px-6">
           <View className="flex gap-8">
-            <form.Field name="email">
+            <form.Field name="emailOrPhone">
               {(field) => (
                 <View>
                   <Label nativeID="email">Email or phone number</Label>
@@ -84,7 +101,9 @@ export default function Screen() {
               )}
             </form.Field>
 
-            <Button onPress={form.handleSubmit}>Send code</Button>
+            <Button onPress={form.handleSubmit} isLoading={isPending} disabled={isPending}>
+              Send code
+            </Button>
           </View>
 
           <View className="flex w-full flex-row items-center justify-between gap-4">
@@ -94,16 +113,6 @@ export default function Screen() {
 
             <View className="h-0.5 flex-1 bg-[#FFDCC1]" />
           </View>
-
-          <Button className="border-[#B4B4BC] bg-background">
-            <Image
-              source={require('@/assets/icons/google.svg')}
-              style={{ width: 18, height: 18 }}
-              contentFit="contain"
-            />
-
-            <Text className="font-cabinet-extrabold text-[#737381]">Continue with Google</Text>
-          </Button>
 
           <View className="flex flex-row items-center justify-center gap-1.5">
             <Text className="text-[#737381]">Don’t have an account?</Text>

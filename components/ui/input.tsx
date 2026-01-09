@@ -72,6 +72,8 @@ const Input = React.forwardRef<TextInput, InputProps>(
             }),
             className
           )}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           {...props}
         />
 

@@ -9,7 +9,7 @@ interface EmptyStateProps {
 
 export default function EmptyState({ subtitle, title }: EmptyStateProps) {
   return (
-    <View className="flex flex-1 items-center justify-center gap-6">
+    <View className="flex flex-1 items-center justify-center gap-6 bg-white">
       <View>
         <Text className="text-center font-cabinet-bold text-[#FE6A00]">{title}</Text>
         <Text className="text-center text-sm text-[#737381]">{subtitle}</Text>

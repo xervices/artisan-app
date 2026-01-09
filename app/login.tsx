@@ -17,6 +17,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 import { api } from '@/api';
 import { showErrorMessage } from '@/api/helpers';
+import { useAuthStore } from '@/store/auth-store';
 
 const formSchema = z.object({
   emailOrPhone: z.string().min(1, 'Email or Phone is required.'),
@@ -46,7 +47,22 @@ export default function Screen() {
     validators: {
       onSubmit: formSchema,
     },
-    onSubmit: async ({ value }) => {},
+    onSubmit: async ({ value }) => {
+      mutate(value, {
+        onSuccess: (res) => {
+          if (!res.user.emailVerified) {
+            router.navigate({
+              pathname: '/verify-email',
+              params: {
+                email: value.emailOrPhone,
+              },
+            });
+          } else {
+            useAuthStore.getState().setLoginState(true);
+          }
+        },
+      });
+    },
   });
 
   return (
@@ -95,7 +111,7 @@ export default function Screen() {
             )}
           </form.Field>
 
-          <Button onPress={form.handleSubmit} isLoading={isPending}>
+          <Button onPress={form.handleSubmit} isLoading={isPending} disabled={isPending}>
             Log In
           </Button>
         </View>

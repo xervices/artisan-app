@@ -3,6 +3,9 @@ import { apiClient, publicApiClient } from './client';
 import { tokenStorage } from './token-storage';
 import { getErrorMessage, RequestBody } from './helpers';
 import { useAuthStore } from '@/store/auth-store';
+import { Platform } from 'react-native';
+
+const normalizePath = (uri: string) => (Platform.OS === 'ios' ? uri.replace('file://', '') : uri);
 
 export const api = {
   // Server Health endpoints
@@ -37,13 +40,21 @@ export const api = {
           throw new Error(getErrorMessage(error, 'Login failed'));
         }
 
+        if (data.user.role === 'user') {
+          throw new Error(
+            getErrorMessage({
+              message:
+                'Unauthorized: This account is not associated with an artisan, install the Xervices app and login.',
+            })
+          );
+        }
+
         if (data?.tokens) {
           await tokenStorage.setTokens(data.tokens.accessToken, data.tokens.refreshToken);
         }
 
         if (data.user) {
           useAuthStore.getState().setUser(data.user);
-          useAuthStore.getState().setLoginState(true);
         }
 
         return data;
@@ -178,4 +189,163 @@ export const api = {
       },
     };
   },
+
+  // User management endpoints
+  getCurrentUser: () =>
+    queryOptions({
+      queryKey: ['users', 'me'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/users/me');
+
+        if (data) {
+          useAuthStore.getState().setUser(data);
+        }
+
+        return data;
+      },
+    }),
+  updateProfile: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/users/me', 'patch'>) => {
+        const formData = new FormData();
+        const user = useAuthStore.getState().user;
+
+        // Define fields to append (excluding avatar which needs special handling)
+        const fields = ['fullName', 'address', 'bio', 'city', 'country', 'state', 'postalCode'];
+
+        // Append only non-empty fields
+        fields.forEach((field) => {
+          const value = credentials[field];
+
+          // @ts-ignore
+          const prevValue: string = user?.profile[field];
+
+          if (value !== undefined && value !== null && value !== '' && prevValue !== value) {
+            formData.append(field, String(value));
+          }
+        });
+
+        // Handle avatar file upload
+        // @ts-ignore
+        if (credentials.avatarUrl && credentials.avatarUrl !== user?.profile?.avatarUrl) {
+          const file = {
+            // @ts-ignore
+            uri: normalizePath(credentials.avatarUrl),
+            // @ts-ignore - avatarMimeType sent from form but not specified in api
+            type: credentials.avatarMimeType || 'image/jpeg',
+            name: `avatar_${Date.now()}}`,
+          };
+
+          // @ts-ignore - FormData typing issue in React Native
+          formData.append('avatar', file);
+        }
+
+        const { data, error } = await apiClient.PATCH('/api/users/me', {
+          // @ts-ignore - FormData not properly typed in openapi-fetch
+          body: formData,
+          bodySerializer: () => formData, // Prevent body serialization
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Profile update failed'));
+        }
+
+        return data;
+      },
+    };
+  },
+
+  // Artisan endpoints
+  updateArtisanProfile: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/artisans/onboard', 'post'>) => {
+        const formData = new FormData();
+
+        const fields = [
+          'categoryIds',
+          'identificationType',
+          'identificationNumber',
+          'yearsOfExperience',
+          'professionalLicenseNumber',
+          'licenseIssueState',
+          'licenseIssueDate',
+        ] as const;
+
+        // Append only non-empty fields
+        fields.forEach((field) => {
+          const value = credentials[field];
+
+          if (value !== undefined && value !== null && value !== '') {
+            if (field === 'categoryIds') {
+              formData.append(field, value);
+            } else {
+              formData.append(field, String(value));
+            }
+          }
+        });
+
+        // @ts-ignore
+        if (credentials.certifications && credentials.certifications.length > 0) {
+          // @ts-ignore
+          credentials.certifications.forEach((cert, index) => {
+            const file = {
+              uri: normalizePath(cert.uri),
+              type: cert.mimeType || 'application/pdf',
+              name: cert.name || `certification_${index}_${Date.now()}`,
+            };
+            // @ts-ignore - FormData typing issue in React Native
+            formData.append('certifications', file);
+          });
+        }
+
+        // @ts-ignore
+        if (credentials.previousJobs && credentials.previousJobs.length > 0) {
+          // @ts-ignore
+          credentials.previousJobs.forEach((cert, index) => {
+            const file = {
+              uri: normalizePath(cert.uri),
+              type: cert.mimeType || 'application/pdf',
+              name: cert.name || `certification_${index}_${Date.now()}`,
+            };
+            // @ts-ignore - FormData typing issue in React Native
+            formData.append('previousJobs', file);
+          });
+        }
+
+        const { data, error } = await apiClient.POST('/api/artisans/onboard', {
+          // @ts-ignore - FormData not properly typed in openapi-fetch
+          body: formData,
+          bodySerializer: () => formData, // Prevent body serialization
+        });
+
+        console.log(error);
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Professional profile update failed'));
+        }
+
+        return data;
+      },
+    };
+  },
+  getCurrentArtisanProfile: () =>
+    queryOptions({
+      queryKey: ['artisans', 'me'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/artisans/me');
+
+        return data;
+      },
+    }),
+
+  // Categories (Skills) endpoints
+  getAllCategories: () =>
+    queryOptions({
+      queryKey: ['categories'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/categories');
+
+        return data;
+      },
+    }),
 };

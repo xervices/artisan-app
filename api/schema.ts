@@ -1502,12 +1502,22 @@ export interface components {
         };
         VerifyAccountDto: {
             /**
+             * @description User email address
+             * @example user@example.com
+             */
+            email: string;
+            /**
              * @description The 6-digit verification code sent to email and phone
              * @example 123456
              */
             code: string;
         };
         ResendVerificationDto: {
+            /**
+             * @description User email address
+             * @example user@example.com
+             */
+            email: string;
             /**
              * @description Type of verification to resend. Use "email" to resend email verification or "phone" to resend SMS verification. The code will be sent to the email/phone associated with your account.
              * @example email
@@ -1719,6 +1729,11 @@ export interface components {
              */
             avatarUrl?: string;
             /**
+             * Format: binary
+             * @description Avatar image file
+             */
+            avatar?: string;
+            /**
              * @description User bio/description
              * @example I love hiring great artisans for home projects.
              */
@@ -1838,6 +1853,41 @@ export interface components {
              *     ]
              */
             previousJobUrls?: string[];
+            /** @description Certification documents */
+            certifications?: string[];
+            /** @description Photos of previous jobs */
+            previousJobs?: string[];
+        };
+        ArtisanProfile: {
+            id: string;
+            userId: string;
+            /** @enum {string} */
+            identificationType: "BVN" | "NIN";
+            identificationNumber: string;
+            /** @enum {string} */
+            verificationStatus: "pending" | "verified" | "rejected";
+            /** Format: date-time */
+            verifiedAt?: string;
+            verificationProvider?: string;
+            yearsOfExperience?: number;
+            professionalLicenseNumber?: string;
+            /** Format: date-time */
+            licenseIssueDate?: string;
+            /** Format: date-time */
+            licenseExpiryDate?: string;
+            certificationUrls?: string[];
+            previousJobUrls?: string[];
+            serviceRadiusKm: number;
+            baseHourlyRate?: number;
+            averageRating: number;
+            totalReviews: number;
+            totalJobsCompleted: number;
+            isAvailable: boolean;
+            isVerified: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
         };
         UpdateSkillsDto: {
             /**
@@ -2812,15 +2862,6 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
         };
     };
     AuthController_resendVerification: {
@@ -2847,15 +2888,6 @@ export interface operations {
             };
             /** @description Already verified */
             400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3304,7 +3336,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateProfileDto"];
+                "multipart/form-data": components["schemas"]["UpdateProfileDto"];
             };
         };
         responses: {
@@ -3430,7 +3462,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["OnboardArtisanDto"];
+                "multipart/form-data": components["schemas"]["OnboardArtisanDto"];
             };
         };
         responses: {
@@ -3439,7 +3471,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ArtisanProfile"];
+                };
             };
             /** @description Validation error */
             400: {
