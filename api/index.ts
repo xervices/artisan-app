@@ -254,6 +254,19 @@ export const api = {
       },
     };
   },
+  deleteAccount: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/users/me', 'delete'>) => {
+        const { data, error } = await apiClient.DELETE('/api/users/me');
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Delete account failed'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // Artisan endpoints
   updateArtisanProfile: () => {
@@ -359,6 +372,78 @@ export const api = {
       queryKey: ['categories'],
       queryFn: async () => {
         const { data } = await apiClient.GET('/api/categories');
+
+        return data;
+      },
+    }),
+
+  // promotions, referrals & discounts endpoints
+  getMyReferralInfo: () =>
+    queryOptions({
+      queryKey: ['referrals'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/referrals/me');
+
+        return data;
+      },
+    }),
+  getMyDiscounts: () =>
+    queryOptions({
+      queryKey: ['discounts'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/promotions/discounts');
+
+        return data;
+      },
+    }),
+  getMyPromotions: () =>
+    queryOptions({
+      queryKey: ['promotions'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/promotions/me');
+
+        return data;
+      },
+    }),
+
+  // Support tickets endpoints
+  createSupportTicket: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/support/tickets', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/support/tickets', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Login failed'));
+        }
+
+        return data;
+      },
+    };
+  },
+
+  // app ratings endpoints
+  submitAppRating: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/app-ratings', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/app-ratings', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to submit rating'));
+        }
+
+        return data;
+      },
+    };
+  },
+  getMyAppRatings: () =>
+    queryOptions({
+      queryKey: ['app-ratings'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/app-ratings/me');
 
         return data;
       },

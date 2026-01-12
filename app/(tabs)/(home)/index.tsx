@@ -11,8 +11,6 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 
 export default function Screen() {
-  const { data } = useQuery(api.getCurrentArtisanProfile());
-
   return (
     <Layout
       useBackground
@@ -32,7 +30,7 @@ export default function Screen() {
 
         <VerifyAccount />
 
-        <Offers />
+        {/* <Offers /> */}
       </View>
     </Layout>
   );

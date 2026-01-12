@@ -2,8 +2,14 @@ import { Pressable, View } from 'react-native';
 import { Text } from '../ui/text';
 import { ArrowUpRight } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
 
 export function VerifyAccount() {
+  const { data, isError } = useQuery(api.getCurrentArtisanProfile());
+
+  if (data?.isVerified || isError) return null;
+
   return (
     <View className="flex gap-1 rounded-[8px] border border-[#DFDFE1] bg-[#F4F4F5] p-4">
       <Text className="font-cabinet-bold text-[#1B1B1E]">Hi There! 👋</Text>
