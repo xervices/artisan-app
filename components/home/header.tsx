@@ -4,9 +4,13 @@ import { BadgeCheck, Bell } from 'lucide-react-native';
 import { Text } from '../ui/text';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/store/auth-store';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
 
 export function Header() {
   const { user } = useAuthStore();
+
+  const { data } = useQuery(api.getCurrentArtisanProfile());
 
   return (
     <View className="flex w-full flex-row items-end justify-between">
@@ -27,7 +31,7 @@ export function Header() {
               {user?.profile?.fullName}
             </Text>
 
-            <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />
+            {data?.isVerified && <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />}
           </View>
         </View>
       </View>

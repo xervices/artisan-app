@@ -3,13 +3,33 @@ import { Text } from '../ui/text';
 import { Switch } from '../ui/switch';
 import { useState } from 'react';
 import * as Haptics from 'expo-haptics';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { LoadingIndicator } from '../ui/loading-indicator';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 
 export function AvailabilityStatus() {
-  const [checked, setChecked] = useState(false);
+  const { data, isError, isLoading, refetch } = useQuery(api.getCurrentArtisanProfile());
+
+  const { isPending, mutate } = useMutation(api.toggleAvailability());
+
+  if (isError) return null;
 
   function onCheckedChange(checked: boolean) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setChecked(checked);
+
+    mutate(
+      {},
+      {
+        onSuccess: () => {
+          refetch();
+          showSuccessMessage('Availability changed successfully');
+        },
+        onError: (err) => {
+          showErrorMessage(err.message);
+        },
+      }
+    );
   }
 
   return (
@@ -19,7 +39,11 @@ export function AvailabilityStatus() {
         <Text className="text-sm text-[#737381]">Turn on availability to get job requests</Text>
       </View>
 
-      <Switch checked={checked} onCheckedChange={onCheckedChange} />
+      {isLoading || isPending ? (
+        <LoadingIndicator size={24} />
+      ) : (
+        <Switch checked={data?.isAvailable || false} onCheckedChange={onCheckedChange} />
+      )}
     </View>
   );
 }

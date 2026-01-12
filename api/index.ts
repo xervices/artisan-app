@@ -383,6 +383,19 @@ export const api = {
         return data;
       },
     }),
+  toggleAvailability: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/artisans/availability', 'patch'>) => {
+        const { data, error } = await apiClient.PATCH('/api/artisans/availability');
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Availability toggle request failed'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // Categories (Skills) endpoints
   getAllCategories: () =>
