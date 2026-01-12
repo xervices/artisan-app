@@ -35,6 +35,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { SheetManager } from 'react-native-actions-sheet';
 import { showErrorMessage } from '@/api/helpers';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
+import { useAuthStore } from '@/store/auth-store';
 
 /**
  * Formats file size in bytes to megabytes with 1 decimal place
@@ -83,6 +84,8 @@ const idTypes = [
 ];
 
 export default function Screen() {
+  const { user } = useAuthStore();
+
   const categories = useQuery(api.getAllCategories());
 
   const verifyNIN = useMutation(api.verifyNIN());
@@ -130,7 +133,7 @@ export default function Screen() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      if (!verifyNIN.data?.success) {
+      if (!verifyNIN.data?.success || !verifyNameMatch()) {
         showErrorMessage('Please validate your NIN before proceeding!.');
         return;
       }
@@ -205,6 +208,22 @@ export default function Screen() {
         ]);
       }
     }
+  };
+
+  const verifyNameMatch = () => {
+    const ninFirstName = verifyNIN.data?.data?.firstName;
+    const ninLastName = verifyNIN.data?.data?.lastName;
+
+    if (ninFirstName && ninLastName) {
+      if (
+        user?.profile?.fullName.includes(ninFirstName) &&
+        user?.profile.fullName.includes(ninLastName)
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   };
 
   return (
@@ -331,9 +350,19 @@ export default function Screen() {
 
                       return (
                         <View className="flex flex-row gap-2">
-                          {verifyNIN.isSuccess && verifyNIN.data.success === true && (
-                            <Text className="text-xs text-[#2BC84E]">Match with name</Text>
-                          )}
+                          {verifyNIN.isSuccess &&
+                            verifyNIN.data.success === true &&
+                            verifyNameMatch() && (
+                              <Text className="text-xs text-[#2BC84E]">Match with name</Text>
+                            )}
+
+                          {verifyNIN.isSuccess &&
+                            verifyNIN.data.success === true &&
+                            !verifyNameMatch() && (
+                              <Text className="text-xs text-[#B3031E]">
+                                Name associated with NIN does not match registered name.
+                              </Text>
+                            )}
 
                           {verifyNIN.isSuccess && verifyNIN.data.success === false && (
                             <Text className="text-xs text-[#B3031E]">{verifyNIN.data.message}</Text>
