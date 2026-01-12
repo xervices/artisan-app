@@ -34,6 +34,7 @@ import { DateInput } from '@/components/ui/date-input';
 import * as ImagePicker from 'expo-image-picker';
 import { SheetManager } from 'react-native-actions-sheet';
 import { showErrorMessage } from '@/api/helpers';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
 
 /**
  * Formats file size in bytes to megabytes with 1 decimal place
@@ -77,12 +78,14 @@ const formSchema = z.object({
 });
 
 const idTypes = [
-  { value: 'BVN', label: 'BVN' },
+  // { value: 'BVN', label: 'BVN' },
   { value: 'NIN', label: 'NIN' },
 ];
 
 export default function Screen() {
   const categories = useQuery(api.getAllCategories());
+
+  const verifyNIN = useMutation(api.verifyNIN());
 
   const { mutate, isPending } = useMutation(api.updateArtisanProfile());
 
@@ -116,7 +119,7 @@ export default function Screen() {
   const form = useForm({
     defaultValues: {
       categoryIds: '',
-      identificationType: '',
+      identificationType: 'NIN',
       identificationNumber: '',
       yearsOfExperience: '',
       professionalLicenseNumber: '',
@@ -127,6 +130,11 @@ export default function Screen() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      if (!verifyNIN.data?.success) {
+        showErrorMessage('Please validate your NIN before proceeding!.');
+        return;
+      }
+
       const data = { ...value, certifications, previousJobs };
 
       // @ts-ignore
@@ -258,7 +266,7 @@ export default function Screen() {
                 <View>
                   <Label nativeID="idType">Select Identification</Label>
 
-                  <Select>
+                  <Select defaultValue={{ label: 'NIN', value: 'NIN' }}>
                     <SelectTrigger ref={ref} className="w-full bg-white">
                       <SelectValue id="idType" placeholder="Select Identification" />
                     </SelectTrigger>
@@ -304,10 +312,50 @@ export default function Screen() {
                     placeholder="Enter your ID number."
                     keyboardType="number-pad"
                     hasError={!field.state.meta.isValid}
+                    editable={!verifyNIN.isPending}
                   />
                   {!field.state.meta.isValid ? (
                     <InputError errors={field.state.meta.errors} />
                   ) : null}
+
+                  <form.Subscribe
+                    selector={(state) => ({
+                      idNumber: state.values.identificationNumber,
+                    })}
+                    children={({ idNumber }) => {
+                      React.useEffect(() => {
+                        if (idNumber && idNumber.length === 11) {
+                          verifyNIN.mutate({ nin: idNumber });
+                        }
+                      }, [idNumber]);
+
+                      return (
+                        <View className="flex flex-row gap-2">
+                          {verifyNIN.isSuccess && verifyNIN.data.success === true && (
+                            <Text className="text-xs text-[#2BC84E]">Match with name</Text>
+                          )}
+
+                          {verifyNIN.isSuccess && verifyNIN.data.success === false && (
+                            <Text className="text-xs text-[#B3031E]">{verifyNIN.data.message}</Text>
+                          )}
+
+                          {verifyNIN.isPending && (
+                            <>
+                              <LoadingIndicator size={14} />
+
+                              <Text className="text-xs">Validating your NIN</Text>
+                            </>
+                          )}
+
+                          {verifyNIN.isError && (
+                            <Text className="text-xs text-[#B3031E]">
+                              {verifyNIN.error.message}
+                            </Text>
+                          )}
+                        </View>
+                      );
+                    }}
+                  />
                 </View>
               )}
             </form.Field>

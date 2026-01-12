@@ -337,6 +337,21 @@ export const api = {
         return data;
       },
     }),
+  verifyNIN: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/artisans/verify-nin', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/artisans/verify-nin', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'NIN Verification failed'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // Categories (Skills) endpoints
   getAllCategories: () =>

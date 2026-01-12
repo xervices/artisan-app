@@ -297,34 +297,6 @@ export default function Screen() {
             Continue
           </Button>
         </View>
-
-        <View className="flex flex-row items-center justify-center gap-1.5">
-          <Text className="text-[#737381]">Already have an account?</Text>
-
-          <Pressable onPress={() => router.navigate('/login')}>
-            <Text className="text-primary">Log in</Text>
-          </Pressable>
-        </View>
-
-        <View className="flex flex-row items-center justify-center gap-1.5">
-          <Text className="text-center text-[#737381]">
-            <Pressable>
-              <Text className="mx-1 leading-normal text-[#737381]">
-                By creating an account, you agree to our
-              </Text>
-            </Pressable>
-
-            <Pressable>
-              <Text className="leading-normal text-primary">Terms of Service</Text>
-            </Pressable>
-            <Pressable>
-              <Text className="mx-1 leading-normal text-[#737381]">and</Text>
-            </Pressable>
-            <Pressable>
-              <Text className="leading-normal text-primary">Privacy Policy</Text>
-            </Pressable>
-          </Text>
-        </View>
       </View>
     </ScrollView>
   );
