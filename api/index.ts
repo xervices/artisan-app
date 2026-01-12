@@ -365,6 +365,24 @@ export const api = {
       },
     };
   },
+  getLevels: () =>
+    queryOptions({
+      queryKey: ['levels', 'all'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/artisans/levels');
+
+        return data;
+      },
+    }),
+  getMyLevel: () =>
+    queryOptions({
+      queryKey: ['level', 'me'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/artisans/me/level');
+
+        return data;
+      },
+    }),
 
   // Categories (Skills) endpoints
   getAllCategories: () =>

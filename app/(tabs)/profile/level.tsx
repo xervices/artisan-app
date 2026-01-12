@@ -7,6 +7,9 @@ import { Image } from 'expo-image';
 import { ChevronRight } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { SheetManager } from 'react-native-actions-sheet';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { LoadingState } from '@/components/loading-state';
 
 const data = [
   {
@@ -38,6 +41,10 @@ const data = [
 ];
 
 export default function Screen() {
+  const [levels, myLevel] = useQueries({
+    queries: [api.getLevels(), api.getMyLevel()],
+  });
+
   return (
     <Layout
       useBackground
@@ -46,49 +53,53 @@ export default function Screen() {
           <AuthHeader title="Your level" />
         </View>
       }>
-      <View className="flex-1 gap-4">
-        <View className="flex flex-row items-center justify-between gap-4 rounded-[8px] bg-[#140900] p-4">
-          <View className="flex gap-4">
-            <Text className="font-cabinet-bold text-sm text-[#FFF4EA]">Sarah Rodri</Text>
+      {levels?.isLoading || myLevel?.isLoading ? (
+        <LoadingState title="Loading levels..." />
+      ) : (
+        <View className="flex-1 gap-4">
+          <View className="flex flex-row items-center justify-between gap-4 rounded-[8px] bg-[#140900] p-4">
+            <View className="flex gap-4">
+              <Text className="font-cabinet-bold text-sm text-[#FFF4EA]">Sarah Rodri</Text>
 
-            <View className="flex flex-row items-center gap-6">
-              <Text className="font-cabinet-bold text-xs text-[#FFAC70]">
-                Total Jobs : <Text className="text-xs text-[#FFAC70]">10</Text>
-              </Text>
+              <View className="flex flex-row items-center gap-6">
+                <Text className="font-cabinet-bold text-xs text-[#FFAC70]">
+                  Total Jobs : <Text className="text-xs text-[#FFAC70]">10</Text>
+                </Text>
 
-              <Text className="font-cabinet-bold text-xs text-[#FFAC70]">
-                Rating : <Text className="text-xs text-[#FFAC70]">10%</Text>
+                <Text className="font-cabinet-bold text-xs text-[#FFAC70]">
+                  Rating : <Text className="text-xs text-[#FFAC70]">10%</Text>
+                </Text>
+              </View>
+            </View>
+
+            <Image
+              source={require('@/assets/icons/level-1.svg')}
+              style={{ width: 56, height: 56 }}
+              contentFit="contain"
+            />
+          </View>
+
+          <View className="flex flex-row items-center justify-between rounded-[8px] bg-[#FFF4EA] p-4">
+            <View className="flex">
+              <Text className="font-cabinet-bold text-sm text-[#3E1A00]">Level limit</Text>
+
+              <Text className="text-xs text-[#737381]">
+                The higher your level the more visible you are to users.
               </Text>
             </View>
           </View>
 
-          <Image
-            source={require('@/assets/icons/level-1.svg')}
-            style={{ width: 56, height: 56 }}
-            contentFit="contain"
-          />
+          {data.map((i) => (
+            <View
+              key={i.id}
+              className="flex flex-row items-center justify-between gap-2 rounded-[8px] bg-[#F4F4F5] p-4">
+              <Text className="flex-1 text-sm text-[#737381]">{i.title}</Text>
+
+              <Image source={i.badge} style={{ width: 32, height: 32 }} contentFit="contain" />
+            </View>
+          ))}
         </View>
-
-        <View className="flex flex-row items-center justify-between rounded-[8px] bg-[#FFF4EA] p-4">
-          <View className="flex">
-            <Text className="font-cabinet-bold text-sm text-[#3E1A00]">Level limit</Text>
-
-            <Text className="text-xs text-[#737381]">
-              The higher your level the more visible you are to users.
-            </Text>
-          </View>
-        </View>
-
-        {data.map((i) => (
-          <View
-            key={i.id}
-            className="flex flex-row items-center justify-between gap-2 rounded-[8px] bg-[#F4F4F5] p-4">
-            <Text className="flex-1 text-sm text-[#737381]">{i.title}</Text>
-
-            <Image source={i.badge} style={{ width: 32, height: 32 }} contentFit="contain" />
-          </View>
-        ))}
-      </View>
+      )}
     </Layout>
   );
   ``;
