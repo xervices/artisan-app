@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { useAuthStore } from '@/store/auth-store';
 import { showErrorMessage } from './helpers';
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://server-api-bibv.onrender.com';
+export const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://server-api-bibv.onrender.com';
 
 // Auth middleware that adds the access token to requests
 const authMiddleware: Middleware = {

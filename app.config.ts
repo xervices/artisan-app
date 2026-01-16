@@ -62,6 +62,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       bundleIdentifier: bundleIdentifier,
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
+        UIBackgroundModes: ['location'],
       },
     },
     experiments: {
@@ -80,6 +81,13 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           apiKey: googleMapsApiKey,
         },
       },
+      permissions: [
+        'ACCESS_COARSE_LOCATION',
+        'ACCESS_FINE_LOCATION',
+        'ACCESS_BACKGROUND_LOCATION',
+        'FOREGROUND_SERVICE',
+        'FOREGROUND_SERVICE_LOCATION',
+      ],
     },
     web: {
       bundler: 'metro',
@@ -100,6 +108,16 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             './assets/fonts/CabinetGrotesk-Extrabold.otf',
             './assets/fonts/CabinetGrotesk-Black.otf',
           ],
+        },
+      ],
+      [
+        'expo-location',
+        {
+          locationAlwaysAndWhenInUsePermission: `Allow ${name} to use your location to show nearby jobs and update your position.`,
+          locationAlwaysPermission: `Allow ${name} to use your location even when the app is in the background to keep your location updated.`,
+          locationWhenInUsePermission: `Allow ${name} to use your location to show nearby jobs.`,
+          isIosBackgroundLocationEnabled: true,
+          isAndroidBackgroundLocationEnabled: true,
         },
       ],
       'expo-router',

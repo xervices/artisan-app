@@ -4,44 +4,34 @@ import { OfferCard } from '@/components/home/offers';
 import { Layout } from '@/components/layout';
 import { LoadingState } from '@/components/loading-state';
 import { useSocketIO } from '@/hooks/use-socket-io';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { View } from 'react-native';
 
 export default function Screen() {
-  const { joinRoom, isJoiningRoom, isConnected, on } = useSocketIO({ autoConnect: true });
-
-  const artisanProfile = useQuery(api.getCurrentArtisanProfile());
-
-  useEffect(() => {
-    const artisanCategories = artisanProfile?.data?.categories;
-
-    if (isConnected && artisanCategories && artisanCategories?.length > 1) {
-      artisanCategories?.map((cat) =>
-        on(`service_request:${cat.id}`, (data) => {
-          console.log(data);
-        })
-      );
-    }
-  }, [isConnected, artisanProfile]);
+  const [artisanProfile, artisanOffers] = useQueries({
+    queries: [api.getCurrentArtisanProfile(), api.getArtisanOffers()],
+  });
 
   return (
     <Layout
       useBackground
-      isRefreshing={artisanProfile?.isRefetching}
-      onRefresh={artisanProfile?.refetch}
+      isRefreshing={artisanProfile?.isRefetching || artisanOffers?.isRefetching}
+      onRefresh={() => {
+        artisanProfile?.refetch();
+        artisanOffers?.refetch();
+      }}
       stickyHeader={
         <View className="pb-4">
           <AuthHeader title="Requests" />
         </View>
       }>
-      {artisanProfile?.isLoading ? (
+      {artisanProfile?.isLoading || artisanOffers?.isLoading ? (
         <LoadingState title="Loading data..." />
       ) : (
         <View className="flex-1 gap-6">
-          {new Array(6).fill(0).map((_, index) => (
-            <OfferCard key={index} />
-          ))}
+          {artisanOffers?.data &&
+            artisanOffers?.data.map((offer) => <OfferCard key={offer.id} data={offer} />)}
         </View>
       )}
     </Layout>

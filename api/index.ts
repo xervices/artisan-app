@@ -254,6 +254,21 @@ export const api = {
       },
     };
   },
+  updateLocation: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/users/location', 'patch'>) => {
+        const { data, error } = await apiClient.PATCH('/api/users/location', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Location update failed'));
+        }
+
+        return data;
+      },
+    };
+  },
   deleteAccount: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/users/me', 'delete'>) => {
@@ -410,6 +425,17 @@ export const api = {
       queryKey: ['categories'],
       queryFn: async () => {
         const { data } = await apiClient.GET('/api/categories');
+
+        return data;
+      },
+    }),
+
+  // offers endpoints
+  getArtisanOffers: () =>
+    queryOptions({
+      queryKey: ['artisan', 'offers'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/offers/my-offers');
 
         return data;
       },

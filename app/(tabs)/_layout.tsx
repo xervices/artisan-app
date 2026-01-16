@@ -1,10 +1,26 @@
 import { Text } from '@/components/ui/text';
+import { useBackgroundLocation } from '@/hooks/use-background-location';
+import { useAuthStore } from '@/store/auth-store';
 import { Image } from 'expo-image';
 import { Tabs } from 'expo-router';
-import { Key } from 'react';
+import { Key, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 
 export default function TabsLayout() {
+  const { isLoggedIn } = useAuthStore();
+  const { startTracking, stopTracking } = useBackgroundLocation();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      // Auto-start tracking for artisans
+      startTracking();
+    }
+
+    return () => {
+      stopTracking();
+    };
+  }, [isLoggedIn]);
+
   return (
     <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <MyTabBar {...props} />}>
       <Tabs.Screen
