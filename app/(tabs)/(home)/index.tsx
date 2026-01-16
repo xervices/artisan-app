@@ -30,7 +30,7 @@ export default function Screen() {
 
         <VerifyAccount />
 
-        {/* <Offers /> */}
+        <Offers />
       </View>
     </Layout>
   );

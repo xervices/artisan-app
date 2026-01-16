@@ -1,9 +1,10 @@
+import { api } from '@/api';
 import { AuthHeader } from '@/components/auth-header';
 import RequestUserCard from '@/components/home/request-user-card';
 import { Layout } from '@/components/layout';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import { useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { CircleAlert, Play } from 'lucide-react-native';
 import { Pressable, View } from 'react-native';

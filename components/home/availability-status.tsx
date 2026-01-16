@@ -19,7 +19,7 @@ export function AvailabilityStatus() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     mutate(
-      {},
+      { isAvailable: checked },
       {
         onSuccess: () => {
           refetch();

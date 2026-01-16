@@ -53,7 +53,7 @@ export function formatSizeToMB(bytes: number | undefined | null): string {
 
 const formSchema = z.object({
   // Required: Category IDs for skills/services
-  categoryIds: z.string().min(1, 'Please select a category'),
+  categoryIds: z.array(z.string()).min(1, 'Select at least 1 category'),
 
   // Required: Identification type
   identificationType: z.string().min(1, 'Identification type is required.'),
@@ -121,7 +121,7 @@ export default function Screen() {
 
   const form = useForm({
     defaultValues: {
-      categoryIds: '',
+      categoryIds: [''],
       identificationType: 'NIN',
       identificationNumber: '',
       yearsOfExperience: '',
@@ -259,7 +259,9 @@ export default function Screen() {
                             {categories.data?.map((cat) => (
                               <SelectItem
                                 onPress={() => {
-                                  field.handleChange(cat.id);
+                                  if (!field.state.value.includes(cat.id)) {
+                                    field.handleChange((prev) => [...prev, cat.id]);
+                                  }
                                 }}
                                 key={cat.id}
                                 label={cat.name}
@@ -275,6 +277,28 @@ export default function Screen() {
                     {!field.state.meta.isValid ? (
                       <InputError errors={field.state.meta.errors} />
                     ) : null}
+
+                    <View className="mt-1 flex flex-row flex-wrap gap-2">
+                      {field.state.value?.map(
+                        (item) =>
+                          item && (
+                            <View
+                              key={item}
+                              className="flex flex-row items-center gap-2 rounded-sm border px-2 py-1">
+                              <Text className="text-xs leading-none">
+                                {categories.data?.find((i) => i.id === item)?.name}
+                              </Text>
+
+                              <Pressable
+                                onPress={() => {
+                                  field.handleChange((prev) => prev.filter((i) => i !== item));
+                                }}>
+                                <X size={16} color={'#B3031E'} />
+                              </Pressable>
+                            </View>
+                          )
+                      )}
+                    </View>
                   </View>
                 )}
               </form.Field>

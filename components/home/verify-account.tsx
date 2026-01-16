@@ -6,9 +6,9 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 
 export function VerifyAccount() {
-  const { data, isError } = useQuery(api.getCurrentArtisanProfile());
+  const { data, isLoading } = useQuery(api.getCurrentArtisanProfile());
 
-  if (data?.isVerified || isError) return null;
+  if (data?.verificationStatus !== 'rejected' || isLoading) return null;
 
   return (
     <View className="flex gap-1 rounded-[8px] border border-[#DFDFE1] bg-[#F4F4F5] p-4">

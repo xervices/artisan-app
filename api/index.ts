@@ -290,7 +290,12 @@ export const api = {
 
           if (value !== undefined && value !== null && value !== '') {
             if (field === 'categoryIds') {
-              formData.append(field, value);
+              // @ts-ignore
+              value?.forEach((category) => {
+                if (category) {
+                  formData.append(field, String(category));
+                }
+              });
             } else {
               formData.append(field, String(value));
             }
@@ -386,7 +391,9 @@ export const api = {
   toggleAvailability: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/artisans/availability', 'patch'>) => {
-        const { data, error } = await apiClient.PATCH('/api/artisans/availability');
+        const { data, error } = await apiClient.PATCH('/api/artisans/availability', {
+          body: credentials,
+        });
 
         if (error) {
           throw new Error(getErrorMessage(error, 'Availability toggle request failed'));
@@ -479,4 +486,19 @@ export const api = {
         return data;
       },
     }),
+
+  // security endpoints
+  checkPinStatus: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/security/check-pin-status', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/security/check-pin-status');
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to check pin status'));
+        }
+
+        return data;
+      },
+    };
+  },
 };

@@ -10,16 +10,27 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { useTimer } from '@/hooks/use-timer';
 import { OtpInput } from 'react-native-otp-entry';
 import { Button } from '@/components/ui/button';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/api';
+import { LoadingState } from '@/components/loading-state';
 
 export default function Screen() {
+  const { mutate, isPending, data } = useMutation(api.checkPinStatus());
+
   const [timer, setTimer] = React.useState(60);
   const { minute, seconds } = useTimer({ sec: timer });
+
+  React.useEffect(() => {
+    mutate({});
+  }, []);
 
   const handleOnResendOTP = () => {
     if (Number(seconds) > 0) return;
 
     setTimer((prev) => prev + 30);
   };
+
+  console.log(data);
 
   return (
     <Layout
@@ -29,45 +40,49 @@ export default function Screen() {
           <AuthHeader title="PIN" />
         </View>
       }>
-      <View className="flex-1 gap-6">
-        <Text className="text-center text-sm text-[#737381]">Change PIN</Text>
+      {isPending ? (
+        <LoadingState title="Getting things ready..." />
+      ) : (
+        <View className="flex-1 gap-6">
+          <Text className="text-center text-sm text-[#737381]">Change PIN</Text>
 
-        <View className="mt-16">
-          <OtpInput
-            numberOfDigits={4}
-            theme={{
-              pinCodeContainerStyle: {
-                width: 60,
-                aspectRatio: 1 / 1,
-                borderRadius: 8,
-                borderWidth: 1,
-                borderColor: '#C8C8CF',
-              },
-              focusStickStyle: {
-                backgroundColor: '#FE6A00',
-              },
-              focusedPinCodeContainerStyle: {
-                borderColor: '#FE6A00',
-              },
-              pinCodeTextStyle: {
-                fontSize: 24,
-                color: '#1B1B1E',
-                fontFamily: 'CabinetGrotesk-Bold',
-              },
-            }}
-          />
+          <View className="mt-16">
+            <OtpInput
+              numberOfDigits={4}
+              theme={{
+                pinCodeContainerStyle: {
+                  width: 60,
+                  aspectRatio: 1 / 1,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  borderColor: '#C8C8CF',
+                },
+                focusStickStyle: {
+                  backgroundColor: '#FE6A00',
+                },
+                focusedPinCodeContainerStyle: {
+                  borderColor: '#FE6A00',
+                },
+                pinCodeTextStyle: {
+                  fontSize: 24,
+                  color: '#1B1B1E',
+                  fontFamily: 'CabinetGrotesk-Bold',
+                },
+              }}
+            />
+          </View>
+
+          <Text className="text-center text-sm text-[#737381]">
+            A verification code will be sent to{' '}
+            <Text className="text-sm text-[#FE6A00]">sarahrodri@gmail.com</Text> and{' '}
+            <Text className="text-sm text-[#FE6A00]">+234813456789</Text>.
+          </Text>
+
+          <Button onPress={() => router.navigate('/profile/verify-pin')} className="mt-auto">
+            Continue
+          </Button>
         </View>
-
-        <Text className="text-center text-sm text-[#737381]">
-          A verification code will be sent to{' '}
-          <Text className="text-sm text-[#FE6A00]">sarahrodri@gmail.com</Text> and{' '}
-          <Text className="text-sm text-[#FE6A00]">+234813456789</Text>.
-        </Text>
-
-        <Button onPress={() => router.navigate('/profile/verify-pin')} className="mt-auto">
-          Continue
-        </Button>
-      </View>
+      )}
     </Layout>
   );
 }
