@@ -441,6 +441,17 @@ export const api = {
       },
     }),
 
+  // jobs endpoints
+  getUserJobs: () =>
+    queryOptions({
+      queryKey: ['user', 'jobs'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/jobs');
+
+        return data;
+      },
+    }),
+
   // promotions, referrals & discounts endpoints
   getMyReferralInfo: () =>
     queryOptions({
