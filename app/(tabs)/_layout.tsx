@@ -79,7 +79,7 @@ function MyTabBar({ state, descriptors, navigation }: MyTabBarProps) {
 
   return (
     <View className="bg-white">
-      <View className="mb-5 flex h-20 w-full flex-row items-center justify-between gap-6 bg-white px-[28px]">
+      <View className="mb-5 flex h-20 w-full flex-row items-center justify-center gap-[10%] bg-white">
         {state.routes.map(
           (route: { key: string | number; name: any }, index: Key | null | undefined) => {
             const { options } = descriptors[route.key];

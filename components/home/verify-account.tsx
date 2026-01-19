@@ -8,14 +8,14 @@ import { api } from '@/api';
 export function VerifyAccount() {
   const { data, isLoading } = useQuery(api.getCurrentArtisanProfile());
 
-  if (data?.verificationStatus !== 'rejected' || isLoading) return null;
+  // if (data?.verificationStatus !== 'rejected' || isLoading) return null;
 
   return (
     <View className="flex gap-1 rounded-[8px] border border-[#DFDFE1] bg-[#F4F4F5] p-4">
       <Text className="font-cabinet-bold text-[#1B1B1E]">Hi There! 👋</Text>
 
-      <View className="flex flex-row items-center justify-between">
-        <Text className="text-sm text-[#737381]">You need to verify your account.</Text>
+      <View className="flex flex-row items-center justify-between gap-2">
+        <Text className="flex-1 text-sm text-[#737381]">You need to verify your account.</Text>
 
         <Pressable
           onPress={() => router.navigate('/verify/step-2')}

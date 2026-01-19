@@ -100,8 +100,8 @@ export default function Screen() {
                           Leaky kitchen faucet needs immediate repair. Water dripping constantly.
                         </Text>
 
-                        <View className="flex flex-row items-center justify-between">
-                          <View className="flex flex-row items-center gap-1">
+                        <View className="flex flex-row items-center justify-between gap-6">
+                          <View className="flex flex-1 flex-row items-center gap-1">
                             <Avatar alt="User's Avatar" className="h-6 w-6">
                               <AvatarImage
                                 source={{ uri: 'https://github.com/mrzachnugent.png' }}
@@ -212,8 +212,8 @@ export default function Screen() {
                           Leaky kitchen faucet needs immediate repair. Water dripping constantly.
                         </Text>
 
-                        <View className="flex flex-row items-center justify-between">
-                          <View className="flex flex-row items-center gap-1">
+                        <View className="flex flex-row items-center justify-between gap-6">
+                          <View className="flex flex-1 flex-row items-center gap-1">
                             <Avatar alt="User's Avatar" className="h-6 w-6">
                               <AvatarImage
                                 source={{ uri: 'https://github.com/mrzachnugent.png' }}

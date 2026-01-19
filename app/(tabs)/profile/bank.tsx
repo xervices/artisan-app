@@ -38,8 +38,8 @@ export default function Screen() {
               shadowRadius: 4,
               elevation: 2,
             }}
-            className="flex flex-row items-center justify-between gap-4 rounded-[8px] bg-white px-2 py-4">
-            <View className="flex flex-row items-center gap-4">
+            className="flex flex-row items-center justify-between gap-8 rounded-[8px] bg-white px-2 py-4">
+            <View className="flex flex-1 flex-row items-center gap-4">
               <View className="flex h-5 w-5 items-center justify-center rounded-full border-2 border-[#FE6A00]">
                 <View className="flex flex-row items-center">
                   <View className="h-3 w-3 rounded-full bg-[#FE6A00]" />
