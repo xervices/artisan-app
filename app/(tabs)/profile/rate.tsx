@@ -16,6 +16,7 @@ import * as Device from 'expo-device';
 import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 import { router } from 'expo-router';
 import { InputError } from '@/components/ui/input-error';
+import { LoadingState } from '@/components/loading-state';
 
 const formSchema = z.object({
   rating: z.number().min(1, 'Rating is required.'),
@@ -23,7 +24,7 @@ const formSchema = z.object({
 });
 
 export default function Screen() {
-  const { data, isLoading, refetch } = useQuery(api.getMyAppRatings());
+  const { data, isLoading, refetch, isRefetching } = useQuery(api.getMyAppRatings());
   const { mutate, isPending } = useMutation(api.submitAppRating());
 
   const form = useForm({
@@ -65,68 +66,78 @@ export default function Screen() {
   return (
     <Layout
       useBackground
+      isRefreshing={isRefetching}
+      onRefresh={refetch}
       stickyHeader={
         <View className="pb-4">
           <AuthHeader title="Rate Xervices" />
         </View>
       }>
-      <View className="flex-1 gap-6">
-        <View className="flex gap-2">
-          <Text className="text-center font-cabinet-bold text-[#737381]">Rate us</Text>
+      {isLoading ? (
+        <LoadingState title="Setting things up..." />
+      ) : (
+        <View className="flex-1 gap-6">
+          <View className="flex gap-2">
+            <Text className="text-center font-cabinet-bold text-[#737381]">Rate us</Text>
 
-          <Text className="text-center text-sm text-[#737381]">We would love to hear from you</Text>
-        </View>
+            <Text className="text-center text-sm text-[#737381]">
+              We would love to hear from you
+            </Text>
+          </View>
 
-        <View className="flex gap-10">
-          <form.Field name="rating">
-            {(field) => (
-              <View>
-                <View className="flex flex-row items-center justify-center gap-4">
-                  {new Array(5).fill(0).map((_, index) => (
-                    <Pressable onPress={() => field.handleChange(index + 1)} key={index}>
-                      <Star
-                        fill={index >= field.state.value ? '#DFDFE1' : '#FF9445'}
-                        size={28}
-                        stroke={index >= field.state.value ? '#DFDFE1' : '#FF9445'}
-                      />
-                    </Pressable>
-                  ))}
+          <View className="flex gap-10">
+            <form.Field name="rating">
+              {(field) => (
+                <View>
+                  <View className="flex flex-row items-center justify-center gap-4">
+                    {new Array(5).fill(0).map((_, index) => (
+                      <Pressable onPress={() => field.handleChange(index + 1)} key={index}>
+                        <Star
+                          fill={index >= field.state.value ? '#DFDFE1' : '#FF9445'}
+                          size={28}
+                          stroke={index >= field.state.value ? '#DFDFE1' : '#FF9445'}
+                        />
+                      </Pressable>
+                    ))}
+                  </View>
+                  <View className="flex flex-row items-center justify-center">
+                    {!field.state.meta.isValid ? (
+                      <InputError errors={field.state.meta.errors} />
+                    ) : null}
+                  </View>
                 </View>
-                <View className="flex flex-row items-center justify-center">
+              )}
+            </form.Field>
+
+            <form.Field name="feedback">
+              {(field) => (
+                <View>
+                  <Label nativeID="comment">Add a comment</Label>
+                  <Textarea
+                    className="bg-white"
+                    id="comment"
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    placeholder="Enter your feedback"
+                    hasError={!field.state.meta.isValid}
+                  />
                   {!field.state.meta.isValid ? (
                     <InputError errors={field.state.meta.errors} />
                   ) : null}
                 </View>
-              </View>
-            )}
-          </form.Field>
+              )}
+            </form.Field>
+          </View>
 
-          <form.Field name="feedback">
-            {(field) => (
-              <View>
-                <Label nativeID="comment">Add a comment</Label>
-                <Textarea
-                  className="bg-white"
-                  id="comment"
-                  value={field.state.value}
-                  onChangeText={field.handleChange}
-                  placeholder="Enter your feedback"
-                  hasError={!field.state.meta.isValid}
-                />
-                {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
-              </View>
-            )}
-          </form.Field>
+          <Button
+            onPress={form.handleSubmit}
+            isLoading={isPending}
+            disabled={isPending}
+            className="mt-auto">
+            Submit Review
+          </Button>
         </View>
-
-        <Button
-          onPress={form.handleSubmit}
-          isLoading={isPending}
-          disabled={isPending}
-          className="mt-auto">
-          Submit Review
-        </Button>
-      </View>
+      )}
     </Layout>
   );
 }

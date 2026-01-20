@@ -8,7 +8,7 @@ import { api } from '@/api';
 export function VerifyAccount() {
   const { data, isLoading } = useQuery(api.getCurrentArtisanProfile());
 
-  // if (data?.verificationStatus !== 'rejected' || isLoading) return null;
+  if (data?.verificationStatus !== 'rejected' || isLoading) return null;
 
   return (
     <View className="flex gap-1 rounded-[8px] border border-[#DFDFE1] bg-[#F4F4F5] p-4">

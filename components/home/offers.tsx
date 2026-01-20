@@ -8,11 +8,14 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { paths } from '@/api/schema';
 import { formatRelativeTime } from '@/lib/utils';
+import { ServiceRequestData } from '@/hooks/types';
 
-export function Offers() {
-  const { data, isLoading } = useQuery(api.getArtisanOffers());
+interface OffersType {
+  data: ServiceRequestData[];
+}
 
-  if (!data || data.length === 0 || isLoading) return null;
+export function Offers({ data }: OffersType) {
+  if (!data || data.length === 0) return null;
 
   return (
     <View className="flex gap-2">
@@ -39,7 +42,7 @@ export type OfferType =
   paths['/api/offers/my-offers']['get']['responses'][200]['content']['application/json'][0];
 
 interface OfferCardType {
-  data: OfferType;
+  data: ServiceRequestData;
 }
 
 export function OfferCard({ data }: OfferCardType) {
@@ -55,25 +58,19 @@ export function OfferCard({ data }: OfferCardType) {
       className="flex gap-4 rounded-[8px] bg-white p-4">
       <View className="flex flex-row items-center justify-between">
         <View className="flex-1">
-          <Text className="font-cabinet-bold text-[#1B1B1E]">
-            {data.serviceRequest?.category.name}
-          </Text>
+          <Text className="font-cabinet-bold text-[#1B1B1E]">{data.categoryId}</Text>
           <Text className="text-xs text-[#FE6A00]">{formatRelativeTime(data.createdAt)}</Text>
         </View>
 
         <View className="flex flex-1 flex-row items-center justify-end gap-1">
           <Avatar alt="User's Avatar" className="h-6 w-6">
-            <AvatarImage source={{ uri: data.serviceRequest?.user.profile?.avatarUrl }} />
+            <AvatarImage source={{ uri: '' }} />
             <AvatarFallback className="bg-primary">
-              <Text className="font-cabinet-bold uppercase leading-none">
-                {data.serviceRequest?.user.profile?.fullName.substring(0, 2)}
-              </Text>
+              <Text className="font-cabinet-bold uppercase leading-none">JH</Text>
             </AvatarFallback>
           </Avatar>
 
-          <Text className="font-cabinet-bold text-sm text-[#737381]">
-            {data.serviceRequest?.user.profile?.fullName}
-          </Text>
+          <Text className="font-cabinet-bold text-sm text-[#737381]">John Doe</Text>
         </View>
       </View>
 
@@ -82,7 +79,7 @@ export function OfferCard({ data }: OfferCardType) {
           router.navigate({
             pathname: '/request',
             params: {
-              id: '1234',
+              id: data.id,
             },
           })
         }>

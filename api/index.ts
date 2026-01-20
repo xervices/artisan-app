@@ -430,6 +430,23 @@ export const api = {
       },
     }),
 
+  // service endpoints
+  getServiceRequest: (id: string) =>
+    queryOptions({
+      queryKey: ['service-request', id],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/service-requests/{id}', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+
   // offers endpoints
   getArtisanOffers: () =>
     queryOptions({
@@ -440,6 +457,91 @@ export const api = {
         return data;
       },
     }),
+  getOffersHistory: (id: string) =>
+    queryOptions({
+      queryKey: ['artisan', 'offers', 'history', id],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/offers/{id}/history', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+  getServiceOffers: (id: string) =>
+    queryOptions({
+      queryKey: ['artisan', 'offers', 'service', id],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/offers/service-request/{id}', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+  createNewOffer: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/offers', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/offers', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'offer failed to send.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  createCounterOffer: (id: string) => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/offers/{id}/counter', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/offers/{id}/counter', {
+          body: credentials,
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'counter offer failed to send.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  respondToOffer: (id: string) => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/offers/{id}/respond', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/offers/{id}/respond', {
+          body: credentials,
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'response to offer failed to send.'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // jobs endpoints
   getUserJobs: () =>
@@ -532,6 +634,82 @@ export const api = {
 
         if (error) {
           throw new Error(getErrorMessage(error, 'Failed to check pin status'));
+        }
+
+        return data;
+      },
+    };
+  },
+  updatePin: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/security/pin', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/security/pin', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to update pin.'));
+        }
+
+        return data;
+      },
+    };
+  },
+
+  // disputes endpoints
+  createDispute: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/disputes', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/disputes', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to create dispute.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  getMyDisputes: () =>
+    queryOptions({
+      queryKey: ['disputes'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/disputes');
+
+        return data;
+      },
+    }),
+  getDisputeDetail: (id: string) =>
+    queryOptions({
+      queryKey: ['disputes', id],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/disputes/{id}', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+  addDisputeEvidence: (id: string) => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/disputes/{id}/evidence', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/disputes/{id}/evidence', {
+          body: credentials,
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to add dispute evidence.'));
         }
 
         return data;

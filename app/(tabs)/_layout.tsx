@@ -10,16 +10,16 @@ export default function TabsLayout() {
   const { isLoggedIn } = useAuthStore();
   const { startTracking, stopTracking } = useBackgroundLocation();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      // Auto-start tracking for artisans
-      startTracking();
-    }
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     // Auto-start tracking for artisans
+  //     startTracking();
+  //   }
 
-    return () => {
-      stopTracking();
-    };
-  }, [isLoggedIn]);
+  //   return () => {
+  //     stopTracking();
+  //   };
+  // }, [isLoggedIn]);
 
   return (
     <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <MyTabBar {...props} />}>

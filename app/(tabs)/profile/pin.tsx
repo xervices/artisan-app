@@ -13,24 +13,20 @@ import { Button } from '@/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingState } from '@/components/loading-state';
+import { useAuthStore } from '@/store/auth-store';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 
 export default function Screen() {
+  const { user } = useAuthStore();
   const { mutate, isPending, data } = useMutation(api.checkPinStatus());
 
-  const [timer, setTimer] = React.useState(60);
-  const { minute, seconds } = useTimer({ sec: timer });
+  const updatePin = useMutation(api.updatePin());
+
+  const [pin, setPin] = React.useState('');
 
   React.useEffect(() => {
     mutate({});
   }, []);
-
-  const handleOnResendOTP = () => {
-    if (Number(seconds) > 0) return;
-
-    setTimer((prev) => prev + 30);
-  };
-
-  console.log(data);
 
   return (
     <Layout
@@ -44,11 +40,14 @@ export default function Screen() {
         <LoadingState title="Getting things ready..." />
       ) : (
         <View className="flex-1 gap-6">
-          <Text className="text-center text-sm text-[#737381]">Change PIN</Text>
+          <Text className="text-center text-sm text-[#737381]">
+            {data?.hasPin ? 'Change' : 'Create'} PIN
+          </Text>
 
           <View className="mt-16">
             <OtpInput
               numberOfDigits={4}
+              onTextChange={setPin}
               theme={{
                 pinCodeContainerStyle: {
                   width: 60,
@@ -69,16 +68,41 @@ export default function Screen() {
                   fontFamily: 'CabinetGrotesk-Bold',
                 },
               }}
+              disabled={updatePin?.isPending}
             />
           </View>
 
           <Text className="text-center text-sm text-[#737381]">
             A verification code will be sent to{' '}
-            <Text className="text-sm text-[#FE6A00]">sarahrodri@gmail.com</Text> and{' '}
-            <Text className="text-sm text-[#FE6A00]">+234813456789</Text>.
+            <Text className="text-sm text-[#FE6A00]">{user?.email}</Text> and{' '}
+            {user?.phoneVerified && (
+              <Text className="text-sm text-[#FE6A00]">{user?.phoneNumber}</Text>
+            )}
+            .
           </Text>
 
-          <Button onPress={() => router.navigate('/profile/verify-pin')} className="mt-auto">
+          <Button
+            isLoading={updatePin?.isPending}
+            disabled={updatePin?.isPending}
+            onPress={() => {
+              updatePin?.mutate(
+                {
+                  pin,
+                },
+                {
+                  onSuccess: (res) => {
+                    console.log(res);
+                    showSuccessMessage('Pin changed successfully!');
+                    router.back();
+                  },
+                  onError: (err) => {
+                    showErrorMessage(err.message);
+                  },
+                }
+              );
+            }}
+            // onPress={() => router.navigate('/profile/verify-pin')}
+            className="mt-auto">
             Continue
           </Button>
         </View>
