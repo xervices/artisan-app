@@ -35,7 +35,16 @@ declare module 'react-native-actions-sheet' {
       };
     }>;
     'ongoing-job-sheet': SheetDefinition;
-    'counter-offer-sheet': SheetDefinition;
+    'counter-offer-sheet': SheetDefinition<{
+      payload: {
+        onConfirm?: (amount: number) => void;
+        type: 'offer' | 'counter';
+        name?: string;
+        profileImage?: string;
+        amount?: number;
+        counterAmount?: number;
+      };
+    }>;
     'withdraw-sheet': SheetDefinition;
     'pin-sheet': SheetDefinition;
     'filter-sheet': SheetDefinition;

@@ -179,6 +179,11 @@ export const api = {
       mutationFn: async (credentials: RequestBody<'/api/auth/logout', 'post'>) => {
         const { data, error } = await apiClient.POST('/api/auth/logout', {
           body: credentials,
+          params: {
+            header: {
+              authorization: '',
+            },
+          },
         });
 
         if (error) {
@@ -228,12 +233,15 @@ export const api = {
         // Handle avatar file upload
         // @ts-ignore
         if (credentials.avatarUrl && credentials.avatarUrl !== user?.profile?.avatarUrl) {
+          // @ts-ignore
+          const extension = credentials.avatarMimeType === 'image/png' ? 'png' : 'jpg';
+
           const file = {
             // @ts-ignore
             uri: normalizePath(credentials.avatarUrl),
             // @ts-ignore - avatarMimeType sent from form but not specified in api
             type: credentials.avatarMimeType || 'image/jpeg',
-            name: `avatar_${Date.now()}}`,
+            name: `avatar_${Date.now()}}.${extension}`,
           };
 
           // @ts-ignore - FormData typing issue in React Native
@@ -284,7 +292,7 @@ export const api = {
   },
 
   // Artisan endpoints
-  updateArtisanProfile: () => {
+  onboardArtisan: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/artisans/onboard', 'post'>) => {
         const formData = new FormData();
@@ -346,6 +354,81 @@ export const api = {
         }
 
         const { data, error } = await apiClient.POST('/api/artisans/onboard', {
+          // @ts-ignore - FormData not properly typed in openapi-fetch
+          body: formData,
+          bodySerializer: () => formData, // Prevent body serialization
+        });
+
+        console.log(error);
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Professional profile update failed'));
+        }
+
+        return data;
+      },
+    };
+  },
+  updateArtisan: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/artisans/me', 'patch'>) => {
+        const formData = new FormData();
+
+        const fields = [
+          'categoryIds',
+          'yearsOfExperience',
+          'professionalLicenseNumber',
+          'licenseIssueState',
+          'licenseIssueDate',
+        ] as const;
+
+        // Append only non-empty fields
+        fields.forEach((field) => {
+          const value = credentials[field];
+
+          if (value !== undefined && value !== null && value !== '') {
+            if (field === 'categoryIds') {
+              // @ts-ignore
+              value?.forEach((category) => {
+                if (category) {
+                  formData.append(field, String(category));
+                }
+              });
+            } else {
+              formData.append(field, String(value));
+            }
+          }
+        });
+
+        // @ts-ignore
+        if (credentials.certifications && credentials.certifications.length > 0) {
+          // @ts-ignore
+          credentials.certifications.forEach((cert, index) => {
+            const file = {
+              uri: normalizePath(cert.uri),
+              type: cert.mimeType || 'application/pdf',
+              name: cert.name || `certification_${index}_${Date.now()}`,
+            };
+            // @ts-ignore - FormData typing issue in React Native
+            formData.append('certifications', file);
+          });
+        }
+
+        // @ts-ignore
+        if (credentials.previousJobs && credentials.previousJobs.length > 0) {
+          // @ts-ignore
+          credentials.previousJobs.forEach((cert, index) => {
+            const file = {
+              uri: normalizePath(cert.uri),
+              type: cert.mimeType || 'application/pdf',
+              name: cert.name || `certification_${index}_${Date.now()}`,
+            };
+            // @ts-ignore - FormData typing issue in React Native
+            formData.append('previousJobs', file);
+          });
+        }
+
+        const { data, error } = await apiClient.PATCH('/api/artisans/me', {
           // @ts-ignore - FormData not properly typed in openapi-fetch
           body: formData,
           bodySerializer: () => formData, // Prevent body serialization

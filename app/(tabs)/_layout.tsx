@@ -1,5 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { useBackgroundLocation } from '@/hooks/use-background-location';
+import { MarketplaceProvider } from '@/providers/use-marketplace-context';
 import { useAuthStore } from '@/store/auth-store';
 import { Image } from 'expo-image';
 import { Tabs } from 'expo-router';
@@ -9,6 +10,7 @@ import { Pressable, View } from 'react-native';
 export default function TabsLayout() {
   const { isLoggedIn } = useAuthStore();
   const { startTracking, stopTracking } = useBackgroundLocation();
+  const { user } = useAuthStore();
 
   // useEffect(() => {
   //   if (isLoggedIn) {
@@ -22,32 +24,34 @@ export default function TabsLayout() {
   // }, [isLoggedIn]);
 
   return (
-    <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <MyTabBar {...props} />}>
-      <Tabs.Screen
-        name="(home)"
-        options={{
-          title: 'Home',
-        }}
-      />
-      <Tabs.Screen
-        name="jobs"
-        options={{
-          title: 'My Jobs',
-        }}
-      />
-      <Tabs.Screen
-        name="earnings"
-        options={{
-          title: 'Earnings',
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-        }}
-      />
-    </Tabs>
+    <MarketplaceProvider artisanId={user?.id}>
+      <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <MyTabBar {...props} />}>
+        <Tabs.Screen
+          name="(home)"
+          options={{
+            title: 'Home',
+          }}
+        />
+        <Tabs.Screen
+          name="jobs"
+          options={{
+            title: 'My Jobs',
+          }}
+        />
+        <Tabs.Screen
+          name="earnings"
+          options={{
+            title: 'Earnings',
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: 'Profile',
+          }}
+        />
+      </Tabs>
+    </MarketplaceProvider>
   );
 }
 

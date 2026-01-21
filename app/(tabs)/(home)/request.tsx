@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { showErrorMessage } from '@/api/helpers';
 import { AuthHeader } from '@/components/auth-header';
 import RequestUserCard from '@/components/home/request-user-card';
 import { Layout } from '@/components/layout';
@@ -7,10 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { useOffersSocket } from '@/hooks/use-offers-socket';
 import { formatCurrency } from '@/lib/utils';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useMarketplaceContext } from '@/providers/use-marketplace-context';
+import { useMutation, useQueries } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { CircleAlert, Play } from 'lucide-react-native';
+import { useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
@@ -21,12 +24,14 @@ export default function Screen() {
     queries: [api.getServiceRequest(id), api.getServiceOffers(id)],
   });
 
-  const { offers } = useOffersSocket({
-    serviceRequestId: id,
-    onOffered: (res) => {
-      serviceOffers?.refetch();
-    },
-  });
+  const sendOffer = useMutation(api.createNewOffer());
+  const counterOffer = useMutation(api.createCounterOffer(id));
+
+  const { offers } = useMarketplaceContext();
+
+  useEffect(() => {
+    offers.joinServiceRequest(id);
+  }, [id]);
 
   return (
     <Layout
@@ -99,46 +104,97 @@ export default function Screen() {
             </Text>
           </View>
 
-          <View className="flex gap-2">
-            <Text className="font-cabinet-medium text-xs uppercase text-[#1B1B1E]">Offers</Text>
+          {serviceOffers?.data ? (
+            <>
+              <View className="flex gap-2">
+                <Text className="font-cabinet-medium text-xs uppercase text-[#1B1B1E]">Offers</Text>
 
-            <View className="gap-4 rounded-[8px] border border-[#E9E9EB] p-4">
-              {serviceOffers?.data?.map((offer) =>
-                offer.offeredBy === 'artisan' ? (
-                  <View
-                    key={offer.id}
-                    className="flex aspect-[295/60] w-full items-center justify-center rounded-[6px] bg-[#F4F4F5]">
-                    <Text className="text-center text-xs text-[#737381]">Your offer</Text>
-                    <Text className="text-center font-cabinet-bold text-sm text-[#1B1B1E]">
-                      {formatCurrency(offer.amount)}
-                    </Text>
-                  </View>
-                ) : (
-                  <View
-                    key={offer.id}
-                    className="flex aspect-[295/60] w-full items-center justify-center rounded-[6px] bg-[#0A0A0B]">
-                    <Text className="text-center text-xs text-[#FFF4EA]">Customer offer</Text>
-                    <Text className="text-center font-cabinet-bold text-sm text-[#FFB884]">
-                      {formatCurrency(offer.amount)}
-                    </Text>
-                  </View>
-                )
-              )}
-            </View>
-          </View>
+                <View className="gap-4 rounded-[8px] border border-[#E9E9EB] p-4">
+                  {serviceOffers?.data?.map((offer) =>
+                    offer.offeredBy === 'artisan' ? (
+                      <View
+                        key={offer.id}
+                        className="flex aspect-[295/60] w-full items-center justify-center rounded-[6px] bg-[#F4F4F5]">
+                        <Text className="text-center text-xs text-[#737381]">Your offer</Text>
+                        <Text className="text-center font-cabinet-bold text-sm text-[#1B1B1E]">
+                          {formatCurrency(offer.amount)}
+                        </Text>
+                      </View>
+                    ) : (
+                      <View
+                        key={offer.id}
+                        className="flex aspect-[295/60] w-full items-center justify-center rounded-[6px] bg-[#0A0A0B]">
+                        <Text className="text-center text-xs text-[#FFF4EA]">Customer offer</Text>
+                        <Text className="text-center font-cabinet-bold text-sm text-[#FFB884]">
+                          {formatCurrency(offer.amount)}
+                        </Text>
+                      </View>
+                    )
+                  )}
+                </View>
+              </View>
 
-          <View className="flex flex-row gap-4">
+              <View className="flex flex-row gap-4">
+                <Button
+                  className="flex-1"
+                  variant={'outline'}
+                  onPress={() => {
+                    SheetManager.show('counter-offer-sheet', {
+                      payload: {
+                        type: 'counter',
+                        name: service.data?.user?.profile?.fullName,
+                        profileImage: service.data?.user?.profile?.avatarUrl,
+                        amount: 1000,
+                        counterAmount: 1000,
+                        onConfirm: (amount) => {
+                          sendOffer.mutate(
+                            { amount, serviceRequestId: id },
+                            {
+                              onSuccess: (res) => {
+                                serviceOffers.refetch();
+                              },
+                              onError: (err) => {
+                                showErrorMessage(err.message);
+                              },
+                            }
+                          );
+                        },
+                      },
+                    });
+                  }}>
+                  Counter
+                </Button>
+
+                <Button className="flex-1">Accept</Button>
+              </View>
+            </>
+          ) : (
             <Button
-              className="flex-1"
-              variant={'outline'}
-              onPress={() => SheetManager.show('counter-offer-sheet')}>
-              Counter
+              onPress={() => {
+                SheetManager.show('counter-offer-sheet', {
+                  payload: {
+                    type: 'offer',
+                    name: service.data?.user?.profile?.fullName,
+                    profileImage: service.data?.user?.profile?.avatarUrl,
+                    onConfirm: (amount) => {
+                      sendOffer.mutate(
+                        { amount, serviceRequestId: id },
+                        {
+                          onSuccess: (res) => {
+                            serviceOffers.refetch();
+                          },
+                          onError: (err) => {
+                            showErrorMessage(err.message);
+                          },
+                        }
+                      );
+                    },
+                  },
+                });
+              }}>
+              Send offer
             </Button>
-
-            <Button className="flex-1">Accept</Button>
-          </View>
-
-          <Button onPress={() => SheetManager.show('counter-offer-sheet')}>Send offer</Button>
+          )}
         </View>
       )}
     </Layout>

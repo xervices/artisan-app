@@ -90,7 +90,7 @@ export default function Screen() {
 
   const verifyNIN = useMutation(api.verifyNIN());
 
-  const { mutate, isPending } = useMutation(api.updateArtisanProfile());
+  const { mutate, isPending } = useMutation(api.onboardArtisan());
 
   const [certifications, setCertifications] = React.useState<
     {

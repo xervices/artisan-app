@@ -88,3 +88,34 @@ export function formatRelativeTime(isoDateString?: string | null): string {
 
   return date.fromNow();
 }
+
+/**
+ * Formats an ISO date string to 'YYYY-MM-DD HH:mm:ss' format
+ * @param isoString - ISO 8601 date string (e.g., '2025-11-27T17:47:27.000Z')
+ * @returns Formatted date string (e.g., '2025-11-27 17:47:27') or null if invalid
+ */
+export function formatDateTime(isoString?: string | null): string | null {
+  if (!isoString) {
+    return null;
+  }
+
+  try {
+    const date = new Date(isoString);
+
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  } catch (error) {
+    return null;
+  }
+}

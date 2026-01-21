@@ -9,20 +9,19 @@ import { api } from '@/api';
 import { paths } from '@/api/schema';
 import { formatRelativeTime } from '@/lib/utils';
 import { ServiceRequestData } from '@/hooks/types';
+import { useMarketplaceContext } from '@/providers/use-marketplace-context';
 
-interface OffersType {
-  data: ServiceRequestData[];
-}
+export function Offers() {
+  const { requests } = useMarketplaceContext();
 
-export function Offers({ data }: OffersType) {
-  if (!data || data.length === 0) return null;
+  if (!requests || !requests.requests || requests.requests.length === 0) return null;
 
   return (
     <View className="flex gap-2">
       <Text className="font-cabinet-medium text-xs uppercase">New request</Text>
 
       <View className="flex gap-4">
-        {data?.slice(0, 2)?.map((offer) => (
+        {requests.requests?.slice(0, 2)?.map((offer) => (
           <OfferCard key={offer.id} data={offer} />
         ))}
       </View>
@@ -66,7 +65,7 @@ export function OfferCard({ data }: OfferCardType) {
           <Avatar alt="User's Avatar" className="h-6 w-6">
             <AvatarImage source={{ uri: '' }} />
             <AvatarFallback className="bg-primary">
-              <Text className="font-cabinet-bold uppercase leading-none">JH</Text>
+              <Text className="font-cabinet-bold text-xs uppercase leading-none">JH</Text>
             </AvatarFallback>
           </Avatar>
 

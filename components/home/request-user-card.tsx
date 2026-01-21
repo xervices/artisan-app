@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Text } from '../ui/text';
 import { Image } from 'expo-image';
+import { formatDateTime } from '@/lib/utils';
 
 interface RequestUserCardProp {
   avatarUrl?: string;
@@ -13,7 +14,7 @@ interface RequestUserCardProp {
 export default function RequestUserCard({ address, avatarUrl, date, name }: RequestUserCardProp) {
   return (
     <View className="gap-4 rounded-[8px] bg-[#0A0A0B] p-4">
-      <View>
+      <View className="flex gap-1">
         <View className="flex flex-row items-center gap-1">
           <Avatar alt="User's Avatar" className="h-6 w-6">
             <AvatarImage source={{ uri: avatarUrl }} />
@@ -48,7 +49,7 @@ export default function RequestUserCard({ address, avatarUrl, date, name }: Requ
 
       <View className="flex flex-row items-center justify-between gap-1">
         <Text className="text-sm text-[#FFF4EA]">Booking Date & Time</Text>
-        <Text className="text-sm text-[#FFF4EA]">{date}</Text>
+        <Text className="text-sm text-[#FFF4EA]">{formatDateTime(date)}</Text>
       </View>
     </View>
   );
