@@ -1,5 +1,5 @@
 import { api } from '@/api';
-import { showErrorMessage } from '@/api/helpers';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 import { AuthHeader } from '@/components/auth-header';
 import RequestUserCard from '@/components/home/request-user-card';
 import { Layout } from '@/components/layout';
@@ -20,14 +20,16 @@ import { SheetManager } from 'react-native-actions-sheet';
 export default function Screen() {
   const { id }: { id: string } = useLocalSearchParams();
 
-  const [service, serviceOffers] = useQueries({
-    queries: [api.getServiceRequest(id), api.getServiceOffers(id)],
+  const [service, artisanOffers] = useQueries({
+    queries: [api.getServiceRequest(id), api.getArtisanOffers()],
   });
 
   const sendOffer = useMutation(api.createNewOffer());
-  const counterOffer = useMutation(api.createCounterOffer(id));
+  const sendCounterOffer = useMutation(api.createCounterOffer());
 
   const { offers } = useMarketplaceContext();
+
+  const offersMade = artisanOffers?.data?.filter((i) => i.serviceRequestId === id);
 
   useEffect(() => {
     offers.joinServiceRequest(id);
@@ -36,17 +38,17 @@ export default function Screen() {
   return (
     <Layout
       useBackground
-      isRefreshing={service?.isRefetching || serviceOffers?.isRefetching}
+      isRefreshing={service?.isRefetching || artisanOffers?.isRefetching}
       onRefresh={() => {
         service?.refetch();
-        serviceOffers?.refetch();
+        artisanOffers?.refetch();
       }}
       stickyHeader={
         <View className="pb-4">
           <AuthHeader title="Requests" />
         </View>
       }>
-      {service?.isLoading || serviceOffers?.isLoading ? (
+      {service?.isLoading || artisanOffers?.isLoading ? (
         <LoadingState title="Loading Request..." />
       ) : (
         <View className="flex-1 gap-4">
@@ -104,33 +106,31 @@ export default function Screen() {
             </Text>
           </View>
 
-          {serviceOffers?.data ? (
+          {offersMade && offersMade?.length > 0 ? (
             <>
               <View className="flex gap-2">
                 <Text className="font-cabinet-medium text-xs uppercase text-[#1B1B1E]">Offers</Text>
 
                 <View className="gap-4 rounded-[8px] border border-[#E9E9EB] p-4">
-                  {serviceOffers?.data?.map((offer) =>
-                    offer.offeredBy === 'artisan' ? (
-                      <View
-                        key={offer.id}
-                        className="flex aspect-[295/60] w-full items-center justify-center rounded-[6px] bg-[#F4F4F5]">
-                        <Text className="text-center text-xs text-[#737381]">Your offer</Text>
-                        <Text className="text-center font-cabinet-bold text-sm text-[#1B1B1E]">
-                          {formatCurrency(offer.amount)}
-                        </Text>
-                      </View>
-                    ) : (
-                      <View
-                        key={offer.id}
-                        className="flex aspect-[295/60] w-full items-center justify-center rounded-[6px] bg-[#0A0A0B]">
-                        <Text className="text-center text-xs text-[#FFF4EA]">Customer offer</Text>
-                        <Text className="text-center font-cabinet-bold text-sm text-[#FFB884]">
-                          {formatCurrency(offer.amount)}
-                        </Text>
-                      </View>
-                    )
-                  )}
+                  {offersMade?.map((offer) => (
+                    <View key={offer.id}>
+                      {offer.offeredBy === 'artisan' ? (
+                        <View className="flex aspect-[295/60] w-full items-center justify-center rounded-[6px] bg-[#F4F4F5]">
+                          <Text className="text-center text-xs text-[#737381]">Your offer</Text>
+                          <Text className="text-center font-cabinet-bold text-sm text-[#1B1B1E]">
+                            {formatCurrency(offer.amount)}
+                          </Text>
+                        </View>
+                      ) : (
+                        <View className="flex aspect-[295/60] w-full items-center justify-center rounded-[6px] bg-[#0A0A0B]">
+                          <Text className="text-center text-xs text-[#FFF4EA]">Customer offer</Text>
+                          <Text className="text-center font-cabinet-bold text-sm text-[#FFB884]">
+                            {formatCurrency(offer.amount)}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  ))}
                 </View>
               </View>
 
@@ -138,20 +138,26 @@ export default function Screen() {
                 <Button
                   className="flex-1"
                   variant={'outline'}
+                  isLoading={sendCounterOffer?.isPending}
+                  disabled={sendCounterOffer?.isPending}
+                  loadingIndicatorColor="#1B1B1E"
                   onPress={() => {
                     SheetManager.show('counter-offer-sheet', {
                       payload: {
                         type: 'counter',
                         name: service.data?.user?.profile?.fullName,
                         profileImage: service.data?.user?.profile?.avatarUrl,
-                        amount: 1000,
-                        counterAmount: 1000,
+                        amount: offersMade && offersMade?.length > 0 ? offersMade[0]?.amount : 1000,
+                        counterAmount:
+                          offersMade && offersMade?.length > 0 ? offersMade[0]?.amount : 1000,
                         onConfirm: (amount) => {
-                          sendOffer.mutate(
-                            { amount, serviceRequestId: id },
+                          sendCounterOffer.mutate(
+                            // @ts-ignore
+                            { amount, id: offersMade[0]?.id },
                             {
                               onSuccess: (res) => {
-                                serviceOffers.refetch();
+                                artisanOffers.refetch();
+                                showSuccessMessage('Counter offer sent successfully!');
                               },
                               onError: (err) => {
                                 showErrorMessage(err.message);
@@ -170,6 +176,8 @@ export default function Screen() {
             </>
           ) : (
             <Button
+              isLoading={sendOffer?.isPending}
+              disabled={sendOffer?.isPending}
               onPress={() => {
                 SheetManager.show('counter-offer-sheet', {
                   payload: {
@@ -181,7 +189,7 @@ export default function Screen() {
                         { amount, serviceRequestId: id },
                         {
                           onSuccess: (res) => {
-                            serviceOffers.refetch();
+                            artisanOffers.refetch();
                           },
                           onError: (err) => {
                             showErrorMessage(err.message);

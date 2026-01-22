@@ -10,9 +10,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { formatCurrency } from '@/lib/utils';
 
 export function CounterOfferSheet(props: SheetProps<'counter-offer-sheet'>) {
-  const [amount, setAmount] = useState(props.payload?.amount);
+  const [amount, setAmount] = useState(props.payload?.amount ? props.payload?.amount : 0);
 
-  const minAmount = amount ? 0.1 * amount : 1000;
+  const [minAmount] = useState(amount ? amount - 0.2 * amount : 1000);
 
   return (
     <ActionSheet
@@ -37,7 +37,8 @@ export function CounterOfferSheet(props: SheetProps<'counter-offer-sheet'>) {
           </Pressable>
 
           <Text className="font-cabinet-bold text-[18px] text-[#737381]">
-            {props.payload?.type === 'counter' ? 'Counteroffer' : 'Offer'} to {props.payload?.name}
+            {props.payload?.type === 'counter' ? 'Counteroffer' : 'Offer'} to{' '}
+            {props.payload?.name || ''}
           </Text>
         </View>
 
@@ -68,11 +69,13 @@ export function CounterOfferSheet(props: SheetProps<'counter-offer-sheet'>) {
         </View>
 
         <View className="flex gap-4">
-          <Text className="text-sm leading-none text-[#737381]">Your counteroffer</Text>
+          <Text className="text-sm leading-none text-[#737381]">
+            {props.payload?.type === 'counter' ? 'Your Counteroffer' : ' Your Offer'}
+          </Text>
 
-          {amount && amount <= 8300 && (
+          {amount && amount <= minAmount ? (
             <Text className="text-center text-sm leading-none text-[#FFAC70]">Can’t go lower</Text>
-          )}
+          ) : null}
 
           <View className="flex flex-row items-center justify-center gap-4">
             <Pressable
@@ -90,16 +93,11 @@ export function CounterOfferSheet(props: SheetProps<'counter-offer-sheet'>) {
               <Minus color={'#FF8733'} size={24} />
             </Pressable>
 
-            <Text className="font-cabinet-bold leading-none text-[#1B1B1E]">₦{amount}</Text>
+            <Text className="font-cabinet-bold leading-none text-[#1B1B1E]">₦{String(amount)}</Text>
 
             <Pressable
               onPress={() => {
-                setAmount((prev) => {
-                  if (prev) {
-                    return prev + 100;
-                  }
-                  return prev;
-                });
+                setAmount((prev) => Number(prev) + Number(100.0));
               }}
               className="flex h-8 w-12 items-center justify-center rounded-r-full bg-[#F4F4F5]">
               <Plus color={'#FF8733'} size={24} />
@@ -107,7 +105,13 @@ export function CounterOfferSheet(props: SheetProps<'counter-offer-sheet'>) {
           </View>
         </View>
 
-        <Button>Send counteroffer</Button>
+        <Button
+          onPress={() => {
+            props.payload?.onConfirm?.(amount);
+            SheetManager.hide('counter-offer-sheet');
+          }}>
+          {props.payload?.type === 'counter' ? 'Send Counteroffer' : 'Send Offer'}
+        </Button>
       </View>
     </ActionSheet>
   );

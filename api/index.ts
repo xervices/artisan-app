@@ -585,14 +585,15 @@ export const api = {
       },
     };
   },
-  createCounterOffer: (id: string) => {
+  createCounterOffer: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/offers/{id}/counter', 'post'>) => {
         const { data, error } = await apiClient.POST('/api/offers/{id}/counter', {
-          body: credentials,
+          body: { amount: credentials.amount, message: credentials.message },
           params: {
             path: {
-              id,
+              // @ts-ignore
+              id: credentials?.id,
             },
           },
         });

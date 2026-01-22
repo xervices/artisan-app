@@ -14,7 +14,9 @@ import { useMarketplaceContext } from '@/providers/use-marketplace-context';
 export function Offers() {
   const { requests } = useMarketplaceContext();
 
-  if (!requests || !requests.requests || requests.requests.length === 0) return null;
+  const { data } = useQuery(api.getArtisanOffers());
+
+  // if (!requests || !requests.requests || requests.requests.length === 0) return null;
 
   return (
     <View className="flex gap-2">
@@ -24,6 +26,22 @@ export function Offers() {
         {requests.requests?.slice(0, 2)?.map((offer) => (
           <OfferCard key={offer.id} data={offer} />
         ))}
+
+        {data &&
+          data?.length > 0 &&
+          data.map((offer) => (
+            <OfferCard
+              key={offer.id}
+              data={{
+                categoryId: offer.serviceRequest?.category.id || '',
+                title: offer.serviceRequest?.title || '',
+                budgetMax: offer.serviceRequest?.budgetMax || 0,
+                budgetMin: offer.serviceRequest?.budgetMin || 0,
+                createdAt: offer.serviceRequest?.createdAt || '',
+                id: offer.serviceRequest?.id || '',
+              }}
+            />
+          ))}
       </View>
 
       <Pressable

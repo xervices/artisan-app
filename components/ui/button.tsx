@@ -97,9 +97,19 @@ type ButtonProps = React.ComponentProps<typeof Pressable> &
     children?: React.ReactNode;
     icon?: React.ReactNode;
     isLoading?: boolean;
+    loadingIndicatorColor?: string;
   };
 
-function Button({ className, variant, size, children, icon, isLoading, ...props }: ButtonProps) {
+function Button({
+  className,
+  variant,
+  size,
+  children,
+  icon,
+  isLoading,
+  loadingIndicatorColor = '#ffffff',
+  ...props
+}: ButtonProps) {
   const hasText =
     typeof children === 'string' || (React.isValidElement(children) && children.type === Text);
 
@@ -110,7 +120,7 @@ function Button({ className, variant, size, children, icon, isLoading, ...props 
         role="button"
         {...props}>
         {isLoading ? (
-          <LoadingIndicator color="#ffffff" size={24} />
+          <LoadingIndicator color={loadingIndicatorColor} size={24} />
         ) : (
           <>
             {icon}
