@@ -14,6 +14,11 @@ export default function Screen() {
 
   const { requests } = useMarketplaceContext();
 
+  // const negotiatingOffers = artisanOffers?.data?.filter(
+  //   (offer, index, self) =>
+  //     self.findIndex((o) => o.serviceRequest?.id === offer.serviceRequest?.id) === index
+  // );
+
   return (
     <Layout
       useBackground
@@ -34,6 +39,24 @@ export default function Screen() {
           {requests.requests?.map((offer) => (
             <OfferCard key={offer.id} data={offer} />
           ))}
+
+          {/* {negotiatingOffers &&
+            negotiatingOffers?.length > 0 &&
+            negotiatingOffers?.map((offer) => (
+              <OfferCard
+                key={offer.id}
+                data={{
+                  categoryId: offer.serviceRequest?.category.name || '',
+                  title: offer.serviceRequest?.title || '',
+                  budgetMax: offer.serviceRequest?.budgetMax || 0,
+                  budgetMin: offer.serviceRequest?.budgetMin || 0,
+                  createdAt: offer.serviceRequest?.createdAt || '',
+                  id: offer.serviceRequest?.id || '',
+                  username: offer?.serviceRequest?.user?.profile?.fullName,
+                  avatarUrl: offer?.serviceRequest?.user?.profile?.avatarUrl,
+                }}
+              />
+            ))} */}
         </View>
       )}
     </Layout>

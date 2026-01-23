@@ -4,6 +4,7 @@ import { tokenStorage } from './token-storage';
 import { getErrorMessage, RequestBody } from './helpers';
 import { useAuthStore } from '@/store/auth-store';
 import { Platform } from 'react-native';
+import { getFileExtension } from '@/lib/utils';
 
 const normalizePath = (uri: string) => (Platform.OS === 'ios' ? uri.replace('file://', '') : uri);
 
@@ -234,7 +235,7 @@ export const api = {
         // @ts-ignore
         if (credentials.avatarUrl && credentials.avatarUrl !== user?.profile?.avatarUrl) {
           // @ts-ignore
-          const extension = credentials.avatarMimeType === 'image/png' ? 'png' : 'jpg';
+          const extension = getFileExtension(credentials.avatarUrl, credentials.avatarMimeType);
 
           const file = {
             // @ts-ignore
@@ -329,10 +330,12 @@ export const api = {
         if (credentials.certifications && credentials.certifications.length > 0) {
           // @ts-ignore
           credentials.certifications.forEach((cert, index) => {
+            const extension = getFileExtension(cert.uri, cert.mimeType);
+
             const file = {
               uri: normalizePath(cert.uri),
               type: cert.mimeType || 'application/pdf',
-              name: cert.name || `certification_${index}_${Date.now()}`,
+              name: cert.name || `certification_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('certifications', file);
@@ -343,10 +346,12 @@ export const api = {
         if (credentials.previousJobs && credentials.previousJobs.length > 0) {
           // @ts-ignore
           credentials.previousJobs.forEach((cert, index) => {
+            const extension = getFileExtension(cert.uri, cert.mimeType);
+
             const file = {
               uri: normalizePath(cert.uri),
               type: cert.mimeType || 'application/pdf',
-              name: cert.name || `certification_${index}_${Date.now()}`,
+              name: cert.name || `certification_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('previousJobs', file);
@@ -358,8 +363,6 @@ export const api = {
           body: formData,
           bodySerializer: () => formData, // Prevent body serialization
         });
-
-        console.log(error);
 
         if (error) {
           throw new Error(getErrorMessage(error, 'Professional profile update failed'));
@@ -404,10 +407,12 @@ export const api = {
         if (credentials.certifications && credentials.certifications.length > 0) {
           // @ts-ignore
           credentials.certifications.forEach((cert, index) => {
+            const extension = getFileExtension(cert.uri, cert.mimeType);
+
             const file = {
               uri: normalizePath(cert.uri),
               type: cert.mimeType || 'application/pdf',
-              name: cert.name || `certification_${index}_${Date.now()}`,
+              name: cert.name || `certification_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('certifications', file);
@@ -418,10 +423,12 @@ export const api = {
         if (credentials.previousJobs && credentials.previousJobs.length > 0) {
           // @ts-ignore
           credentials.previousJobs.forEach((cert, index) => {
+            const extension = getFileExtension(cert.uri, cert.mimeType);
+
             const file = {
               uri: normalizePath(cert.uri),
               type: cert.mimeType || 'application/pdf',
-              name: cert.name || `certification_${index}_${Date.now()}`,
+              name: cert.name || `certification_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('previousJobs', file);

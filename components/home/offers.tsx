@@ -16,7 +16,12 @@ export function Offers() {
 
   const { data } = useQuery(api.getArtisanOffers());
 
-  // if (!requests || !requests.requests || requests.requests.length === 0) return null;
+  // const negotiatingOffers = data?.filter(
+  //   (offer, index, self) =>
+  //     self.findIndex((o) => o.serviceRequest?.id === offer.serviceRequest?.id) === index
+  // );
+
+  if (!requests || !requests.requests || requests.requests.length === 0) return null;
 
   return (
     <View className="flex gap-2">
@@ -27,13 +32,13 @@ export function Offers() {
           <OfferCard key={offer.id} data={offer} />
         ))}
 
-        {data &&
-          data?.length > 0 &&
-          data.map((offer) => (
+        {/* {negotiatingOffers &&
+          negotiatingOffers?.length > 0 &&
+          negotiatingOffers?.slice(0, 2)?.map((offer) => (
             <OfferCard
               key={offer.id}
               data={{
-                categoryId: offer.serviceRequest?.category.id || '',
+                categoryId: offer.serviceRequest?.category.name || '',
                 title: offer.serviceRequest?.title || '',
                 budgetMax: offer.serviceRequest?.budgetMax || 0,
                 budgetMin: offer.serviceRequest?.budgetMin || 0,
@@ -41,7 +46,7 @@ export function Offers() {
                 id: offer.serviceRequest?.id || '',
               }}
             />
-          ))}
+          ))} */}
       </View>
 
       <Pressable
@@ -81,13 +86,15 @@ export function OfferCard({ data }: OfferCardType) {
 
         <View className="flex flex-1 flex-row items-center justify-end gap-1">
           <Avatar alt="User's Avatar" className="h-6 w-6">
-            <AvatarImage source={{ uri: '' }} />
+            <AvatarImage source={{ uri: data?.avatarUrl }} />
             <AvatarFallback className="bg-primary">
-              <Text className="font-cabinet-bold text-xs uppercase leading-none">JH</Text>
+              <Text className="font-cabinet-bold text-xs uppercase leading-none">
+                {data?.username?.substring(0, 2)}
+              </Text>
             </AvatarFallback>
           </Avatar>
 
-          <Text className="font-cabinet-bold text-sm text-[#737381]">John Doe</Text>
+          <Text className="font-cabinet-bold text-sm text-[#737381]">{data?.username}</Text>
         </View>
       </View>
 

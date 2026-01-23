@@ -15,8 +15,6 @@ export function AvailabilityStatus() {
 
   if (isError) return null;
 
-  console.log(data?.userId);
-
   function onCheckedChange(checked: boolean) {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 

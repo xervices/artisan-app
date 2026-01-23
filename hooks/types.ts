@@ -16,6 +16,8 @@ export interface ServiceRequestData {
   preferredDate?: string;
   createdAt: string;
   categoryId: string;
+  username?: string;
+  avatarUrl?: string;
 }
 export interface NewServiceRequestEvent {
   type: 'NEW_SERVICE_REQUEST';

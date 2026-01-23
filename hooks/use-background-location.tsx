@@ -69,9 +69,9 @@ export const useBackgroundLocation = (): UseBackgroundLocationReturn => {
 
       setIsTracking(true);
       setError(null);
-      console.log('✅ Background location tracking started');
+      // console.log('✅ Background location tracking started');
     } catch (err) {
-      console.error('Failed to start tracking:', err);
+      // console.error('Failed to start tracking:', err);
       setError(err instanceof Error ? err.message : 'Failed to start tracking');
     }
   }, []);
@@ -83,10 +83,10 @@ export const useBackgroundLocation = (): UseBackgroundLocationReturn => {
       if (hasStarted) {
         await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
         setIsTracking(false);
-        console.log('✅ Background location tracking stopped');
+        // console.log('✅ Background location tracking stopped');
       }
     } catch (err) {
-      console.error('Failed to stop tracking:', err);
+      // console.error('Failed to stop tracking:', err);
       setError(err instanceof Error ? err.message : 'Failed to stop tracking');
     }
   }, []);

@@ -31,6 +31,9 @@ export default function Screen() {
 
   const offersMade = artisanOffers?.data?.filter((i) => i.serviceRequestId === id);
 
+  const lastOfferId = offersMade && offersMade.length > 0 ? offersMade[0]?.id : '';
+  const acceptOffer = useMutation(api.respondToOffer(lastOfferId));
+
   useEffect(() => {
     offers.joinServiceRequest(id);
   }, [id]);
@@ -81,8 +84,11 @@ export default function Screen() {
 
             <View className="flex flex-row flex-wrap justify-between gap-4">
               {service?.data?.mediaUrls?.map((media) => (
-                <View
+                <Pressable
                   key={media}
+                  onPress={() =>
+                    SheetManager.show('image-preview-sheet', { payload: { imgSource: media } })
+                  }
                   className="relative aspect-square w-[47%] overflow-hidden rounded-[8px]">
                   <Image
                     source={media}
@@ -92,7 +98,7 @@ export default function Screen() {
                     }}
                     contentFit="cover"
                   />
-                </View>
+                </Pressable>
               ))}
             </View>
           </View>
@@ -109,7 +115,17 @@ export default function Screen() {
           {offersMade && offersMade?.length > 0 ? (
             <>
               <View className="flex gap-2">
-                <Text className="font-cabinet-medium text-xs uppercase text-[#1B1B1E]">Offers</Text>
+                <View className="flex flex-row items-center justify-between gap-4">
+                  <Text className="font-cabinet-medium text-xs uppercase text-[#1B1B1E]">
+                    Offers
+                  </Text>
+
+                  <Pressable>
+                    <Text className="font-cabinet-bold text-xs uppercase text-[#B3031E]">
+                      REJECT OFFER
+                    </Text>
+                  </Pressable>
+                </View>
 
                 <View className="gap-4 rounded-[8px] border border-[#E9E9EB] p-4">
                   {offersMade?.map((offer) => (
@@ -171,7 +187,27 @@ export default function Screen() {
                   Counter
                 </Button>
 
-                <Button className="flex-1">Accept</Button>
+                <Button
+                  isLoading={acceptOffer?.isPending}
+                  disabled={acceptOffer?.isPending}
+                  onPress={() => {
+                    acceptOffer?.mutate(
+                      { action: 'accept' },
+                      {
+                        onSuccess: () => {
+                          showSuccessMessage('Offer accepted');
+                          artisanOffers.refetch();
+                          service.refetch();
+                        },
+                        onError: (err) => {
+                          showErrorMessage(err.message);
+                        },
+                      }
+                    );
+                  }}
+                  className="flex-1">
+                  Accept
+                </Button>
               </View>
             </>
           ) : (
