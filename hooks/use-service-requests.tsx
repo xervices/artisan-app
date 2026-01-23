@@ -4,13 +4,18 @@ import { useSocketIO } from './use-socket-io';
 interface ServiceRequestData {
   id: string;
   title: string;
-  budgetMin: number;
-  budgetMax: number;
-  serviceLocation: {
-    type: 'Point';
-    coordinates: [number, number];
-  };
+  description: string;
+  budgetMin: number | null;
+  budgetMax: number | null;
+  categoryId: string;
+  categoryName: string;
+  serviceAddress: string;
+  preferredDate: string | null;
   createdAt: string;
+  user: {
+    avatarUrl: string;
+    name: string;
+  };
 }
 
 interface ServiceRequestEvent {

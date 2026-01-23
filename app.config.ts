@@ -63,17 +63,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
         UIBackgroundModes: ['location'],
-        NSLocationWhenInUseUsageDescription:
-          'This app uses location services to provide a better experience.',
-        NSLocationAlwaysUsageDescription:
-          'This app uses location services to provide a better experience.',
-        NSLocationUsageDescription:
-          'This app uses location services to provide a better experience.',
-        NSPhotoLibraryUsageDescription:
-          'This app uses the photo library to provide a better experience.',
-        NSCameraUsageDescription: 'This app uses the camera to provide a better experience.',
-        NSMicrophoneUsageDescription:
-          'This app uses the microphone to provide a better experience.',
       },
     },
     experiments: {
@@ -167,26 +156,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         'expo-image-picker',
         {
           photosPermission: 'The app accesses your photos to let you share them with your friends.',
-        },
-      ],
-      'dojah-kyc-sdk-react-expo',
-      [
-        'expo-build-properties',
-        {
-          ios: {
-            extraPods: [
-              {
-                name: 'Realm',
-                version: '~> 10.52.2',
-                modular_headers: true,
-              },
-              {
-                name: 'DojahWidget',
-                git: 'https://github.com/dojah-inc/sdk-swift.git',
-                branch: 'pod-package',
-              },
-            ],
-          },
         },
       ],
     ],

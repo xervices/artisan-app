@@ -80,21 +80,21 @@ export function OfferCard({ data }: OfferCardType) {
       className="flex gap-4 rounded-[8px] bg-white p-4">
       <View className="flex flex-row items-center justify-between">
         <View className="flex-1">
-          <Text className="font-cabinet-bold text-[#1B1B1E]">{data.categoryId}</Text>
+          <Text className="font-cabinet-bold text-[#1B1B1E]">{data.categoryName}</Text>
           <Text className="text-xs text-[#FE6A00]">{formatRelativeTime(data.createdAt)}</Text>
         </View>
 
         <View className="flex flex-1 flex-row items-center justify-end gap-1">
           <Avatar alt="User's Avatar" className="h-6 w-6">
-            <AvatarImage source={{ uri: data?.avatarUrl }} />
+            <AvatarImage source={{ uri: data?.user?.avatarUrl }} />
             <AvatarFallback className="bg-primary">
               <Text className="font-cabinet-bold text-xs uppercase leading-none">
-                {data?.username?.substring(0, 2)}
+                {data?.user?.name?.substring(0, 2)}
               </Text>
             </AvatarFallback>
           </Avatar>
 
-          <Text className="font-cabinet-bold text-sm text-[#737381]">{data?.username}</Text>
+          <Text className="font-cabinet-bold text-sm text-[#737381]">{data?.user?.name}</Text>
         </View>
       </View>
 

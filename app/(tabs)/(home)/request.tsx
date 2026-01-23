@@ -191,6 +191,14 @@ export default function Screen() {
                   isLoading={acceptOffer?.isPending}
                   disabled={acceptOffer?.isPending}
                   onPress={() => {
+                    if (
+                      offersMade &&
+                      offersMade?.length > 0 &&
+                      offersMade[0]?.offeredBy === 'artisan'
+                    )
+                      return showErrorMessage(
+                        'You cannot accept your own offer. Wait for the user to send a counter offer'
+                      );
                     acceptOffer?.mutate(
                       { action: 'accept' },
                       {

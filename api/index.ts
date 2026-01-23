@@ -584,6 +584,8 @@ export const api = {
           body: credentials,
         });
 
+        console.log(error);
+
         if (error) {
           throw new Error(getErrorMessage(error, 'offer failed to send.'));
         }

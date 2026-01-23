@@ -10,6 +10,10 @@ import { CameraSheet } from './camera-sheet';
 import { WithdrawSheet } from './withdraw-sheet';
 import { PinSheet } from './pin-sheet';
 import { FilterSheet } from './filter-sheet';
+import {
+  VerificationProfileSheet,
+  VerificationProfileSheetPayload,
+} from './verification-profile-sheet';
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {
@@ -57,6 +61,9 @@ declare module 'react-native-actions-sheet' {
         onRedirect?: () => void;
       };
     }>;
+    'verification-profile-sheet': SheetDefinition<{
+      payload: VerificationProfileSheetPayload;
+    }>;
   }
 }
 
@@ -75,6 +82,7 @@ export const Sheets = () => {
         'withdraw-sheet': WithdrawSheet,
         'pin-sheet': PinSheet,
         'filter-sheet': FilterSheet,
+        'verification-profile-sheet': VerificationProfileSheet,
       }}
     />
   );

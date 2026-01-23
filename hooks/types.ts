@@ -8,16 +8,18 @@ export interface Location {
 export interface ServiceRequestData {
   id: string;
   title: string;
-  description?: string;
-  serviceAddress?: string;
-  serviceLocation?: Location;
-  budgetMin: number;
-  budgetMax: number;
-  preferredDate?: string;
-  createdAt: string;
+  description: string;
+  budgetMin: number | null;
+  budgetMax: number | null;
   categoryId: string;
-  username?: string;
-  avatarUrl?: string;
+  categoryName: string;
+  serviceAddress: string;
+  preferredDate: string | null;
+  createdAt: string;
+  user: {
+    avatarUrl: string;
+    name: string;
+  };
 }
 export interface NewServiceRequestEvent {
   type: 'NEW_SERVICE_REQUEST';
@@ -69,10 +71,12 @@ export interface RequestViewedEvent {
 export interface NewOfferEvent {
   type: 'NEW_OFFER';
   data: {
-    id: string;
     amount: number;
-    message: string;
     artisanId: string;
+    createdAt: string;
+    id: string;
+    message: string | null;
+    offeredBy: string;
   };
   timestamp: string;
 }
