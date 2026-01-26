@@ -38,7 +38,11 @@ declare module 'react-native-actions-sheet' {
         onDelete?: () => void;
       };
     }>;
-    'ongoing-job-sheet': SheetDefinition;
+    'ongoing-job-sheet': SheetDefinition<{
+      payload: {
+        id: string;
+      };
+    }>;
     'counter-offer-sheet': SheetDefinition<{
       payload: {
         onConfirm?: (amount: number) => void;

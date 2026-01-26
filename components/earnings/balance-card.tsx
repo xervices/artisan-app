@@ -4,8 +4,14 @@ import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { Button } from '../ui/button';
 import { SheetManager } from 'react-native-actions-sheet';
+import { formatCurrency } from '@/lib/utils';
 
-export function BalanceCard() {
+interface BalanceCardProp {
+  balance?: number;
+  incomingPayment?: number;
+}
+
+export function BalanceCard({ balance, incomingPayment }: BalanceCardProp) {
   const [balanceVisibility, setBalanceVisibility] = useState(true);
 
   return (
@@ -14,7 +20,7 @@ export function BalanceCard() {
         <View className="flex-1">
           <Text className="text-xs text-[#FFF4EA]">Earned</Text>
           <Text className="font-cabinet-bold text-xl text-[#FFB884]">
-            {balanceVisibility ? '₦0,00' : '₦✼✼✼✼✼✼✼'}
+            {balanceVisibility ? formatCurrency(balance) : '₦✼✼✼✼✼✼✼'}
           </Text>
         </View>
 
@@ -32,15 +38,17 @@ export function BalanceCard() {
         </Pressable>
       </View>
 
-      <View className="flex flex-row items-center gap-1">
-        <Text className="text-xs text-[#FFF4EA]">Incoming payment</Text>
+      {incomingPayment && (
+        <View className="flex flex-row items-center gap-1">
+          <Text className="text-xs text-[#FFF4EA]">Incoming payment</Text>
 
-        <View className="h-1 w-1 rounded-full bg-[#FE6A00]" />
+          <View className="h-1 w-1 rounded-full bg-[#FE6A00]" />
 
-        <Text className="font-cabinet-bold text-xs text-[#FFF4EA]">
-          {balanceVisibility ? '₦0,00' : '₦✼✼✼✼✼✼✼'}
-        </Text>
-      </View>
+          <Text className="font-cabinet-bold text-xs text-[#FFF4EA]">
+            {balanceVisibility ? formatCurrency(incomingPayment) : '₦✼✼✼✼✼✼✼'}
+          </Text>
+        </View>
+      )}
 
       <Button
         onPress={() => SheetManager.show('withdraw-sheet')}

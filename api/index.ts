@@ -646,6 +646,81 @@ export const api = {
         return data;
       },
     }),
+  getJobDetail: (id: string) =>
+    queryOptions({
+      queryKey: ['job', id],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/jobs/{id}', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+  startJob: (id: string) => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/jobs/{id}/start', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/jobs/{id}/start', {
+          // body: credentials,
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'failed to start job.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  completeJob: (id: string) => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/jobs/{id}/complete', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/jobs/{id}/complete', {
+          // body: credentials,
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'failed to mark as complete job.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  cancelJob: (id: string) => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/jobs/{id}/cancel', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/jobs/{id}/cancel', {
+          // body: credentials,
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'failed to cancel job.'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // promotions, referrals & discounts endpoints
   getMyReferralInfo: () =>
@@ -809,4 +884,50 @@ export const api = {
       },
     };
   },
+
+  // earnings endpoints
+  getMyEarnings: () =>
+    queryOptions({
+      queryKey: ['earnings'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/earnings');
+
+        return data;
+      },
+    }),
+  getTransactionHistory: ({
+    endDate,
+    period,
+    startDate,
+    type,
+  }: {
+    period?: TransactionsPeriodTypes;
+    startDate?: string;
+    endDate?: string;
+    type?: string;
+  }) =>
+    queryOptions({
+      queryKey: ['transactions', endDate, period, startDate, type],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/earnings/transactions', {
+          params: {
+            query: {
+              endDate,
+              period,
+              startDate,
+              type,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
 };
+
+export type TransactionsPeriodTypes =
+  | 'today'
+  | 'this_week'
+  | 'this_month'
+  | 'previous_month'
+  | 'this_year';

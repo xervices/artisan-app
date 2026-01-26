@@ -30,7 +30,6 @@ export interface VerificationResult {
 }
 
 export interface VerificationProfileSheetPayload {
-  widgetId: string;
   userData?: VerificationUserData;
   metadata?: VerificationMetadata;
   onSuccess?: (result: VerificationResult) => void;
@@ -39,10 +38,10 @@ export interface VerificationProfileSheetPayload {
 }
 
 const buildVerificationUrl = (
-  widgetId: string,
   userData?: VerificationUserData,
   metadata?: VerificationMetadata
 ): string => {
+  const widgetId = '697360505dae32fe5044be3b';
   const baseUrl = 'https://identity.dojah.io';
   const params = new URLSearchParams();
 
@@ -70,17 +69,27 @@ const buildVerificationUrl = (
 export function VerificationProfileSheet(props: SheetProps<'verification-profile-sheet'>) {
   const [isLoading, setIsLoading] = useState(true);
 
-  const { widgetId, userData, metadata, onSuccess, onError, onClose } = props.payload ?? {};
+  const { userData, metadata, onSuccess, onError, onClose } = props.payload ?? {};
 
-  if (!widgetId) {
-    return null;
-  }
-
-  const verificationUrl = buildVerificationUrl(widgetId, userData, metadata);
+  const verificationUrl = buildVerificationUrl(userData, metadata);
 
   const handleWebViewMessage = (event: WebViewMessageEvent) => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
+
+      // Check if the message contains the success string
+      if (
+        data.type === 'success_message' ||
+        data.text?.includes('Your verification has been successfully completed.')
+      ) {
+        onSuccess?.({
+          status: 'success',
+          data: data.data || data,
+          message: 'Verification completed successfully',
+        });
+        SheetManager.hide('verification-profile-sheet');
+        return;
+      }
 
       if (data.type === 'success' || data.status === 'success') {
         onSuccess?.({
@@ -179,6 +188,20 @@ export function VerificationProfileSheet(props: SheetProps<'verification-profile
             onError={handleWebViewError}
             onLoadStart={() => setIsLoading(true)}
             onLoadEnd={() => setIsLoading(false)}
+            injectedJavaScript={`
+              (function() {
+                const observer = new MutationObserver(function(mutations) {
+                  const bodyText = document.body.innerText;
+                  if (bodyText.includes('Your verification has been successfully completed.')) {
+                    window.ReactNativeWebView.postMessage(JSON.stringify({
+                      type: 'success_message',
+                      text: bodyText
+                    }));
+                  }
+                });
+                observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+              })();
+            `}
             style={{ flex: 1 }}
           />
         </View>

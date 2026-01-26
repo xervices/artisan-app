@@ -29,6 +29,7 @@ import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 import { router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { NIGERIAN_STATES } from '@/store/data';
+import { SheetManager } from 'react-native-actions-sheet';
 
 const formSchema = z.object({
   avatarUrl: z.string(),
@@ -121,7 +122,18 @@ export function PersonalDetails() {
           return (
             <View className="flex w-full items-center justify-center">
               <Pressable
-                onPress={pickImage}
+                onPress={() =>
+                  SheetManager.show('verification-profile-sheet', {
+                    payload: {
+                      onError(error) {
+                        console.log(error);
+                      },
+                      onSuccess(result) {
+                        showSuccessMessage(result?.message || '');
+                      },
+                    },
+                  })
+                }
                 className="relative h-20 w-20 overflow-hidden rounded-full">
                 <Avatar className="h-full w-full" alt="User's Avatar">
                   <AvatarImage source={{ uri: url }} />

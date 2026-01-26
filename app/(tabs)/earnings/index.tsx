@@ -17,8 +17,8 @@ import { LoadingState } from '@/components/loading-state';
 import { formatCurrency } from '@/lib/utils';
 
 export default function Screen() {
-  const [promotions] = useQueries({
-    queries: [api.getMyPromotions()],
+  const [promotions, earnings, transactions] = useQueries({
+    queries: [api.getMyPromotions(), api.getMyEarnings(), api.getTransactionHistory({})],
   });
 
   const [value, setValue] = React.useState('earnings');
@@ -65,30 +65,36 @@ export default function Screen() {
           {/* Earnings content */}
           <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
             <TabsContent value="earnings" className="flex gap-4 pb-16 pt-4">
-              <BalanceCard />
+              {earnings?.isLoading || transactions?.isLoading ? (
+                <LoadingState title="Loading your earnings..." />
+              ) : (
+                <>
+                  <BalanceCard
+                    balance={earnings?.data?.availableBalance}
+                    incomingPayment={earnings?.data?.pendingBalance}
+                  />
 
-              <View className="flex flex-row items-center justify-between">
-                <Text className="font-cabinet-medium text-xs uppercase text-[#737381]">
-                  Transaction History
-                </Text>
+                  <View className="flex flex-row items-center justify-between">
+                    <Text className="font-cabinet-medium text-xs uppercase text-[#737381]">
+                      Transaction History
+                    </Text>
 
-                <Pressable
-                  onPress={() => router.navigate('/earnings/history')}
-                  className="mt-1 flex flex-row items-center gap-1">
-                  <Text className="font-cabinet-bold text-xs leading-none text-[#737381]">
-                    Show all
-                  </Text>
+                    <Pressable
+                      onPress={() => router.navigate('/earnings/history')}
+                      className="mt-1 flex flex-row items-center gap-1">
+                      <Text className="font-cabinet-bold text-xs leading-none text-[#737381]">
+                        Show all
+                      </Text>
 
-                  <ChevronDown size={12} />
-                </Pressable>
-              </View>
+                      <ChevronDown size={12} />
+                    </Pressable>
+                  </View>
 
-              <TransactionCard />
-              <TransactionCard type="withdrawal" />
-              <TransactionCard type="dispute" />
-              <TransactionCard />
-              <TransactionCard type="withdrawal" />
-              <TransactionCard type="dispute" />
+                  {transactions?.data?.slice(0, 5)?.map((transaction) => (
+                    <TransactionCard key={transaction?.id} type={transaction?.type} />
+                  ))}
+                </>
+              )}
             </TabsContent>
           </ScrollView>
 

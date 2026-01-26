@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { Text } from '../ui/text';
 
 interface TransactionCardProps {
-  type?: 'income' | 'withdrawal' | 'dispute';
+  type?: string;
 }
 
 export default function TransactionCard({ type = 'income' }: TransactionCardProps) {
