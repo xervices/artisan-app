@@ -15,6 +15,12 @@ import {
   VerificationProfileSheetPayload,
 } from './verification-profile-sheet';
 
+interface CameraSheetPayload {
+  url: string;
+  mimeType: string;
+  isVideo?: boolean;
+}
+
 declare module 'react-native-actions-sheet' {
   interface Sheets {
     'image-preview-sheet': SheetDefinition<{
@@ -29,7 +35,7 @@ declare module 'react-native-actions-sheet' {
     }>;
     'camera-sheet': SheetDefinition<{
       payload: {
-        onSelect?: (url: string, isVideo?: boolean) => void;
+        onSelect?: (media: CameraSheetPayload) => void;
       };
     }>;
     'delete-account-sheet': SheetDefinition;

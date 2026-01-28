@@ -1,4 +1,9 @@
-import { NewOfferEvent, RequestViewedEvent } from '@/hooks/types';
+import {
+  NewOfferEvent,
+  RequestViewedEvent,
+  OfferAcceptedEvent,
+  CounterOfferEvent,
+} from '@/hooks/types';
 import { useOffersSocket } from '@/hooks/use-offers-socket';
 import { useServiceRequestsSocket } from '@/hooks/use-service-requests-socket';
 import React, { createContext, useContext, type ReactNode } from 'react';
@@ -13,9 +18,6 @@ const MarketplaceContext = createContext<MarketplaceContextType | null>(null);
 
 interface MarketplaceProviderProps {
   children: ReactNode;
-  // Callbacks for Offers
-  onViewed?: (data: RequestViewedEvent['data']) => void;
-  onOffered?: (data: NewOfferEvent['data']) => void;
   // Options for Service Requests
   artisanId?: string;
   requestsAutoConnect?: boolean;
@@ -26,9 +28,6 @@ export const MarketplaceProvider: React.FC<MarketplaceProviderProps> = ({
   // Options for Service Requests (defaults to true as per user request)
   artisanId,
   requestsAutoConnect = true,
-  // Callbacks for Offers
-  onViewed,
-  onOffered,
 }) => {
   // State for Offers socket
   const [activeServiceRequestId, setActiveServiceRequestId] = React.useState<string | undefined>(
@@ -40,8 +39,6 @@ export const MarketplaceProvider: React.FC<MarketplaceProviderProps> = ({
   const offersData = useOffersSocket({
     serviceRequestId: activeServiceRequestId,
     autoConnect: offersEnabled,
-    onViewed,
-    onOffered,
   });
 
   // Service Requests Socket (Auto connected)
@@ -67,10 +64,57 @@ export const MarketplaceProvider: React.FC<MarketplaceProviderProps> = ({
   return <MarketplaceContext.Provider value={value}>{children}</MarketplaceContext.Provider>;
 };
 
-export const useMarketplaceContext = (): MarketplaceContextType => {
+export interface UseMarketplaceContextOptions {
+  onOfferEvent?: (
+    eventType: 'offer:new' | 'request:viewed' | 'offer:accepted' | 'offer:counter',
+    data: any
+  ) => void;
+}
+
+export const useMarketplaceContext = (
+  options?: UseMarketplaceContextOptions
+): MarketplaceContextType => {
   const context = useContext(MarketplaceContext);
   if (!context) {
     throw new Error('useMarketplaceContext must be used within a MarketplaceProvider');
   }
+
+  // Register offer event callback if provided
+  React.useEffect(() => {
+    if (!options?.onOfferEvent || !context.offers.socket) {
+      return;
+    }
+
+    const socket = context.offers.socket;
+
+    const handleOfferNew = (event: any) => {
+      options.onOfferEvent?.('offer:new', event.data);
+    };
+
+    const handleRequestViewed = (event: any) => {
+      options.onOfferEvent?.('request:viewed', event.data);
+    };
+
+    const handleOfferAccepted = (event: any) => {
+      options.onOfferEvent?.('offer:accepted', event.data);
+    };
+
+    const handleOfferCounter = (event: any) => {
+      options.onOfferEvent?.('offer:counter', event.data);
+    };
+
+    socket.on('offer:new', handleOfferNew);
+    socket.on('request:viewed', handleRequestViewed);
+    socket.on('offer:accepted', handleOfferAccepted);
+    socket.on('offer:counter', handleOfferCounter);
+
+    return () => {
+      socket.off('offer:new', handleOfferNew);
+      socket.off('request:viewed', handleRequestViewed);
+      socket.off('offer:accepted', handleOfferAccepted);
+      socket.off('offer:counter', handleOfferCounter);
+    };
+  }, [context.offers.socket, options?.onOfferEvent]);
+
   return context;
 };

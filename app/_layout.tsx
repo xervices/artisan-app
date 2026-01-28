@@ -1,4 +1,4 @@
-// import '../location-task';
+import '../location-task';
 import '@/global.css';
 
 import { useAuthStore } from '@/store/auth-store';
@@ -36,6 +36,7 @@ export default function RootLayout() {
                 <Stack.Protected guard={isLoggedIn}>
                   <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                   <Stack.Screen name="chat" options={{ headerShown: false }} />
+                  <Stack.Screen name="ongoing" options={{ headerShown: false }} />
                   <Stack.Screen name="verify" options={{ headerShown: false }} />
                 </Stack.Protected>
 

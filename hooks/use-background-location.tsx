@@ -55,11 +55,11 @@ export const useBackgroundLocation = (): UseBackgroundLocationReturn => {
       // Start background location updates
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.Balanced,
-        distanceInterval: 100, // Update every 100 meters
+        distanceInterval: 10, // Update every 10 meters
         deferredUpdatesInterval: 60000, // Batch updates every 60 seconds (iOS)
         foregroundService: {
           notificationTitle: 'Xervices is using your location',
-          notificationBody: 'To show you nearby artisans and update your position',
+          notificationBody: 'To show you nearby jobs and update your position',
           notificationColor: '#FE6A00',
         },
         pausesUpdatesAutomatically: false,
@@ -69,9 +69,9 @@ export const useBackgroundLocation = (): UseBackgroundLocationReturn => {
 
       setIsTracking(true);
       setError(null);
-      // console.log('✅ Background location tracking started');
+      console.log('✅ Background location tracking started');
     } catch (err) {
-      // console.error('Failed to start tracking:', err);
+      console.error('Failed to start tracking:', err);
       setError(err instanceof Error ? err.message : 'Failed to start tracking');
     }
   }, []);
@@ -83,10 +83,10 @@ export const useBackgroundLocation = (): UseBackgroundLocationReturn => {
       if (hasStarted) {
         await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
         setIsTracking(false);
-        // console.log('✅ Background location tracking stopped');
+        console.log('✅ Background location tracking stopped');
       }
     } catch (err) {
-      // console.error('Failed to stop tracking:', err);
+      console.error('Failed to stop tracking:', err);
       setError(err instanceof Error ? err.message : 'Failed to stop tracking');
     }
   }, []);

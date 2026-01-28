@@ -27,7 +27,11 @@ export default function Screen() {
   const sendOffer = useMutation(api.createNewOffer());
   const sendCounterOffer = useMutation(api.createCounterOffer());
 
-  const { offers } = useMarketplaceContext();
+  const { offers } = useMarketplaceContext({
+    onOfferEvent(eventType, data) {
+      artisanOffers?.refetch();
+    },
+  });
 
   const offersMade = artisanOffers?.data?.filter((i) => i.serviceRequestId === id);
 

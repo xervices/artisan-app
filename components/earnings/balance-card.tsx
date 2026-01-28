@@ -38,7 +38,7 @@ export function BalanceCard({ balance, incomingPayment }: BalanceCardProp) {
         </Pressable>
       </View>
 
-      {incomingPayment && (
+      {incomingPayment ? (
         <View className="flex flex-row items-center gap-1">
           <Text className="text-xs text-[#FFF4EA]">Incoming payment</Text>
 
@@ -48,7 +48,7 @@ export function BalanceCard({ balance, incomingPayment }: BalanceCardProp) {
             {balanceVisibility ? formatCurrency(incomingPayment) : '₦✼✼✼✼✼✼✼'}
           </Text>
         </View>
-      )}
+      ) : null}
 
       <Button
         onPress={() => SheetManager.show('withdraw-sheet')}

@@ -12,16 +12,16 @@ export default function TabsLayout() {
   const { startTracking, stopTracking } = useBackgroundLocation();
   const { user } = useAuthStore();
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     // Auto-start tracking for artisans
-  //     startTracking();
-  //   }
+  useEffect(() => {
+    if (isLoggedIn) {
+      // Auto-start tracking for artisans
+      startTracking();
+    }
 
-  //   return () => {
-  //     stopTracking();
-  //   };
-  // }, [isLoggedIn]);
+    return () => {
+      stopTracking();
+    };
+  }, [isLoggedIn]);
 
   return (
     <MarketplaceProvider artisanId={user?.id}>

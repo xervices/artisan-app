@@ -133,10 +133,10 @@ export default function Screen() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      if (!verifyNIN.data?.success || !verifyNameMatch()) {
-        showErrorMessage('Please validate your NIN before proceeding!.');
-        return;
-      }
+      // if (!verifyNIN.data?.success || !verifyNameMatch()) {
+      //   showErrorMessage('Please validate your NIN before proceeding!.');
+      //   return;
+      // }
 
       const data = { ...value, certifications, previousJobs };
 

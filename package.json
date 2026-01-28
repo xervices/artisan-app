@@ -3,6 +3,9 @@
   "main": "expo-router/entry",
   "version": "0.1.10",
   "scripts": {
+    "patch": "pnpm version patch",
+    "minor": "pnpm version minor",
+    "major": "pnpm version major",
     "dev": "expo start",
     "generate:schema": "npx openapi-typescript https://server-api-bibv.onrender.com/api/docs-json -o ./api/schema.ts",
     "build": "eas build --platform all",
@@ -24,6 +27,7 @@
     "clean": "rm -rf .expo node_modules"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^5.2.8",
     "@legendapp/list": "^2.0.16",
     "@react-native-community/datetimepicker": "8.4.4",
     "@react-navigation/native": "^7.0.0",

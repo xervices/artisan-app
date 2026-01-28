@@ -12,7 +12,11 @@ export default function Screen() {
     queries: [api.getCurrentArtisanProfile(), api.getArtisanOffers()],
   });
 
-  const { requests } = useMarketplaceContext();
+  const { requests } = useMarketplaceContext({
+    onOfferEvent(eventType, data) {
+      artisanOffers?.refetch();
+    },
+  });
 
   // const negotiatingOffers = artisanOffers?.data?.filter(
   //   (offer, index, self) =>

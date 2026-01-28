@@ -14,9 +14,12 @@ let refreshPromise: Promise<string | null> | null = null;
 
 /**
  * Refresh the access token using the refresh token
+ * Works in both foreground and background contexts
  * Prevents multiple simultaneous refresh requests
  */
-async function refreshAccessToken(): Promise<string | null> {
+export async function refreshAccessToken(
+  skipInBackground: boolean = false
+): Promise<string | null> {
   // If already refreshing, wait for that request to complete
   if (isRefreshing && refreshPromise) {
     console.log('⏳ Waiting for ongoing token refresh...');
@@ -36,15 +39,26 @@ async function refreshAccessToken(): Promise<string | null> {
 
       console.log('🔄 Refreshing access token...');
 
-      // Create a separate client without auth middleware to avoid infinite loop
-      const refreshClient = createClient<paths>({ baseUrl: BASE_URL });
-      const { data, error } = await refreshClient.POST('/api/auth/refresh', {
-        body: { refreshToken },
+      // Use direct fetch instead of client to ensure it works in background tasks
+      const response = await fetch(`${BASE_URL}/api/auth/refresh`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refreshToken }),
       });
 
-      if (error || !data) {
-        console.error('❌ Token refresh failed:', error);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Token refresh failed:', errorText);
         throw new Error('Failed to refresh token');
+      }
+
+      const data = await response.json();
+
+      if (!data.accessToken) {
+        console.error('❌ No access token in response');
+        throw new Error('No access token in response');
       }
 
       // Store new tokens
@@ -57,8 +71,12 @@ async function refreshAccessToken(): Promise<string | null> {
 
       // Clear tokens and logout on refresh failure
       await tokenStorage.clearTokens();
-      useAuthStore.getState().setLoginState(false);
-      showErrorMessage('Session expired, please login again');
+
+      // Only try to update auth state if not in background
+      if (!skipInBackground && useAuthStore.getState) {
+        useAuthStore.getState().setLoginState(false);
+        showErrorMessage('Session expired, please login again');
+      }
 
       return null;
     } finally {

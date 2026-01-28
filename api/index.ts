@@ -664,8 +664,28 @@ export const api = {
   startJob: (id: string) => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/jobs/{id}/start', 'post'>) => {
+        const formData = new FormData();
+
+        // @ts-ignore
+        if (credentials.beforePhotos && credentials.beforePhotos.length > 0) {
+          // @ts-ignore
+          credentials.beforePhotos.forEach((photo, index) => {
+            const extension = getFileExtension(photo.url, photo.mimeType);
+
+            const file = {
+              uri: normalizePath(photo.url),
+              type: photo.mimeType || 'application/pdf',
+              name: photo.name || `photo_${index}_${Date.now()}.${extension}`,
+            };
+            // @ts-ignore - FormData typing issue in React Native
+            formData.append('beforePhotos', file);
+          });
+        }
+
         const { data, error } = await apiClient.POST('/api/jobs/{id}/start', {
-          // body: credentials,
+          // @ts-ignore - FormData not properly typed in openapi-fetch
+          body: formData,
+          bodySerializer: () => formData, // Prevent body serialization
           params: {
             path: {
               id,
@@ -684,8 +704,28 @@ export const api = {
   completeJob: (id: string) => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/jobs/{id}/complete', 'post'>) => {
+        const formData = new FormData();
+
+        // @ts-ignore
+        if (credentials.afterPhotos && credentials.afterPhotos.length > 0) {
+          // @ts-ignore
+          credentials.afterPhotos.forEach((photo, index) => {
+            const extension = getFileExtension(photo.url, photo.mimeType);
+
+            const file = {
+              uri: normalizePath(photo.url),
+              type: photo.mimeType || 'application/pdf',
+              name: photo.name || `photo_${index}_${Date.now()}.${extension}`,
+            };
+            // @ts-ignore - FormData typing issue in React Native
+            formData.append('afterPhotos', file);
+          });
+        }
+
         const { data, error } = await apiClient.POST('/api/jobs/{id}/complete', {
-          // body: credentials,
+          // @ts-ignore - FormData not properly typed in openapi-fetch
+          body: formData,
+          bodySerializer: () => formData, // Prevent body serialization
           params: {
             path: {
               id,
@@ -705,7 +745,7 @@ export const api = {
     return {
       mutationFn: async (credentials: RequestBody<'/api/jobs/{id}/cancel', 'post'>) => {
         const { data, error } = await apiClient.POST('/api/jobs/{id}/cancel', {
-          // body: credentials,
+          body: credentials,
           params: {
             path: {
               id,
@@ -715,6 +755,58 @@ export const api = {
 
         if (error) {
           throw new Error(getErrorMessage(error, 'failed to cancel job.'));
+        }
+
+        return data;
+      },
+    };
+  },
+
+  // chat  endpoints
+  getChatRoom: (jobId: string) =>
+    queryOptions({
+      queryKey: ['job', 'chat', 'room', jobId],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/chat/jobs/{jobId}', {
+          params: {
+            path: {
+              jobId,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+  getMessagesChatRoom: (id: string) =>
+    queryOptions({
+      queryKey: ['chat', 'room', id, 'messages'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/chat/rooms/{id}/messages', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+  sendMessage: (id: string) => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/chat/rooms/{id}/messages', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/chat/rooms/{id}/messages', {
+          body: credentials,
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to send message.'));
         }
 
         return data;
