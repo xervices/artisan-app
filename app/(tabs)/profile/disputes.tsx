@@ -84,8 +84,8 @@ export default function Screen() {
                     elevation: 4,
                   }}
                   className="flex gap-4 rounded-[8px] bg-white p-4">
-                  <View className="flex flex-row items-center justify-between">
-                    <View>
+                  <View className="flex flex-row items-center justify-between gap-4">
+                    <View className="flex-1">
                       <Text className="flex-1 font-cabinet-bold leading-none text-[#1B1B1E]">
                         Plumber
                       </Text>
@@ -138,8 +138,8 @@ export default function Screen() {
                     elevation: 4,
                   }}
                   className="flex gap-4 rounded-[8px] bg-white p-4">
-                  <View className="flex flex-row items-center justify-between">
-                    <View>
+                  <View className="flex flex-row items-center justify-between gap-4">
+                    <View className="flex-1">
                       <Text className="flex-1 font-cabinet-bold leading-none text-[#1B1B1E]">
                         Plumber
                       </Text>

@@ -39,6 +39,8 @@ import { LoadingState } from '@/components/loading-state';
 import { formatCurrency, formatDateTime } from '@/lib/utils';
 import { SheetManager } from 'react-native-actions-sheet';
 import { showErrorMessage } from '@/api/helpers';
+import { useCameraPermissions } from 'expo-camera';
+import { UploadedMedia } from '@/components/uploaded-media';
 
 const formSchema = z.object({
   jobId: z.string().min(1, 'Job Id is required.'),
@@ -82,6 +84,13 @@ export default function Screen() {
   const { data, isLoading, refetch, isRefetching } = useQuery(api.getJobDetail(id));
 
   const createDispute = useMutation(api.createDispute());
+
+  const [permission] = useCameraPermissions();
+  const [showPermissionModal, setShowPermissionModal] = React.useState(false);
+
+  const [media, setMediaSrcs] = React.useState<
+    { url: string; mimeType: string; isVideo?: boolean }[]
+  >([]);
 
   const insets = useSafeAreaInsets();
   const contentInsets = {
@@ -241,30 +250,58 @@ export default function Screen() {
           </View>
 
           <View className="flex flex-row flex-wrap gap-2">
-            {new Array(4).fill(0).map((_, index) => (
-              <View
-                key={index}
-                className="relative aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
-                <Image
-                  source={require('@/assets/images/sample.png')}
-                  style={{ width: '100%', height: '100%' }}
-                  contentFit="cover"
-                />
-
-                <View className="absolute inset-0 flex items-center justify-center">
-                  <Pressable className="flex aspect-square w-[26px] items-center justify-center rounded-full bg-[#FFF4EA]">
-                    <Trash2 size={16} color={'#737381'} />
-                  </Pressable>
-                </View>
-              </View>
+            {media?.map((item) => (
+              <UploadedMedia
+                key={item.url}
+                url={item.url}
+                onDelete={() =>
+                  SheetManager.show('delete-image-sheet', {
+                    payload: {
+                      onDelete() {
+                        setMediaSrcs((prev) => prev.filter((media) => media.url !== item.url));
+                      },
+                    },
+                  })
+                }
+                type={item.isVideo ? 'video' : 'photo'}
+              />
             ))}
           </View>
 
-          <View className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
-            <Camera size={24} color={'#737381'} />
-          </View>
+          <Pressable
+            onPress={() => {
+              if (permission?.granted) {
+                SheetManager.show('camera-sheet', {
+                  payload: {
+                    onSelect(value) {
+                      setMediaSrcs((prev) => {
+                        return [...prev, value];
+                      });
+                    },
+                  },
+                });
+              } else {
+                setShowPermissionModal(true);
+              }
+            }}
+            className="flex aspect-[327/100] w-full items-center justify-center rounded-[8px] border-[2px] border-[#E9E9EB]">
+            <Image
+              source={require('@/assets/icons/camera-primary.svg')}
+              style={{ width: 24, height: 24 }}
+              contentFit="contain"
+            />
 
-          <Button className="mt-14" onPress={form.handleSubmit}>
+            <Text className="text-center text-sm text-[#FE6A00]">Add Photos/Videos</Text>
+            <Text className="text-center text-xs text-[#B4B4BC]">
+              Tap to add photos of the issue
+            </Text>
+          </Pressable>
+
+          <Button
+            isLoading={createDispute?.isPending}
+            disabled={createDispute?.isPending}
+            className="mt-14"
+            onPress={form.handleSubmit}>
             Submit Dispute
           </Button>
         </View>

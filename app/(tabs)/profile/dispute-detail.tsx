@@ -18,12 +18,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingState } from '@/components/loading-state';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatDateTime } from '@/lib/utils';
 
 export default function Screen() {
   const { id }: { id: string } = useLocalSearchParams();
 
   const { data, isLoading, refetch, isRefetching } = useQuery(api?.getDisputeDetail(id));
+
+  const job = useQuery(api.getJobDetail(data?.jobId));
 
   return (
     <Layout
@@ -42,15 +44,19 @@ export default function Screen() {
           <View className="flex w-full flex-row">
             <View className="flex w-1/2 flex-row items-center gap-2">
               <Avatar alt="User's Avatar" className="h-14 w-14">
-                <AvatarImage source={{ uri: 'https://github.com/mrzachnugent.png' }} />
+                <AvatarImage source={{ uri: job?.data?.user?.profile?.avatarUrl }} />
                 <AvatarFallback className="bg-primary">
-                  <Text className="font-cabinet-bold leading-none">ZN</Text>
+                  <Text className="font-cabinet-bold text-xs uppercase leading-none">
+                    {job?.data?.user?.profile?.fullName?.substring(0, 2)}
+                  </Text>
                 </AvatarFallback>
               </Avatar>
 
               <View>
                 <View className="flex flex-row items-center">
-                  <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">Sarah Rodri</Text>
+                  <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">
+                    {job?.data?.user?.profile?.fullName}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -59,7 +65,7 @@ export default function Screen() {
               <Text className="text-right text-xs text-[#FF6A00]">JOB ID ● {data?.jobId}</Text>
 
               <Text className="text-right font-cabinet-bold text-[18px] text-[#FF6A00]">
-                {formatCurrency(data?.refundAmount)}
+                {formatCurrency(job?.data?.finalAmount)}
               </Text>
             </View>
           </View>
@@ -67,17 +73,21 @@ export default function Screen() {
           <View className="flex w-full flex-row justify-between">
             <Text className="flex-1 text-sm text-[#737381]">Booking Date & Time</Text>
 
-            <Text className="font-cabinet-bold text-sm text-[#737381]">2025-11-27 17:47:27</Text>
+            <Text className="font-cabinet-bold text-sm text-[#737381]">
+              {formatDateTime(job?.data?.serviceRequest?.createdAt)}
+            </Text>
           </View>
 
           <View className="flex w-full flex-row justify-between">
             <Text className="flex-1 text-sm text-[#737381]">Job Description</Text>
 
-            <Text className="font-cabinet-bold text-sm text-[#737381]">Plumbing</Text>
+            <Text className="font-cabinet-bold text-sm text-[#737381]">
+              {job?.data?.serviceRequest?.category?.name}
+            </Text>
           </View>
 
           <View className="w-full rounded-[4px] border border-[#DFDFE1] p-4">
-            <Text className="flex-1 text-sm text-[#737381]">{data?.disputeType}</Text>
+            <Text className="flex-1 text-sm capitalize text-[#737381]">{data?.disputeType}</Text>
           </View>
 
           <View>
@@ -112,7 +122,7 @@ export default function Screen() {
                 </View>
               </View>
 
-              <View>
+              {/* <View>
                 <Text className="font-cabinet-bold text-xs text-[#B4B4BC]">After</Text>
 
                 <View className="flex flex-row flex-wrap gap-2">
@@ -126,7 +136,7 @@ export default function Screen() {
                     </View>
                   ))}
                 </View>
-              </View>
+              </View> */}
             </View>
           </View>
 

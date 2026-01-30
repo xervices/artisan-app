@@ -1,10 +1,11 @@
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { Pressable, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 import { Layout } from '@/components/layout';
 import { router, useLocalSearchParams, useNavigation, usePathname } from 'expo-router';
 import { SheetManager } from 'react-native-actions-sheet';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
+import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
@@ -16,6 +17,8 @@ import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 import CameraPermissionDialog from '@/components/camera-permission-dialog';
 import { useCurrentLocation, useLocation } from 'solomo';
 import { useJobsSocket } from '@/hooks/use-jobs-socket';
+import { useCameraPermissions } from 'expo-camera';
+import { makePhoneCall } from '@/lib/utils';
 
 const routeCoordinates = [
   { latitude: 37.78825, longitude: -122.4324 }, // Start point
@@ -32,8 +35,8 @@ export default function Screen() {
 
   const { data, isLoading, refetch, isRefetching } = useQuery(api.getJobDetail(id));
 
-  const pathname = usePathname();
-  const navigation = useNavigation();
+  const [permission] = useCameraPermissions();
+  const [showPermissionModal, setShowPermissionModal] = React.useState(false);
 
   const mapRef = React.useRef<MapView>(null);
 
@@ -57,6 +60,12 @@ export default function Screen() {
     { url: string; mimeType: string; isVideo?: boolean }[]
   >([]);
 
+  const [userLocation, setUserLocation] = React.useState(routeCoordinates[0]);
+  const [eta, setEta] = React.useState<string | null>(null);
+  const [routeCoords, setRouteCoords] = React.useState<{ latitude: number; longitude: number }[]>(
+    []
+  );
+
   const startJob = useMutation(api.startJob(id));
   const cancelJob = useMutation(api.cancelJob(id));
   const completeJob = useMutation(api.completeJob(id));
@@ -66,6 +75,9 @@ export default function Screen() {
 
   // Location Tracking Logic
   const lastLocationRef = React.useRef<{ latitude: number; longitude: number } | null>(null);
+  const lastEtaFetchLocationRef = React.useRef<{ latitude: number; longitude: number } | null>(
+    null
+  );
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const R = 6371000; // Earth's radius in meters
@@ -81,6 +93,88 @@ export default function Screen() {
 
     return R * c; // Distance in meters
   };
+
+  // Decode polyline from Google's encoded format
+  const decodePolyline = (encoded: string): { latitude: number; longitude: number }[] => {
+    const points: { latitude: number; longitude: number }[] = [];
+    let index = 0;
+    let lat = 0;
+    let lng = 0;
+
+    while (index < encoded.length) {
+      let b: number;
+      let shift = 0;
+      let result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      const dlat = result & 1 ? ~(result >> 1) : result >> 1;
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      const dlng = result & 1 ? ~(result >> 1) : result >> 1;
+      lng += dlng;
+
+      points.push({ latitude: lat / 1e5, longitude: lng / 1e5 });
+    }
+    return points;
+  };
+
+  const fetchEta = async (
+    origin: { latitude: number; longitude: number },
+    destination: { latitude: number; longitude: number }
+  ) => {
+    try {
+      const apiKey = 'AIzaSyDkT-0SiaW_dZq_ydeOTZAsKT6IvSgLp5Q'; // Fallback to dev key if Constants fails
+
+      if (!apiKey) {
+        console.warn('Google Maps API Key not found');
+        return;
+      }
+
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${apiKey}`
+      );
+
+      const result = await response.json();
+
+      if (result.routes && result.routes.length > 0 && result.routes[0].legs) {
+        const duration = result.routes[0].legs[0].duration.text;
+        setEta(duration);
+
+        // Decode and set polyline
+        const overviewPolyline = result.routes[0].overview_polyline?.points;
+        if (overviewPolyline) {
+          const decodedCoords = decodePolyline(overviewPolyline);
+          setRouteCoords(decodedCoords);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching ETA:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (mapRef.current && userLocation) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+        },
+        300
+      );
+    }
+  }, [userLocation]);
 
   React.useEffect(() => {
     let locationListener: any;
@@ -112,6 +206,10 @@ export default function Screen() {
 
                 if (distance >= 10) {
                   console.log(`📍 Moved ${Math.round(distance)}m, updating location`);
+                  setUserLocation({
+                    latitude: currentCoords.latitude,
+                    longitude: currentCoords.longitude,
+                  });
                   updateLocation(currentCoords.latitude, currentCoords.longitude).catch((err) =>
                     console.error('Failed to update location:', err)
                   );
@@ -119,9 +217,43 @@ export default function Screen() {
                     latitude: currentCoords.latitude,
                     longitude: currentCoords.longitude,
                   };
+
+                  // Check if we need to update ETA (throttle by 200m)
+                  if (data?.serviceRequest) {
+                    const distSinceLastEta = lastEtaFetchLocationRef.current
+                      ? calculateDistance(
+                          lastEtaFetchLocationRef.current.latitude,
+                          lastEtaFetchLocationRef.current.longitude,
+                          currentCoords.latitude,
+                          currentCoords.longitude
+                        )
+                      : 999999;
+
+                    if (
+                      distSinceLastEta >= 200 &&
+                      data.serviceRequest.serviceLatitude &&
+                      data.serviceRequest.serviceLongitude
+                    ) {
+                      fetchEta(
+                        { latitude: currentCoords.latitude, longitude: currentCoords.longitude },
+                        {
+                          latitude: data.serviceRequest.serviceLatitude,
+                          longitude: data.serviceRequest.serviceLongitude,
+                        }
+                      );
+                      lastEtaFetchLocationRef.current = {
+                        latitude: currentCoords.latitude,
+                        longitude: currentCoords.longitude,
+                      };
+                    }
+                  }
                 }
               } else {
                 // First location, always update
+                setUserLocation({
+                  latitude: currentCoords.latitude,
+                  longitude: currentCoords.longitude,
+                });
                 updateLocation(currentCoords.latitude, currentCoords.longitude).catch((err) =>
                   console.error('Failed to update location:', err)
                 );
@@ -129,6 +261,24 @@ export default function Screen() {
                   latitude: currentCoords.latitude,
                   longitude: currentCoords.longitude,
                 };
+
+                // Initial ETA fetch
+                if (
+                  data?.serviceRequest?.serviceLatitude &&
+                  data?.serviceRequest?.serviceLongitude
+                ) {
+                  fetchEta(
+                    { latitude: currentCoords.latitude, longitude: currentCoords.longitude },
+                    {
+                      latitude: data.serviceRequest.serviceLatitude,
+                      longitude: data.serviceRequest.serviceLongitude,
+                    }
+                  );
+                  lastEtaFetchLocationRef.current = {
+                    latitude: currentCoords.latitude,
+                    longitude: currentCoords.longitude,
+                  };
+                }
               }
             }
           };
@@ -159,14 +309,14 @@ export default function Screen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.status]);
 
-  React.useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.fitToCoordinates(routeCoordinates, {
-        edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-        animated: true,
-      });
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   if (mapRef.current) {
+  //     mapRef.current.fitToCoordinates(routeCoordinates, {
+  //       edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+  //       animated: true,
+  //     });
+  //   }
+  // }, []);
 
   const handleOnMarkArrived = () => {
     if (beforePhotos?.length < 1)
@@ -221,23 +371,26 @@ export default function Screen() {
         <View className="relative flex flex-1 items-center justify-center">
           <MapView
             ref={mapRef}
-            provider={PROVIDER_GOOGLE}
+            provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
             style={{ width: '100%', height: '100%' }}
             initialRegion={{
-              latitude: 37.78225,
-              longitude: -122.4264,
+              latitude: data?.serviceRequest?.serviceLatitude || 4.7425431,
+              longitude: data?.serviceRequest?.serviceLongitude || 7.0379143,
               latitudeDelta: 0.02,
               longitudeDelta: 0.02,
             }}>
-            <Polyline
-              coordinates={routeCoordinates}
-              strokeColor="#FE6A00" // Orange color
-              strokeWidth={4}
-              lineCap="round"
-              lineJoin="round"
-            />
+            {routeCoords.length > 0 && (
+              <Polyline
+                coordinates={routeCoords}
+                strokeColor="#FE6A00"
+                strokeWidth={4}
+                lineCap="round"
+                lineJoin="round"
+              />
+            )}
 
-            <Marker coordinate={routeCoordinates[0]} anchor={{ x: 0.5, y: 1 }}>
+            {/* User Marker */}
+            <Marker coordinate={userLocation} anchor={{ x: 0.5, y: 1 }}>
               <View
                 style={{
                   width: 30,
@@ -263,7 +416,10 @@ export default function Screen() {
             </Marker>
 
             <Marker
-              coordinate={routeCoordinates[routeCoordinates.length - 1]}
+              coordinate={{
+                latitude: data?.serviceRequest?.serviceLatitude || 4.7425431,
+                longitude: data?.serviceRequest?.serviceLongitude || 7.0379143,
+              }}
               anchor={{ x: 0.5, y: 0.5 }}>
               <View
                 style={{
@@ -293,7 +449,9 @@ export default function Screen() {
               Destination
             </Text>
 
-            <Text className="text-center text-xs text-[#1B1B1E]">Your are 2 mins away</Text>
+            <Text className="text-center text-xs text-[#1B1B1E]">
+              {eta ? `You are ${eta} away` : 'Calculating arrival time...'}
+            </Text>
           </View>
 
           <BottomSheet
@@ -333,7 +491,7 @@ export default function Screen() {
                     Don’t forget to check in when you arrive
                   </Text>
 
-                  <Text className="text-xs text-[#737381]">She'll check in when he arrives</Text>
+                  {/* <Text className="text-xs text-[#737381]">She'll check in when he arrives</Text> */}
                 </View>
 
                 <View className="flex w-full flex-row">
@@ -358,7 +516,12 @@ export default function Screen() {
                 </View>
 
                 <View className="flex flex-row gap-4">
-                  <Button className="flex-1 border-[#1B1B1E] bg-white">
+                  <Button
+                    disabled={!data?.user?.phoneVerified}
+                    onPress={() => {
+                      makePhoneCall(data?.user?.phoneNumber);
+                    }}
+                    className="flex-1 border-[#1B1B1E] bg-white">
                     <PhoneCall size={16} fill={'#1B1B1E'} />
 
                     <Text className="font-cabinet-bold text-[#1B1B1E]">Call</Text>
@@ -394,15 +557,19 @@ export default function Screen() {
 
                       <Pressable
                         onPress={() => {
-                          SheetManager.show('camera-sheet', {
-                            payload: {
-                              onSelect(value) {
-                                setBeforePhotos((prev) => {
-                                  return [...prev, value];
-                                });
+                          if (permission?.granted) {
+                            SheetManager.show('camera-sheet', {
+                              payload: {
+                                onSelect(value) {
+                                  setBeforePhotos((prev) => {
+                                    return [...prev, value];
+                                  });
+                                },
                               },
-                            },
-                          });
+                            });
+                          } else {
+                            setShowPermissionModal(true);
+                          }
                         }}
                         className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
                         <Camera size={24} color={'#737381'} />
@@ -412,12 +579,32 @@ export default function Screen() {
                         {beforePhotos?.map((photo, index) => (
                           <View
                             key={index}
-                            className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+                            className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
                             <Image
                               source={photo?.url}
                               style={{ width: '100%', height: '100%' }}
                               contentFit="cover"
                             />
+
+                            <Pressable
+                              onPress={() =>
+                                SheetManager.show('delete-image-sheet', {
+                                  payload: {
+                                    onDelete() {
+                                      setBeforePhotos((prev) =>
+                                        prev.filter((media) => media.url !== photo.url)
+                                      );
+                                    },
+                                  },
+                                })
+                              }
+                              className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
+                              <Image
+                                source={require('@/assets/icons/trash.svg')}
+                                style={{ width: 12, height: 12 }}
+                                contentFit="contain"
+                              />
+                            </Pressable>
                           </View>
                         ))}
                       </View>
@@ -435,7 +622,7 @@ export default function Screen() {
                           ? beforeEvidence?.map((i) => (
                               <View
                                 key={i?.id}
-                                className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+                                className="aspect-square w-20 overflow-hidden rounded-[4px]">
                                 <Image
                                   source={i?.mediaUrl}
                                   style={{ width: '100%', height: '100%' }}
@@ -455,17 +642,21 @@ export default function Screen() {
                       </Text>
 
                       <Pressable
-                        onPress={() =>
-                          SheetManager.show('camera-sheet', {
-                            payload: {
-                              onSelect(value) {
-                                setAfterPhotos((prev) => {
-                                  return [...prev, value];
-                                });
+                        onPress={() => {
+                          if (permission?.granted) {
+                            SheetManager.show('camera-sheet', {
+                              payload: {
+                                onSelect(value) {
+                                  setAfterPhotos((prev) => {
+                                    return [...prev, value];
+                                  });
+                                },
                               },
-                            },
-                          })
-                        }
+                            });
+                          } else {
+                            setShowPermissionModal(true);
+                          }
+                        }}
                         className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
                         <Camera size={24} color={'#737381'} />
                       </Pressable>
@@ -474,12 +665,32 @@ export default function Screen() {
                         {afterPhotos.map((photo, index) => (
                           <View
                             key={index}
-                            className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+                            className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
                             <Image
                               source={photo?.url}
                               style={{ width: '100%', height: '100%' }}
                               contentFit="cover"
                             />
+
+                            <Pressable
+                              onPress={() =>
+                                SheetManager.show('delete-image-sheet', {
+                                  payload: {
+                                    onDelete() {
+                                      setAfterPhotos((prev) =>
+                                        prev.filter((media) => media.url !== photo.url)
+                                      );
+                                    },
+                                  },
+                                })
+                              }
+                              className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
+                              <Image
+                                source={require('@/assets/icons/trash.svg')}
+                                style={{ width: 12, height: 12 }}
+                                contentFit="contain"
+                              />
+                            </Pressable>
                           </View>
                         ))}
                       </View>
@@ -497,7 +708,7 @@ export default function Screen() {
                           ? afterEvidence?.map((i) => (
                               <View
                                 key={i?.id}
-                                className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+                                className="aspect-square w-20 overflow-hidden rounded-[4px]">
                                 <Image
                                   source={i?.mediaUrl}
                                   style={{ width: '100%', height: '100%' }}
@@ -600,7 +811,33 @@ export default function Screen() {
         </View>
       </View>
 
-      <CameraPermissionDialog />
+      <CameraPermissionDialog
+        onPermissionsGranted={() => {
+          if (data?.status === 'in_progress') {
+            SheetManager.show('camera-sheet', {
+              payload: {
+                onSelect(value) {
+                  setAfterPhotos((prev) => {
+                    return [...prev, value];
+                  });
+                },
+              },
+            });
+          } else {
+            SheetManager.show('camera-sheet', {
+              payload: {
+                onSelect(value) {
+                  setBeforePhotos((prev) => {
+                    return [...prev, value];
+                  });
+                },
+              },
+            });
+          }
+        }}
+        visible={showPermissionModal}
+        setVisible={setShowPermissionModal}
+      />
     </Layout>
   );
 }

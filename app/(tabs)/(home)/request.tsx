@@ -11,7 +11,7 @@ import { formatCurrency } from '@/lib/utils';
 import { useMarketplaceContext } from '@/providers/use-marketplace-context';
 import { useMutation, useQueries } from '@tanstack/react-query';
 import { Image } from 'expo-image';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { CircleAlert, Play } from 'lucide-react-native';
 import { useEffect } from 'react';
 import { Pressable, View } from 'react-native';
@@ -29,7 +29,11 @@ export default function Screen() {
 
   const { offers } = useMarketplaceContext({
     onOfferEvent(eventType, data) {
-      artisanOffers?.refetch();
+      if (eventType === 'offer:accepted') {
+        showSuccessMessage('Offer accepted');
+        artisanOffers?.refetch();
+        router.replace('/');
+      }
     },
   });
 
@@ -64,6 +68,8 @@ export default function Screen() {
             avatarUrl={service?.data?.user?.profile?.avatarUrl}
             date={service?.data?.createdAt}
             name={service?.data?.user?.profile?.fullName}
+            serviceLat={service?.data?.serviceLatitude || undefined}
+            serviceLong={service?.data?.serviceLongitude || undefined}
           />
 
           <View className="flex flex-row items-center justify-between rounded-[8px] bg-[#F4F4F5] p-4">

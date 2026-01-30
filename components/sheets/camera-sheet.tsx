@@ -182,7 +182,7 @@ export function CameraSheet(props: SheetProps<'camera-sheet'>) {
           ? renderPicture(imageMedia?.uri, videoMedia?.uri)
           : renderCamera()}
 
-        <View className="mt-auto flex flex-row items-center justify-between">
+        <View className="mt-auto flex flex-row items-center justify-between pb-28">
           <Pressable
             onPress={pickImage}
             className="flex h-10 w-10 items-center justify-center rounded-full bg-[#27272B]">

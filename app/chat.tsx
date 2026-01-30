@@ -22,7 +22,7 @@ import { api } from '@/api';
 import * as z from 'zod';
 import { useForm } from '@tanstack/react-form';
 import { showErrorMessage } from '@/api/helpers';
-import { formatTime12HourIntl } from '@/lib/utils';
+import { formatTime12HourIntl, makePhoneCall } from '@/lib/utils';
 import { LoadingState } from '@/components/loading-state';
 import { useChatSocket } from '@/hooks/use-chat-socket';
 import { useAuthStore } from '@/store/auth-store';
@@ -155,7 +155,12 @@ export default function Screen() {
   });
 
   return (
-    <Layout useBackground scrollable={false}>
+    <Layout
+      isRefreshing={messages?.isRefetching}
+      onRefresh={messages?.refetch}
+      useBackground
+      scrollable={false}
+      keyboardAvoiding>
       {messages?.isLoading ? (
         <LoadingState title="Loading messages ..." />
       ) : (
@@ -165,7 +170,12 @@ export default function Screen() {
               <ArrowLeft size={28} color={'#B4B4BC'} />
             </Pressable>
 
-            <Pressable>
+            <Pressable
+              onPress={() => {
+                if (job?.data?.user?.phoneVerified) {
+                  makePhoneCall(job?.data?.user?.phoneNumber);
+                }
+              }}>
               <Phone size={24} color={'#FE6A00'} fill={'#FE6A00'} />
             </Pressable>
           </View>
