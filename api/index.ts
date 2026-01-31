@@ -536,6 +536,15 @@ export const api = {
         return data;
       },
     }),
+  getAllServiceRequest: () =>
+    queryOptions({
+      queryKey: ['service-request', 'all'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/service-requests');
+
+        return data;
+      },
+    }),
 
   // offers endpoints
   getArtisanOffers: () =>

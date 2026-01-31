@@ -4,9 +4,13 @@ import { Modal, Pressable, View } from 'react-native';
 import { X } from 'lucide-react-native';
 import { Button } from './ui/button';
 import { useLocation } from 'solomo';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/api';
 
 export default function EnableLocationDialog() {
-  const { hasPermission, requestPermission } = useLocation();
+  const { hasPermission, requestPermission, location } = useLocation();
+
+  const { mutate } = useMutation(api.updateLocation());
 
   const [visible, setVisible] = useState(!hasPermission);
 
@@ -17,6 +21,19 @@ export default function EnableLocationDialog() {
       setVisible(true);
     }
   }, [hasPermission]);
+
+  useEffect(() => {
+    if (location?.coords) {
+      mutate(
+        { latitude: location?.coords?.latitude, longitude: location?.coords?.longitude }
+        // {
+        //   onSuccess: (res) => {
+        //     console.log(res);
+        //   },
+        // }
+      );
+    }
+  }, [location]);
 
   return (
     <Modal visible={visible} transparent animationType="fade">

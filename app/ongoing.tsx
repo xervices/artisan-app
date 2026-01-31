@@ -7,7 +7,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 import MapView, { Marker, Polyline, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import Constants from 'expo-constants';
 import { Image } from 'expo-image';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { ArrowLeft, Camera, PhoneCall } from 'lucide-react-native';
@@ -34,6 +34,9 @@ export default function Screen() {
   const { id }: { id: string } = useLocalSearchParams();
 
   const { data, isLoading, refetch, isRefetching } = useQuery(api.getJobDetail(id));
+  const [artisanProfile, earnings] = useQueries({
+    queries: [api.getCurrentArtisanProfile(), api.getMyEarnings()],
+  });
 
   const [permission] = useCameraPermissions();
   const [showPermissionModal, setShowPermissionModal] = React.useState(false);
@@ -330,6 +333,8 @@ export default function Screen() {
       {
         onSuccess: (res) => {
           showSuccessMessage('Job marked as started.');
+          artisanProfile?.refetch();
+          earnings?.refetch();
           refetch();
         },
         onError: (err) => {
@@ -351,6 +356,8 @@ export default function Screen() {
       {
         onSuccess: (res) => {
           showSuccessMessage('Job marked as completed.');
+          artisanProfile?.refetch();
+          earnings?.refetch();
           refetch();
         },
         onError: (err) => {

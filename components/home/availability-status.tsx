@@ -9,7 +9,7 @@ import { LoadingIndicator } from '../ui/loading-indicator';
 import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 
 export function AvailabilityStatus() {
-  const { data, isError, isLoading, refetch } = useQuery(api.getCurrentArtisanProfile());
+  const { data, isError, isLoading, refetch, error } = useQuery(api.getCurrentArtisanProfile());
 
   const { isPending, mutate } = useMutation(api.toggleAvailability());
 

@@ -14,6 +14,7 @@ import {
   VerificationProfileSheet,
   VerificationProfileSheetPayload,
 } from './verification-profile-sheet';
+import { TransactionsPeriodTypes } from '@/api';
 
 interface CameraSheetPayload {
   url: string;
@@ -61,7 +62,12 @@ declare module 'react-native-actions-sheet' {
     }>;
     'withdraw-sheet': SheetDefinition;
     'pin-sheet': SheetDefinition;
-    'filter-sheet': SheetDefinition;
+    'filter-sheet': SheetDefinition<{
+      payload: {
+        onConfirm?: ({ period }: { period: TransactionsPeriodTypes }) => void;
+        selectedPeriod: 'offer' | 'counter';
+      };
+    }>;
     'success-sheet': SheetDefinition<{
       payload: {
         title: string;

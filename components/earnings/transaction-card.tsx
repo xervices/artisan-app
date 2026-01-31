@@ -1,11 +1,18 @@
 import { View } from 'react-native';
 import { Text } from '../ui/text';
+import { formatCurrency, formatDateTime } from '@/lib/utils';
 
 interface TransactionCardProps {
   type?: string;
+  amount?: number;
+  date?: string;
 }
 
-export default function TransactionCard({ type = 'income' }: TransactionCardProps) {
+export default function TransactionCard({
+  type = 'income',
+  amount = 0,
+  date,
+}: TransactionCardProps) {
   return (
     <View className="flex flex-shrink-0 flex-row gap-2 rounded-[8px] border border-[#F4F4F5] bg-white p-4">
       <View className="flex-1 gap-1">
@@ -16,36 +23,45 @@ export default function TransactionCard({ type = 'income' }: TransactionCardProp
           </Text>
         </Text>
 
-        {type === 'income' && (
+        {type === 'payment_received' && (
           <Text className="font-cabinet-bold text-sm text-[#737381]">
             Alex Baker
-            <Text className="font-cabinet-bold text-sm text-[#22973B]">+₦8500</Text>
+            <Text className="font-cabinet-bold text-sm text-[#22973B]">
+              +{formatCurrency(amount)}
+            </Text>
           </Text>
         )}
 
         {type === 'withdrawal' && (
           <Text className="font-cabinet-bold text-sm text-[#737381]">
             Amount
-            <Text className="font-cabinet-bold text-sm text-[#22973B]">+₦8500</Text>
+            <Text className="font-cabinet-bold text-sm text-[#22973B]">
+              +{formatCurrency(amount)}
+            </Text>
           </Text>
         )}
 
         {type === 'dispute' && (
           <Text className="font-cabinet-bold text-sm text-[#737381]">
             Alex Baker
-            <Text className="font-cabinet-bold text-sm text-[#B3031E]">+₦8500</Text>
+            <Text className="font-cabinet-bold text-sm text-[#B3031E]">
+              +{formatCurrency(amount)}
+            </Text>
           </Text>
         )}
       </View>
 
       <View className="flex items-end gap-1">
-        {type === 'income' && (
+        {type === 'payment_received' && (
           <Text className="text-sm text-[#22973B]">
-            Income <Text className="font-cabinet-bold text-sm text-[#22973B]">+₦8500</Text>
+            Income{' '}
+            <Text className="font-cabinet-bold text-sm text-[#22973B]">
+              +{formatCurrency(amount)}
+            </Text>
           </Text>
         )}
 
-        {type === 'income' && (
+        {type === 'payment_received' && (
           <Text className="text-sm text-[#737381]">
             Charges
             <Text className="font-cabinet-bold text-sm text-[#737381]">₦425</Text>
@@ -54,7 +70,7 @@ export default function TransactionCard({ type = 'income' }: TransactionCardProp
 
         {type === 'dispute' && <Text className="text-sm text-[#B3031E]">Dispute</Text>}
 
-        <Text className="text-xs text-[#737381]">2025-11-27 17:47:27</Text>
+        <Text className="text-xs text-[#737381]">{formatDateTime(date)}</Text>
       </View>
     </View>
   );

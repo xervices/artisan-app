@@ -53,6 +53,23 @@ export const MarketplaceProvider: React.FC<MarketplaceProviderProps> = ({
     setOffersEnabled(true);
   }, []);
 
+  // Listen for offer:accepted and remove the associated request
+  React.useEffect(() => {
+    const socket = offersData.socket;
+    if (!socket || !activeServiceRequestId) return;
+
+    const handleOfferAccepted = () => {
+      // When an offer is accepted, remove the associated request
+      requestsData.removeRequest(activeServiceRequestId);
+    };
+
+    socket.on('offer:accepted', handleOfferAccepted);
+
+    return () => {
+      socket.off('offer:accepted', handleOfferAccepted);
+    };
+  }, [offersData.socket, activeServiceRequestId, requestsData]);
+
   const value: MarketplaceContextType = {
     offers: {
       ...offersData,

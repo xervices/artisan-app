@@ -63,7 +63,20 @@ export default function Screen() {
           </TabsList>
 
           {/* Earnings content */}
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={earnings?.isRefetching || transactions?.isRefetching}
+                onRefresh={() => {
+                  earnings?.refetch();
+                  transactions?.refetch();
+                }}
+                tintColor={'#E15D02'}
+                colors={['#E15D02']}
+              />
+            }
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={false}>
             <TabsContent value="earnings" className="flex gap-4 pb-16 pt-4">
               {earnings?.isLoading || transactions?.isLoading ? (
                 <LoadingState title="Loading your earnings..." />
@@ -91,7 +104,12 @@ export default function Screen() {
                   </View>
 
                   {transactions?.data?.slice(0, 5)?.map((transaction) => (
-                    <TransactionCard key={transaction?.id} type={transaction?.type} />
+                    <TransactionCard
+                      key={transaction?.id}
+                      type={transaction?.type}
+                      amount={transaction?.amount}
+                      date={transaction?.createdAt}
+                    />
                   ))}
                 </>
               )}

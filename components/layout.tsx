@@ -27,7 +27,7 @@ export function Layout({
   children,
   bottomPadding = 8,
   horizontalPadding = true,
-  keyboardAvoiding = false,
+  keyboardAvoiding = true,
   paddingHorizontal = 24,
   scrollable = true,
   topPadding = 8,
@@ -65,6 +65,7 @@ export function Layout({
         <ScrollView
           contentContainerStyle={contentContainerStyles}
           keyboardShouldPersistTaps="handled"
+          automaticallyAdjustKeyboardInsets
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -95,7 +96,7 @@ export function Layout({
       {keyboardAvoiding ? (
         <KeyboardAvoidingView
           style={containerStyles}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
           {content}
         </KeyboardAvoidingView>

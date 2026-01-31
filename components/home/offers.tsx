@@ -16,37 +16,51 @@ export function Offers() {
 
   const { data } = useQuery(api.getArtisanOffers());
 
-  // const negotiatingOffers = data?.filter(
-  //   (offer, index, self) =>
-  //     self.findIndex((o) => o.serviceRequest?.id === offer.serviceRequest?.id) === index
-  // );
+  const pendingOffers = data?.filter((i) => i.status === 'pending');
 
-  if (!requests || !requests.requests || requests.requests.length === 0) return null;
+  // Transform pendingOffers to ServiceRequestData format
+  const transformedPendingOffers: ServiceRequestData[] =
+    pendingOffers?.map((offer) => ({
+      categoryId: offer.serviceRequest?.category?.id || '',
+      title: offer.serviceRequest?.title || '',
+      budgetMax: offer.serviceRequest?.budgetMax || 0,
+      budgetMin: offer.serviceRequest?.budgetMin || 0,
+      createdAt: offer.serviceRequest?.createdAt || '',
+      id: offer.serviceRequest?.id || '',
+      categoryName: offer.serviceRequest?.category?.name || '',
+      description: offer?.serviceRequest?.description || '',
+      preferredDate: offer?.serviceRequest?.createdAt || '',
+      serviceAddress: offer?.serviceRequest?.serviceAddress || '',
+      user: offer?.serviceRequest?.user
+        ? {
+            name: offer?.serviceRequest?.user?.profile?.fullName || '',
+            avatarUrl: offer?.serviceRequest?.user?.profile?.avatarUrl || '',
+          }
+        : {
+            avatarUrl: '',
+            name: '',
+          },
+    })) || [];
+
+  // Unify requests and pendingOffers, sort by createdAt (most recent first), take first 2
+  const unifiedData: ServiceRequestData[] = [
+    ...(requests?.requests || []),
+    ...transformedPendingOffers,
+  ]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 2);
+
+  // Return null if no data
+  if (unifiedData.length === 0) return null;
 
   return (
     <View className="flex gap-2">
       <Text className="font-cabinet-medium text-xs uppercase">New request</Text>
 
       <View className="flex gap-4">
-        {requests.requests?.slice(0, 2)?.map((offer) => (
+        {unifiedData.map((offer) => (
           <OfferCard key={offer.id} data={offer} />
         ))}
-
-        {/* {negotiatingOffers &&
-          negotiatingOffers?.length > 0 &&
-          negotiatingOffers?.slice(0, 2)?.map((offer) => (
-            <OfferCard
-              key={offer.id}
-              data={{
-                categoryId: offer.serviceRequest?.category.name || '',
-                title: offer.serviceRequest?.title || '',
-                budgetMax: offer.serviceRequest?.budgetMax || 0,
-                budgetMin: offer.serviceRequest?.budgetMin || 0,
-                createdAt: offer.serviceRequest?.createdAt || '',
-                id: offer.serviceRequest?.id || '',
-              }}
-            />
-          ))} */}
       </View>
 
       <Pressable

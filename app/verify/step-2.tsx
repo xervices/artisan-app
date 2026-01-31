@@ -227,27 +227,94 @@ export default function Screen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+    <View className="flex-1">
       {categories.isLoading ? (
         <LoadingState />
       ) : (
-        <View className="flex-1 gap-4 bg-white">
-          <Text className="text-center font-cabinet-bold text-xs text-[#B4B4BC]">Step 2 of 2</Text>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View className="flex-1 gap-4 bg-white">
+            <Text className="text-center font-cabinet-bold text-xs text-[#B4B4BC]">
+              Step 2 of 2
+            </Text>
 
-          <Text className="text-center text-sm text-[#737381]">
-            Connect with thousands of potential customers
-          </Text>
+            <Text className="text-center text-sm text-[#737381]">
+              Connect with thousands of potential customers
+            </Text>
 
-          <View className="flex gap-4">
-            {categories.data && (
-              <form.Field name="categoryIds">
+            <View className="flex gap-4">
+              {categories.data && (
+                <form.Field name="categoryIds">
+                  {(field) => (
+                    <View>
+                      <Label nativeID="skill">Select skill</Label>
+
+                      <Select>
+                        <SelectTrigger ref={ref} className="w-full bg-white">
+                          <SelectValue id="skill" placeholder="Select Skill" />
+                        </SelectTrigger>
+                        <SelectContent
+                          insets={contentInsets}
+                          className="mt-2 w-full bg-white"
+                          style={{ maxHeight: 300 }}>
+                          <NativeSelectScrollView className="h-full">
+                            <SelectGroup>
+                              <SelectLabel>Skills</SelectLabel>
+                              {categories.data?.map((cat) => (
+                                <SelectItem
+                                  onPress={() => {
+                                    if (!field.state.value.includes(cat.id)) {
+                                      field.handleChange((prev) => [...prev, cat.id]);
+                                    }
+                                  }}
+                                  key={cat.id}
+                                  label={cat.name}
+                                  value={cat.id}>
+                                  {cat.name}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </NativeSelectScrollView>
+                        </SelectContent>
+                      </Select>
+
+                      {!field.state.meta.isValid ? (
+                        <InputError errors={field.state.meta.errors} />
+                      ) : null}
+
+                      <View className="mt-1 flex flex-row flex-wrap gap-2">
+                        {field.state.value?.map(
+                          (item) =>
+                            item && (
+                              <View
+                                key={item}
+                                className="flex flex-row items-center gap-2 rounded-sm border px-2 py-1">
+                                <Text className="text-xs leading-none">
+                                  {categories.data?.find((i) => i.id === item)?.name}
+                                </Text>
+
+                                <Pressable
+                                  onPress={() => {
+                                    field.handleChange((prev) => prev.filter((i) => i !== item));
+                                  }}>
+                                  <X size={16} color={'#B3031E'} />
+                                </Pressable>
+                              </View>
+                            )
+                        )}
+                      </View>
+                    </View>
+                  )}
+                </form.Field>
+              )}
+
+              <form.Field name="identificationType">
                 {(field) => (
                   <View>
-                    <Label nativeID="skill">Select skill</Label>
+                    <Label nativeID="idType">Select Identification</Label>
 
-                    <Select>
+                    <Select defaultValue={{ label: 'NIN', value: 'NIN' }}>
                       <SelectTrigger ref={ref} className="w-full bg-white">
-                        <SelectValue id="skill" placeholder="Select Skill" />
+                        <SelectValue id="idType" placeholder="Select Identification" />
                       </SelectTrigger>
                       <SelectContent
                         insets={contentInsets}
@@ -255,18 +322,16 @@ export default function Screen() {
                         style={{ maxHeight: 300 }}>
                         <NativeSelectScrollView className="h-full">
                           <SelectGroup>
-                            <SelectLabel>Skills</SelectLabel>
-                            {categories.data?.map((cat) => (
+                            <SelectLabel>ID Type</SelectLabel>
+                            {idTypes.map((id) => (
                               <SelectItem
                                 onPress={() => {
-                                  if (!field.state.value.includes(cat.id)) {
-                                    field.handleChange((prev) => [...prev, cat.id]);
-                                  }
+                                  field.handleChange(id.value);
                                 }}
-                                key={cat.id}
-                                label={cat.name}
-                                value={cat.id}>
-                                {cat.name}
+                                key={id.value}
+                                label={id.label}
+                                value={id.value}>
+                                {id.label}
                               </SelectItem>
                             ))}
                           </SelectGroup>
@@ -277,379 +342,320 @@ export default function Screen() {
                     {!field.state.meta.isValid ? (
                       <InputError errors={field.state.meta.errors} />
                     ) : null}
-
-                    <View className="mt-1 flex flex-row flex-wrap gap-2">
-                      {field.state.value?.map(
-                        (item) =>
-                          item && (
-                            <View
-                              key={item}
-                              className="flex flex-row items-center gap-2 rounded-sm border px-2 py-1">
-                              <Text className="text-xs leading-none">
-                                {categories.data?.find((i) => i.id === item)?.name}
-                              </Text>
-
-                              <Pressable
-                                onPress={() => {
-                                  field.handleChange((prev) => prev.filter((i) => i !== item));
-                                }}>
-                                <X size={16} color={'#B3031E'} />
-                              </Pressable>
-                            </View>
-                          )
-                      )}
-                    </View>
                   </View>
                 )}
               </form.Field>
-            )}
 
-            <form.Field name="identificationType">
-              {(field) => (
-                <View>
-                  <Label nativeID="idType">Select Identification</Label>
+              <form.Field name="identificationNumber">
+                {(field) => (
+                  <View>
+                    <Label nativeID="idNumber">Enter Identification Number</Label>
+                    <Input
+                      className="bg-white"
+                      id="idNumber"
+                      value={String(field.state.value)}
+                      onChangeText={field.handleChange}
+                      placeholder="Enter your ID number."
+                      keyboardType="number-pad"
+                      hasError={!field.state.meta.isValid}
+                      editable={!verifyNIN.isPending}
+                    />
+                    {!field.state.meta.isValid ? (
+                      <InputError errors={field.state.meta.errors} />
+                    ) : null}
 
-                  <Select defaultValue={{ label: 'NIN', value: 'NIN' }}>
-                    <SelectTrigger ref={ref} className="w-full bg-white">
-                      <SelectValue id="idType" placeholder="Select Identification" />
-                    </SelectTrigger>
-                    <SelectContent
-                      insets={contentInsets}
-                      className="mt-2 w-full bg-white"
-                      style={{ maxHeight: 300 }}>
-                      <NativeSelectScrollView className="h-full">
-                        <SelectGroup>
-                          <SelectLabel>ID Type</SelectLabel>
-                          {idTypes.map((id) => (
-                            <SelectItem
-                              onPress={() => {
-                                field.handleChange(id.value);
-                              }}
-                              key={id.value}
-                              label={id.label}
-                              value={id.value}>
-                              {id.label}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </NativeSelectScrollView>
-                    </SelectContent>
-                  </Select>
+                    <form.Subscribe
+                      selector={(state) => ({
+                        idNumber: state.values.identificationNumber,
+                      })}
+                      children={({ idNumber }) => {
+                        React.useEffect(() => {
+                          if (idNumber && idNumber.length === 11) {
+                            verifyNIN.mutate({ nin: idNumber });
+                          }
+                        }, [idNumber]);
 
-                  {!field.state.meta.isValid ? (
-                    <InputError errors={field.state.meta.errors} />
-                  ) : null}
-                </View>
-              )}
-            </form.Field>
+                        return (
+                          <View className="flex flex-row gap-2">
+                            {verifyNIN.isSuccess &&
+                              verifyNIN.data.success === true &&
+                              verifyNameMatch() && (
+                                <Text className="text-xs text-[#2BC84E]">Match with name</Text>
+                              )}
 
-            <form.Field name="identificationNumber">
-              {(field) => (
-                <View>
-                  <Label nativeID="idNumber">Enter Identification Number</Label>
-                  <Input
-                    className="bg-white"
-                    id="idNumber"
-                    value={String(field.state.value)}
-                    onChangeText={field.handleChange}
-                    placeholder="Enter your ID number."
-                    keyboardType="number-pad"
-                    hasError={!field.state.meta.isValid}
-                    editable={!verifyNIN.isPending}
-                  />
-                  {!field.state.meta.isValid ? (
-                    <InputError errors={field.state.meta.errors} />
-                  ) : null}
+                            {verifyNIN.isSuccess &&
+                              verifyNIN.data.success === true &&
+                              !verifyNameMatch() && (
+                                <Text className="text-xs text-[#B3031E]">
+                                  Name associated with NIN does not match registered name.
+                                </Text>
+                              )}
 
-                  <form.Subscribe
-                    selector={(state) => ({
-                      idNumber: state.values.identificationNumber,
-                    })}
-                    children={({ idNumber }) => {
-                      React.useEffect(() => {
-                        if (idNumber && idNumber.length === 11) {
-                          verifyNIN.mutate({ nin: idNumber });
-                        }
-                      }, [idNumber]);
-
-                      return (
-                        <View className="flex flex-row gap-2">
-                          {verifyNIN.isSuccess &&
-                            verifyNIN.data.success === true &&
-                            verifyNameMatch() && (
-                              <Text className="text-xs text-[#2BC84E]">Match with name</Text>
-                            )}
-
-                          {verifyNIN.isSuccess &&
-                            verifyNIN.data.success === true &&
-                            !verifyNameMatch() && (
+                            {verifyNIN.isSuccess && verifyNIN.data.success === false && (
                               <Text className="text-xs text-[#B3031E]">
-                                Name associated with NIN does not match registered name.
+                                {verifyNIN.data.message}
                               </Text>
                             )}
 
-                          {verifyNIN.isSuccess && verifyNIN.data.success === false && (
-                            <Text className="text-xs text-[#B3031E]">{verifyNIN.data.message}</Text>
-                          )}
+                            {verifyNIN.isPending && (
+                              <>
+                                <LoadingIndicator size={14} />
 
-                          {verifyNIN.isPending && (
-                            <>
-                              <LoadingIndicator size={14} />
+                                <Text className="text-xs">Validating your NIN</Text>
+                              </>
+                            )}
 
-                              <Text className="text-xs">Validating your NIN</Text>
-                            </>
-                          )}
+                            {verifyNIN.isError && (
+                              <Text className="text-xs text-[#B3031E]">
+                                {verifyNIN.error.message}
+                              </Text>
+                            )}
+                          </View>
+                        );
+                      }}
+                    />
+                  </View>
+                )}
+              </form.Field>
 
-                          {verifyNIN.isError && (
-                            <Text className="text-xs text-[#B3031E]">
-                              {verifyNIN.error.message}
-                            </Text>
-                          )}
+              <form.Field name="yearsOfExperience">
+                {(field) => (
+                  <View>
+                    <Label nativeID="exp">Years of experience</Label>
+                    <Input
+                      className="bg-white"
+                      id="exp"
+                      value={String(field.state.value)}
+                      onChangeText={field.handleChange}
+                      placeholder="Enter your years of experience."
+                      keyboardType="number-pad"
+                      hasError={!field.state.meta.isValid}
+                    />
+                    {!field.state.meta.isValid ? (
+                      <InputError errors={field.state.meta.errors} />
+                    ) : null}
+                  </View>
+                )}
+              </form.Field>
+
+              <form.Field name="professionalLicenseNumber">
+                {(field) => (
+                  <View>
+                    <Label nativeID="license">Professional license number</Label>
+                    <Input
+                      className="bg-white"
+                      id="license"
+                      value={field.state.value}
+                      onChangeText={field.handleChange}
+                      placeholder="Enter your Professional license number."
+                      hasError={!field.state.meta.isValid}
+                    />
+                    {!field.state.meta.isValid ? (
+                      <InputError errors={field.state.meta.errors} />
+                    ) : null}
+                  </View>
+                )}
+              </form.Field>
+
+              <form.Field name="licenseIssueState">
+                {(field) => (
+                  <View>
+                    <Label nativeID="state">Issue state</Label>
+
+                    <Select>
+                      <SelectTrigger className="w-full bg-white">
+                        <SelectValue id="state" placeholder="Select State" />
+                      </SelectTrigger>
+                      <SelectContent
+                        insets={contentInsets}
+                        className="mt-2 w-full bg-white"
+                        style={{ maxHeight: 300 }}>
+                        <NativeSelectScrollView className="h-full">
+                          <SelectGroup>
+                            <SelectLabel>State</SelectLabel>
+                            {NIGERIAN_STATES.map((state) => (
+                              <SelectItem
+                                onPress={() => {
+                                  field.handleChange(state.state);
+                                }}
+                                key={state.state}
+                                label={state.state}
+                                value={state.state}>
+                                {state.state}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </NativeSelectScrollView>
+                      </SelectContent>
+                    </Select>
+
+                    {!field.state.meta.isValid ? (
+                      <InputError errors={field.state.meta.errors} />
+                    ) : null}
+                  </View>
+                )}
+              </form.Field>
+
+              <form.Field name="licenseIssueDate">
+                {(field) => (
+                  <View>
+                    <Label nativeID="date">Issue date</Label>
+
+                    <DateInput
+                      label="Enter Issue date"
+                      onSelect={(date) => {
+                        field.handleChange(date.toISOString());
+                      }}
+                    />
+
+                    {!field.state.meta.isValid ? (
+                      <InputError errors={field.state.meta.errors} />
+                    ) : null}
+                  </View>
+                )}
+              </form.Field>
+
+              <View>
+                <Label nativeID="certs">Upload certifications</Label>
+
+                <Text className="text-sm text-[#737381]">
+                  Upload valid documents that shows you are a professional in your field.
+                </Text>
+
+                <View className="my-2 flex gap-2">
+                  {/* selected documents */}
+                  {certifications?.map((doc, index) => (
+                    <View
+                      key={index}
+                      className="flex flex-row items-center gap-2 rounded-[8px] bg-[#FFF4EA] p-[10px]">
+                      <View className="flex flex-1 flex-row items-center gap-6">
+                        <Image
+                          source={require('@/assets/icons/image.svg')}
+                          style={{ width: 24, height: 24 }}
+                          contentFit="contain"
+                        />
+
+                        <View className="flex flex-1 flex-row items-center gap-2">
+                          <Text className="flex-1 text-xs text-[#3E1A00]" numberOfLines={1}>
+                            {doc.name}
+                          </Text>
+
+                          <View className="h-1 w-1 rounded-full bg-[#767676]" />
+
+                          <Pressable
+                            onPress={() =>
+                              SheetManager.show('image-preview-sheet', {
+                                payload: {
+                                  imgSource: doc.uri,
+                                },
+                              })
+                            }>
+                            <Text className="text-xs text-[#FE6A00]">Preview</Text>
+                          </Pressable>
                         </View>
-                      );
-                    }}
-                  />
-                </View>
-              )}
-            </form.Field>
+                      </View>
 
-            <form.Field name="yearsOfExperience">
-              {(field) => (
-                <View>
-                  <Label nativeID="exp">Years of experience</Label>
-                  <Input
-                    className="bg-white"
-                    id="exp"
-                    value={String(field.state.value)}
-                    onChangeText={field.handleChange}
-                    placeholder="Enter your years of experience."
-                    keyboardType="number-pad"
-                    hasError={!field.state.meta.isValid}
-                  />
-                  {!field.state.meta.isValid ? (
-                    <InputError errors={field.state.meta.errors} />
-                  ) : null}
-                </View>
-              )}
-            </form.Field>
-
-            <form.Field name="professionalLicenseNumber">
-              {(field) => (
-                <View>
-                  <Label nativeID="license">Professional license number</Label>
-                  <Input
-                    className="bg-white"
-                    id="license"
-                    value={field.state.value}
-                    onChangeText={field.handleChange}
-                    placeholder="Enter your Professional license number."
-                    hasError={!field.state.meta.isValid}
-                  />
-                  {!field.state.meta.isValid ? (
-                    <InputError errors={field.state.meta.errors} />
-                  ) : null}
-                </View>
-              )}
-            </form.Field>
-
-            <form.Field name="licenseIssueState">
-              {(field) => (
-                <View>
-                  <Label nativeID="state">Issue state</Label>
-
-                  <Select>
-                    <SelectTrigger className="w-full bg-white">
-                      <SelectValue id="state" placeholder="Select State" />
-                    </SelectTrigger>
-                    <SelectContent
-                      insets={contentInsets}
-                      className="mt-2 w-full bg-white"
-                      style={{ maxHeight: 300 }}>
-                      <NativeSelectScrollView className="h-full">
-                        <SelectGroup>
-                          <SelectLabel>State</SelectLabel>
-                          {NIGERIAN_STATES.map((state) => (
-                            <SelectItem
-                              onPress={() => {
-                                field.handleChange(state.state);
-                              }}
-                              key={state.state}
-                              label={state.state}
-                              value={state.state}>
-                              {state.state}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </NativeSelectScrollView>
-                    </SelectContent>
-                  </Select>
-
-                  {!field.state.meta.isValid ? (
-                    <InputError errors={field.state.meta.errors} />
-                  ) : null}
-                </View>
-              )}
-            </form.Field>
-
-            <form.Field name="licenseIssueDate">
-              {(field) => (
-                <View>
-                  <Label nativeID="date">Issue date</Label>
-
-                  <DateInput
-                    label="Enter Issue date"
-                    onSelect={(date) => {
-                      field.handleChange(date.toISOString());
-                    }}
-                  />
-
-                  {!field.state.meta.isValid ? (
-                    <InputError errors={field.state.meta.errors} />
-                  ) : null}
-                </View>
-              )}
-            </form.Field>
-
-            <View>
-              <Label nativeID="certs">Upload certifications</Label>
-
-              <Text className="text-sm text-[#737381]">
-                Upload valid documents that shows you are a professional in your field.
-              </Text>
-
-              <View className="my-2 flex gap-2">
-                {/* selected documents */}
-                {certifications?.map((doc, index) => (
-                  <View
-                    key={index}
-                    className="flex flex-row items-center gap-2 rounded-[8px] bg-[#FFF4EA] p-[10px]">
-                    <View className="flex flex-1 flex-row items-center gap-6">
-                      <Image
-                        source={require('@/assets/icons/image.svg')}
-                        style={{ width: 24, height: 24 }}
-                        contentFit="contain"
-                      />
-
-                      <View className="flex flex-1 flex-row items-center gap-2">
-                        <Text className="flex-1 text-xs text-[#3E1A00]" numberOfLines={1}>
-                          {doc.name}
-                        </Text>
-
-                        <View className="h-1 w-1 rounded-full bg-[#767676]" />
+                      <View className="flex flex-row items-center gap-6">
+                        <Text className="text-xs text-[#A44400]">{formatSizeToMB(doc.size)}</Text>
 
                         <Pressable
-                          onPress={() =>
-                            SheetManager.show('image-preview-sheet', {
-                              payload: {
-                                imgSource: doc.uri,
-                              },
-                            })
-                          }>
-                          <Text className="text-xs text-[#FE6A00]">Preview</Text>
+                          onPress={() => {
+                            setCertifications((prev) => prev.filter((_, i) => i !== index));
+                          }}>
+                          <X color={'#737381'} size={16} />
                         </Pressable>
                       </View>
                     </View>
+                  ))}
+                </View>
 
-                    <View className="flex flex-row items-center gap-6">
-                      <Text className="text-xs text-[#A44400]">{formatSizeToMB(doc.size)}</Text>
+                <Pressable
+                  onPress={pickDocument}
+                  className="mt-1 flex aspect-[327/100] w-full items-center justify-center rounded-[8px] border-2 border-[#E9E9EB]">
+                  <Image
+                    source={require('@/assets/icons/document.svg')}
+                    style={{ width: 24, height: 24 }}
+                    contentFit="contain"
+                  />
 
-                      <Pressable
-                        onPress={() => {
-                          setCertifications((prev) => prev.filter((_, i) => i !== index));
-                        }}>
-                        <X color={'#737381'} size={16} />
-                      </Pressable>
-                    </View>
-                  </View>
-                ))}
+                  <Text className="text-center text-sm text-[#FE6A00]">Add Documents</Text>
+                  <Text className="text-center text-xs text-[#B4B4BC]">Upload certificate </Text>
+                </Pressable>
               </View>
 
-              <Pressable
-                onPress={pickDocument}
-                className="mt-1 flex aspect-[327/100] w-full items-center justify-center rounded-[8px] border-2 border-[#E9E9EB]">
-                <Image
-                  source={require('@/assets/icons/document.svg')}
-                  style={{ width: 24, height: 24 }}
-                  contentFit="contain"
-                />
+              <View>
+                <Label nativeID="prev">Upload previous jobs</Label>
 
-                <Text className="text-center text-sm text-[#FE6A00]">Add Documents</Text>
-                <Text className="text-center text-xs text-[#B4B4BC]">Upload certificate </Text>
-              </Pressable>
-            </View>
+                <Text className="text-sm text-[#737381]">A minimum of 4</Text>
 
-            <View>
-              <Label nativeID="prev">Upload previous jobs</Label>
+                <View className="my-2 flex gap-2">
+                  {/* selected photos */}
+                  {previousJobs?.map((doc, index) => (
+                    <View
+                      key={index}
+                      className="flex flex-row items-center gap-2 rounded-[8px] bg-[#FFF4EA] p-[10px]">
+                      <View className="flex flex-1 flex-row items-center gap-6">
+                        <Image
+                          source={require('@/assets/icons/image.svg')}
+                          style={{ width: 24, height: 24 }}
+                          contentFit="contain"
+                        />
 
-              <Text className="text-sm text-[#737381]">A minimum of 4</Text>
+                        <View className="flex flex-1 flex-row items-center gap-2">
+                          <Text className="flex-1 text-xs text-[#3E1A00]" numberOfLines={1}>
+                            {doc.name}
+                          </Text>
 
-              <View className="my-2 flex gap-2">
-                {/* selected photos */}
-                {previousJobs?.map((doc, index) => (
-                  <View
-                    key={index}
-                    className="flex flex-row items-center gap-2 rounded-[8px] bg-[#FFF4EA] p-[10px]">
-                    <View className="flex flex-1 flex-row items-center gap-6">
-                      <Image
-                        source={require('@/assets/icons/image.svg')}
-                        style={{ width: 24, height: 24 }}
-                        contentFit="contain"
-                      />
+                          <View className="h-1 w-1 rounded-full bg-[#767676]" />
 
-                      <View className="flex flex-1 flex-row items-center gap-2">
-                        <Text className="flex-1 text-xs text-[#3E1A00]" numberOfLines={1}>
-                          {doc.name}
-                        </Text>
+                          <Pressable
+                            onPress={() =>
+                              SheetManager.show('image-preview-sheet', {
+                                payload: {
+                                  imgSource: doc.uri,
+                                },
+                              })
+                            }>
+                            <Text className="text-xs text-[#FE6A00]">Preview</Text>
+                          </Pressable>
+                        </View>
+                      </View>
 
-                        <View className="h-1 w-1 rounded-full bg-[#767676]" />
+                      <View className="flex flex-row items-center gap-6">
+                        <Text className="text-xs text-[#A44400]">{formatSizeToMB(doc.size)}</Text>
 
                         <Pressable
-                          onPress={() =>
-                            SheetManager.show('image-preview-sheet', {
-                              payload: {
-                                imgSource: doc.uri,
-                              },
-                            })
-                          }>
-                          <Text className="text-xs text-[#FE6A00]">Preview</Text>
+                          onPress={() => {
+                            setPreviousJobs((prev) => prev.filter((_, i) => i !== index));
+                          }}>
+                          <X color={'#737381'} size={16} />
                         </Pressable>
                       </View>
                     </View>
+                  ))}
+                </View>
 
-                    <View className="flex flex-row items-center gap-6">
-                      <Text className="text-xs text-[#A44400]">{formatSizeToMB(doc.size)}</Text>
+                <Pressable
+                  onPress={pickImagesVideos}
+                  className="mt-1 flex aspect-[327/100] w-full items-center justify-center rounded-[8px] border-2 border-[#E9E9EB]">
+                  <Image
+                    source={require('@/assets/icons/camera-primary.svg')}
+                    style={{ width: 24, height: 24 }}
+                    contentFit="contain"
+                  />
 
-                      <Pressable
-                        onPress={() => {
-                          setPreviousJobs((prev) => prev.filter((_, i) => i !== index));
-                        }}>
-                        <X color={'#737381'} size={16} />
-                      </Pressable>
-                    </View>
-                  </View>
-                ))}
+                  <Text className="text-center text-sm text-[#FE6A00]">Add Photos/Videos</Text>
+                  <Text className="text-center text-xs text-[#B4B4BC]">Upload previous jobs </Text>
+                </Pressable>
               </View>
 
-              <Pressable
-                onPress={pickImagesVideos}
-                className="mt-1 flex aspect-[327/100] w-full items-center justify-center rounded-[8px] border-2 border-[#E9E9EB]">
-                <Image
-                  source={require('@/assets/icons/camera-primary.svg')}
-                  style={{ width: 24, height: 24 }}
-                  contentFit="contain"
-                />
-
-                <Text className="text-center text-sm text-[#FE6A00]">Add Photos/Videos</Text>
-                <Text className="text-center text-xs text-[#B4B4BC]">Upload previous jobs </Text>
-              </Pressable>
+              <Button onPress={form.handleSubmit} isLoading={isPending} disabled={isPending}>
+                Continue
+              </Button>
             </View>
-
-            <Button onPress={form.handleSubmit} isLoading={isPending} disabled={isPending}>
-              Continue
-            </Button>
           </View>
-        </View>
+        </ScrollView>
       )}
-    </ScrollView>
+    </View>
   );
 }

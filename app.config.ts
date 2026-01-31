@@ -88,7 +88,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         'FOREGROUND_SERVICE',
         'FOREGROUND_SERVICE_LOCATION',
       ],
-      softwareKeyboardLayoutMode: 'resize',
+      softwareKeyboardLayoutMode: 'pan',
     },
     web: {
       bundler: 'metro',

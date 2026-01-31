@@ -5,6 +5,7 @@ import RequestUserCard from '@/components/home/request-user-card';
 import { Layout } from '@/components/layout';
 import { LoadingState } from '@/components/loading-state';
 import { Button } from '@/components/ui/button';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
 import { useOffersSocket } from '@/hooks/use-offers-socket';
 import { formatCurrency } from '@/lib/utils';
@@ -33,6 +34,8 @@ export default function Screen() {
         showSuccessMessage('Offer accepted');
         artisanOffers?.refetch();
         router.replace('/');
+      } else {
+        artisanOffers?.refetch();
       }
     },
   });
@@ -40,7 +43,7 @@ export default function Screen() {
   const offersMade = artisanOffers?.data?.filter((i) => i.serviceRequestId === id);
 
   const lastOfferId = offersMade && offersMade.length > 0 ? offersMade[0]?.id : '';
-  const acceptOffer = useMutation(api.respondToOffer(lastOfferId));
+  const respondToOffer = useMutation(api.respondToOffer(lastOfferId));
 
   useEffect(() => {
     offers.joinServiceRequest(id);
@@ -130,11 +133,32 @@ export default function Screen() {
                     Offers
                   </Text>
 
-                  <Pressable>
-                    <Text className="font-cabinet-bold text-xs uppercase text-[#B3031E]">
-                      REJECT OFFER
-                    </Text>
-                  </Pressable>
+                  {offersMade &&
+                  offersMade?.length > 0 &&
+                  offersMade[0]?.offeredBy === 'artisan' ? null : respondToOffer?.isPending ? (
+                    <LoadingIndicator size={14} />
+                  ) : (
+                    <Pressable
+                      onPress={() => {
+                        respondToOffer?.mutate(
+                          { action: 'reject' },
+                          {
+                            onSuccess: () => {
+                              showSuccessMessage('Offer rejected');
+                              artisanOffers.refetch();
+                              service.refetch();
+                            },
+                            onError: (err) => {
+                              showErrorMessage(err.message);
+                            },
+                          }
+                        );
+                      }}>
+                      <Text className="font-cabinet-bold text-xs uppercase text-[#B3031E]">
+                        REJECT OFFER
+                      </Text>
+                    </Pressable>
+                  )}
                 </View>
 
                 <View className="gap-4 rounded-[8px] border border-[#E9E9EB] p-4">
@@ -198,8 +222,11 @@ export default function Screen() {
                 </Button>
 
                 <Button
-                  isLoading={acceptOffer?.isPending}
-                  disabled={acceptOffer?.isPending}
+                  isLoading={respondToOffer?.isPending}
+                  disabled={
+                    respondToOffer?.isPending ||
+                    (offersMade && offersMade?.length > 0 && offersMade[0]?.offeredBy === 'artisan')
+                  }
                   onPress={() => {
                     if (
                       offersMade &&
@@ -209,7 +236,7 @@ export default function Screen() {
                       return showErrorMessage(
                         'You cannot accept your own offer. Wait for the user to send a counter offer'
                       );
-                    acceptOffer?.mutate(
+                    respondToOffer?.mutate(
                       { action: 'accept' },
                       {
                         onSuccess: () => {

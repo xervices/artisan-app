@@ -3,6 +3,7 @@ import { AuthHeader } from '@/components/auth-header';
 import { OfferCard } from '@/components/home/offers';
 import { Layout } from '@/components/layout';
 import { LoadingState } from '@/components/loading-state';
+import { ServiceRequestData } from '@/hooks/types';
 import { useMarketplaceContext } from '@/providers/use-marketplace-context';
 import { useQueries } from '@tanstack/react-query';
 import { View } from 'react-native';
@@ -18,10 +19,39 @@ export default function Screen() {
     },
   });
 
-  // const negotiatingOffers = artisanOffers?.data?.filter(
-  //   (offer, index, self) =>
-  //     self.findIndex((o) => o.serviceRequest?.id === offer.serviceRequest?.id) === index
-  // );
+  const pendingOffers = artisanOffers?.data?.filter((i) => i.status === 'pending');
+
+  // Transform pendingOffers to ServiceRequestData format
+  const transformedPendingOffers: ServiceRequestData[] =
+    pendingOffers?.map((offer) => ({
+      categoryId: offer.serviceRequest?.category?.id || '',
+      title: offer.serviceRequest?.title || '',
+      budgetMax: offer.serviceRequest?.budgetMax || 0,
+      budgetMin: offer.serviceRequest?.budgetMin || 0,
+      createdAt: offer.serviceRequest?.createdAt || '',
+      id: offer.serviceRequest?.id || '',
+      categoryName: offer.serviceRequest?.category?.name || '',
+      description: offer?.serviceRequest?.description || '',
+      preferredDate: offer?.serviceRequest?.createdAt || '',
+      serviceAddress: offer?.serviceRequest?.serviceAddress || '',
+      user: offer?.serviceRequest?.user
+        ? {
+            name: offer?.serviceRequest?.user?.profile?.fullName || '',
+            avatarUrl: offer?.serviceRequest?.user?.profile?.avatarUrl || '',
+          }
+        : {
+            avatarUrl: '',
+            name: '',
+          },
+    })) || [];
+
+  // Unify requests and pendingOffers, sort by createdAt (most recent first), take first 2
+  const unifiedData: ServiceRequestData[] = [
+    ...(requests?.requests || []),
+    ...transformedPendingOffers,
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  console.log(unifiedData);
 
   return (
     <Layout
@@ -40,27 +70,9 @@ export default function Screen() {
         <LoadingState title="Loading data..." />
       ) : (
         <View className="flex-1 gap-6">
-          {requests.requests?.map((offer) => (
+          {unifiedData?.map((offer) => (
             <OfferCard key={offer.id} data={offer} />
           ))}
-
-          {/* {negotiatingOffers &&
-            negotiatingOffers?.length > 0 &&
-            negotiatingOffers?.map((offer) => (
-              <OfferCard
-                key={offer.id}
-                data={{
-                  categoryId: offer.serviceRequest?.category.name || '',
-                  title: offer.serviceRequest?.title || '',
-                  budgetMax: offer.serviceRequest?.budgetMax || 0,
-                  budgetMin: offer.serviceRequest?.budgetMin || 0,
-                  createdAt: offer.serviceRequest?.createdAt || '',
-                  id: offer.serviceRequest?.id || '',
-                  username: offer?.serviceRequest?.user?.profile?.fullName,
-                  avatarUrl: offer?.serviceRequest?.user?.profile?.avatarUrl,
-                }}
-              />
-            ))} */}
         </View>
       )}
     </Layout>
