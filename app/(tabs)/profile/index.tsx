@@ -14,10 +14,13 @@ import { useNotification } from '@/providers/notification-provider';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/api';
 import Storage from 'expo-sqlite/kv-store';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
 
 export default function Screen() {
   const { expoPushToken } = useNotification();
-  const { mutateAsync: unregisterDevice } = useMutation(api.unregisterDeviceForPushNotification());
+  const { mutateAsync: unregisterDevice, isPending } = useMutation(
+    api.unregisterDeviceForPushNotification()
+  );
 
   const data = [
     {
@@ -147,6 +150,8 @@ export default function Screen() {
             {item.rightComponent && item.rightComponent()}
 
             {item.isLink && <ChevronRight size={20} color={'#B4B4BC'} />}
+
+            {isPending && item.isDestructive ? <LoadingIndicator size={14} /> : null}
           </Pressable>
         ))}
       </View>
