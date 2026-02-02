@@ -70,7 +70,7 @@ export default function Screen() {
   });
 
   return (
-    <Layout useBackground>
+    <Layout>
       <View className="flex-1 gap-6">
         <View className="flex gap-2">
           <AuthHeader title="Get Started" />

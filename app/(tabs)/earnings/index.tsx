@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useQueries } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingState } from '@/components/loading-state';
-import { formatCurrency } from '@/lib/utils';
+import { copyToClipboard, formatCurrency } from '@/lib/utils';
 
 export default function Screen() {
   const [promotions, earnings, transactions] = useQueries({
@@ -173,7 +173,10 @@ export default function Screen() {
                         {promotions?.data?.referralCode}
                       </Text>
 
-                      <Button className="w-48" size={'sm'}>
+                      <Button
+                        onPress={() => copyToClipboard(promotions?.data?.referralCode)}
+                        className="w-48"
+                        size={'sm'}>
                         Copy Code
                       </Button>
                     </View>
@@ -191,7 +194,10 @@ export default function Screen() {
                       {promotions?.data?.referralLink}
                     </Text>
 
-                    <Button className="w-16" size={'sm'}>
+                    <Button
+                      onPress={() => copyToClipboard(promotions?.data?.referralLink)}
+                      className="w-16"
+                      size={'sm'}>
                       Copy
                     </Button>
                   </View>

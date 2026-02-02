@@ -10,93 +10,110 @@ import * as Haptics from 'expo-haptics';
 import { Switch } from '@/components/ui/switch';
 import { useAuthStore } from '@/store/auth-store';
 import { tokenStorage } from '@/api/token-storage';
-
-const data = [
-  {
-    name: 'Personal Details',
-    icon: require('@/assets/icons/personal.svg'),
-    isLink: true,
-    isDestructive: false,
-    onPress: () => router.navigate('/profile/personal'),
-  },
-  {
-    name: 'Password',
-    icon: require('@/assets/icons/password.svg'),
-    isLink: true,
-    isDestructive: false,
-    onPress: () => router.navigate('/profile/password'),
-  },
-  {
-    name: 'Dispute',
-    icon: require('@/assets/icons/dispute.svg'),
-    isLink: true,
-    isDestructive: false,
-    onPress: () => router.navigate('/profile/disputes'),
-  },
-  {
-    name: 'Payment',
-    icon: require('@/assets/icons/payment.svg'),
-    isLink: true,
-    onPress: () => router.navigate('/profile/payment'),
-  },
-  {
-    name: 'Rate Xervices',
-    icon: require('@/assets/icons/rate.svg'),
-    isLink: true,
-    isDestructive: false,
-    onPress: () => router.navigate('/profile/rate'),
-  },
-  {
-    name: 'Support',
-    icon: require('@/assets/icons/support.svg'),
-    isLink: true,
-    isDestructive: false,
-    onPress: () => router.navigate('/profile/support'),
-  },
-  {
-    name: 'About Xervices',
-    icon: require('@/assets/icons/about.svg'),
-    isLink: true,
-    isDestructive: false,
-    onPress: () => router.navigate('/profile/about'),
-  },
-  {
-    name: 'Your Level',
-    icon: require('@/assets/icons/shield.svg'),
-    isLink: true,
-    isDestructive: false,
-    onPress: () => router.navigate('/profile/level'),
-  },
-  {
-    name: 'Location',
-    icon: require('@/assets/icons/gps.svg'),
-    isLink: false,
-    isDestructive: false,
-    onPress: () => {},
-    rightComponent: () => {
-      const [checked, setChecked] = React.useState(true);
-
-      function onCheckedChange(checked: boolean) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        setChecked(checked);
-      }
-
-      return <Switch checked={checked} onCheckedChange={onCheckedChange} />;
-    },
-  },
-  {
-    name: 'Logout',
-    icon: require('@/assets/icons/logout.svg'),
-    isLink: false,
-    isDestructive: true,
-    onPress: async () => {
-      await tokenStorage.clearTokens();
-      useAuthStore.getState().setLoginState(false);
-    },
-  },
-];
+import { useNotification } from '@/providers/notification-provider';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/api';
+import Storage from 'expo-sqlite/kv-store';
 
 export default function Screen() {
+  const { expoPushToken } = useNotification();
+  const { mutateAsync: unregisterDevice } = useMutation(api.unregisterDeviceForPushNotification());
+
+  const data = [
+    {
+      name: 'Personal Details',
+      icon: require('@/assets/icons/personal.svg'),
+      isLink: true,
+      isDestructive: false,
+      onPress: () => router.navigate('/profile/personal'),
+    },
+    {
+      name: 'Password',
+      icon: require('@/assets/icons/password.svg'),
+      isLink: true,
+      isDestructive: false,
+      onPress: () => router.navigate('/profile/password'),
+    },
+    {
+      name: 'Dispute',
+      icon: require('@/assets/icons/dispute.svg'),
+      isLink: true,
+      isDestructive: false,
+      onPress: () => router.navigate('/profile/disputes'),
+    },
+    {
+      name: 'Payment',
+      icon: require('@/assets/icons/payment.svg'),
+      isLink: true,
+      onPress: () => router.navigate('/profile/payment'),
+    },
+    {
+      name: 'Rate Xervices',
+      icon: require('@/assets/icons/rate.svg'),
+      isLink: true,
+      isDestructive: false,
+      onPress: () => router.navigate('/profile/rate'),
+    },
+    {
+      name: 'Support',
+      icon: require('@/assets/icons/support.svg'),
+      isLink: true,
+      isDestructive: false,
+      onPress: () => router.navigate('/profile/support'),
+    },
+    {
+      name: 'About Xervices',
+      icon: require('@/assets/icons/about.svg'),
+      isLink: true,
+      isDestructive: false,
+      onPress: () => router.navigate('/profile/about'),
+    },
+    {
+      name: 'Your Level',
+      icon: require('@/assets/icons/shield.svg'),
+      isLink: true,
+      isDestructive: false,
+      onPress: () => router.navigate('/profile/level'),
+    },
+    {
+      name: 'Location',
+      icon: require('@/assets/icons/gps.svg'),
+      isLink: false,
+      isDestructive: false,
+      onPress: () => {},
+      rightComponent: () => {
+        const [checked, setChecked] = React.useState(true);
+
+        function onCheckedChange(checked: boolean) {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          setChecked(checked);
+        }
+
+        return <Switch checked={checked} onCheckedChange={onCheckedChange} />;
+      },
+    },
+    {
+      name: 'Logout',
+      icon: require('@/assets/icons/logout.svg'),
+      isLink: false,
+      isDestructive: true,
+      onPress: async () => {
+        if (expoPushToken) {
+          try {
+            await unregisterDevice({ pushToken: expoPushToken });
+            Storage.removeItemSync('push_token_registered');
+            Storage.removeItemSync('is_registered_for_push');
+          } catch (e) {
+            console.log(e);
+          }
+        }
+
+        await tokenStorage.clearTokens();
+        useAuthStore.getState().setLoginState(false);
+      },
+    },
+  ];
+
   return (
     <Layout
       useBackground

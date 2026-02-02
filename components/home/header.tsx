@@ -4,13 +4,15 @@ import { BadgeCheck, Bell } from 'lucide-react-native';
 import { Text } from '../ui/text';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/store/auth-store';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 
 export function Header() {
   const { user } = useAuthStore();
 
-  const { data } = useQuery(api.getCurrentArtisanProfile());
+  const [artisanProfile, unreadNotifications] = useQueries({
+    queries: [api.getCurrentArtisanProfile(), api.getUnreadNotificationCount()],
+  });
 
   return (
     <View className="flex w-full flex-row items-end justify-between">
@@ -31,7 +33,9 @@ export function Header() {
               {user?.profile?.fullName}
             </Text>
 
-            {data?.isVerified && <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />}
+            {artisanProfile?.data?.isVerified && (
+              <BadgeCheck size={16} fill={'#FE6A00'} stroke={'#FFFFFF'} />
+            )}
           </View>
         </View>
       </View>
@@ -41,7 +45,11 @@ export function Header() {
         className="relative flex h-6 w-6 items-center justify-center">
         <Bell fill={'#1B1B1E'} />
 
-        <View className="absolute right-0 top-0 h-2 w-2 rounded-full bg-[#FE6A00]" />
+        {unreadNotifications?.data &&
+        unreadNotifications?.data?.count &&
+        unreadNotifications?.data?.count > 0 ? (
+          <View className="absolute right-0 top-0 h-2 w-2 rounded-full bg-[#FE6A00]" />
+        ) : null}
       </Pressable>
     </View>
   );

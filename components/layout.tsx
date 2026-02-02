@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -62,10 +63,9 @@ export function Layout({
   const renderContent = () => {
     if (scrollable) {
       return (
-        <ScrollView
+        <KeyboardAwareScrollView
           contentContainerStyle={contentContainerStyles}
-          keyboardShouldPersistTaps="handled"
-          automaticallyAdjustKeyboardInsets
+          bottomOffset={62}
           nestedScrollEnabled={true}
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -77,7 +77,7 @@ export function Layout({
             />
           }>
           {children}
-        </ScrollView>
+        </KeyboardAwareScrollView>
       );
     }
     return <View style={[contentContainerStyles, { flex: 1 }]}>{children}</View>;
@@ -93,16 +93,16 @@ export function Layout({
 
   return (
     <>
-      {keyboardAvoiding ? (
+      {/* {keyboardAvoiding ? (
         <KeyboardAvoidingView
           style={containerStyles}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
           {content}
         </KeyboardAvoidingView>
-      ) : (
-        <View style={containerStyles}>{content}</View>
-      )}
+      ) : ( */}
+      <View style={containerStyles}>{content}</View>
+      {/* )} */}
     </>
   );
 }

@@ -823,6 +823,73 @@ export const api = {
     };
   },
 
+  // notifications endpoints
+  getUnreadNotificationCount: () =>
+    queryOptions({
+      queryKey: ['notifications', 'unread'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/notifications/unread-count');
+
+        return data;
+      },
+    }),
+  getMyNotifications: () =>
+    queryOptions({
+      queryKey: ['notifications', 'me'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/notifications');
+
+        return data;
+      },
+    }),
+  markAllNotificationAsRead: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/notifications/mark-all-read', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/notifications/mark-all-read');
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to mark all notifications as read.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  registerDeviceForPushNotification: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/notifications/devices', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/notifications/devices', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(
+            getErrorMessage(error, 'Failed to register device for push notification')
+          );
+        }
+
+        return data;
+      },
+    };
+  },
+  unregisterDeviceForPushNotification: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/notifications/devices', 'delete'>) => {
+        const { data, error } = await apiClient.DELETE('/api/notifications/devices', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(
+            getErrorMessage(error, 'Failed to unregister device for push notification')
+          );
+        }
+
+        return data;
+      },
+    };
+  },
+
   // promotions, referrals & discounts endpoints
   getMyReferralInfo: () =>
     queryOptions({
