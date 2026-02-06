@@ -20,7 +20,7 @@ export default function Screen() {
   const { user } = useAuthStore();
   const { mutate, isPending, data } = useMutation(api.checkPinStatus());
 
-  const updatePin = useMutation(api.updatePin());
+  const requestOtp = useMutation(api.requestOtpForPin());
 
   const [pin, setPin] = React.useState('');
 
@@ -46,11 +46,11 @@ export default function Screen() {
 
           <View className="mt-16">
             <OtpInput
-              numberOfDigits={4}
+              numberOfDigits={6}
               onTextChange={setPin}
               theme={{
                 pinCodeContainerStyle: {
-                  width: 60,
+                  width: 45,
                   aspectRatio: 1 / 1,
                   borderRadius: 8,
                   borderWidth: 1,
@@ -68,7 +68,7 @@ export default function Screen() {
                   fontFamily: 'CabinetGrotesk-Bold',
                 },
               }}
-              disabled={updatePin?.isPending}
+              disabled={requestOtp?.isPending}
             />
           </View>
 
@@ -82,18 +82,20 @@ export default function Screen() {
           </Text>
 
           <Button
-            isLoading={updatePin?.isPending}
-            disabled={updatePin?.isPending}
+            isLoading={requestOtp?.isPending}
+            disabled={requestOtp?.isPending}
             onPress={() => {
-              updatePin?.mutate(
-                {
-                  pin,
-                },
+              requestOtp?.mutate(
+                {},
                 {
                   onSuccess: (res) => {
-                    console.log(res);
-                    showSuccessMessage('Pin changed successfully!');
-                    router.back();
+                    showSuccessMessage(res?.message || 'OTP sent successfully!');
+                    router.navigate({
+                      pathname: '/profile/verify-pin',
+                      params: {
+                        pin,
+                      },
+                    });
                   },
                   onError: (err) => {
                     showErrorMessage(err.message);

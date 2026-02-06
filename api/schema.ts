@@ -84,6 +84,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/mfa/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify MFA code
+         * @description Complete admin login by verifying TOTP or backup code.
+         */
+        post: operations["AuthController_verifyMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/refresh": {
         parameters: {
             query?: never;
@@ -803,8 +823,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get user service requests
-         * @description Get all service requests for the authenticated user
+         * Get service requests
+         * @description For Users: Get all service requests created by the authenticated user. For Artisans: Get service requests matching their categories and location (requests sent to them).
          */
         get: operations["ServiceRequestsController_findMine"];
         put?: never;
@@ -813,6 +833,26 @@ export interface paths {
          * @description Create a new service request for artisan services. Supports multipart/form-data for file uploads.
          */
         post: operations["ServiceRequestsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/service-requests/browse/nearby": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Browse nearby service requests
+         * @description Get available service requests near the artisan's location that match their skills
+         */
+        get: operations["ServiceRequestsController_browseNearby"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1370,6 +1410,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/earnings/commission-rate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get current platform commission rate
+         * @description Fetch the current commission percentage the platform charges on artisan earnings.
+         */
+        get: operations["EarningsController_getCommissionRate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/earnings/transactions": {
         parameters: {
             query?: never;
@@ -1407,6 +1467,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get transaction history
+         * @description Fetch all transaction history for the authenticated user with filters for period, date range, type, and pagination.
+         */
+        get: operations["TransactionsController_getTransactions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/security/pin/request-otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request OTP for PIN creation
+         * @description Sends an OTP to the user email that must be provided when creating/updating the PIN
+         */
+        post: operations["SecurityController_requestPinOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/security/pin": {
         parameters: {
             query?: never;
@@ -1416,7 +1516,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create or update withdrawal PIN */
+        /**
+         * Create or update withdrawal PIN
+         * @description Create or update the withdrawal PIN. Requires OTP verification first (call /security/pin/request-otp)
+         */
         post: operations["SecurityController_createOrUpdatePin"];
         delete?: never;
         options?: never;
@@ -1556,6 +1659,94 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/bank-accounts/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify bank account
+         * @description Verify a bank account number with Paystack and get the account name. Use this before adding a bank account.
+         */
+        post: operations["BankAccountsController_verifyAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get my bank accounts
+         * @description Get all bank accounts for the current user
+         */
+        get: operations["BankAccountsController_findAll"];
+        put?: never;
+        /**
+         * Add bank account
+         * @description Add a verified bank account for withdrawals. The account will be verified with Paystack before being saved.
+         */
+        post: operations["BankAccountsController_addAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank-accounts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get bank account
+         * @description Get a specific bank account by ID
+         */
+        get: operations["BankAccountsController_findOne"];
+        put?: never;
+        post?: never;
+        /**
+         * Remove bank account
+         * @description Remove a bank account
+         */
+        delete: operations["BankAccountsController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/bank-accounts/{id}/set-default": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set as default
+         * @description Set a bank account as the default for withdrawals
+         */
+        post: operations["BankAccountsController_setAsDefault"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/disputes": {
         parameters: {
             query?: never;
@@ -1571,7 +1762,7 @@ export interface paths {
         put?: never;
         /**
          * Create a dispute
-         * @description Raise a dispute on a job. Only job participants can raise disputes.
+         * @description Raise a dispute on a job. Only job participants can raise disputes. Supports multipart/form-data for file uploads.
          */
         post: operations["DisputesController_createDispute"];
         delete?: never;
@@ -1611,7 +1802,7 @@ export interface paths {
         put?: never;
         /**
          * Add evidence to dispute
-         * @description Upload evidence for an open or under-review dispute. Only job participants can add evidence.
+         * @description Upload evidence for an open or under-review dispute. Only job participants can add evidence. Supports multipart/form-data for file uploads.
          */
         post: operations["DisputesController_addEvidence"];
         delete?: never;
@@ -1928,6 +2119,666 @@ export interface paths {
          * @description Get a specific version of terms and conditions
          */
         get: operations["AdminController_getTermsAndConditionsByVersion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/settings/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get admin notification settings
+         * @description Get notification preferences for the current admin. Returns default settings (all enabled) if none exist.
+         */
+        get: operations["AdminController_getAdminNotificationSetting"];
+        /**
+         * Update admin notification settings
+         * @description Update notification preferences for the current admin. Configure alerts for disputes, transactions, withdrawals, artisan verification, and WebSocket updates.
+         */
+        put: operations["AdminController_updateAdminNotificationSetting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/settings/referral": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get referral program settings
+         * @description Get the current active referral program settings including bonus amounts, expiry period, and program status.
+         */
+        get: operations["AdminController_getReferralProgramSetting"];
+        /**
+         * Update referral program settings
+         * @description Update referral program configuration including enable/disable, referrer bonus amount, referred user bonus percentage, and referral expiry period.
+         */
+        put: operations["AdminController_updateReferralProgramSetting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/auth/request-otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request OTP for admin verification
+         * @description Request a 6-digit OTP code for admin verification. The code is sent to both registered email and phone number. Valid for 15 minutes.
+         */
+        post: operations["AdminController_requestAdminOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/auth/verify-otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify admin OTP
+         * @description Verify the 6-digit OTP code sent to admin. Returns a session token for authorized sensitive actions.
+         */
+        post: operations["AdminController_verifyAdminOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/auth/resend-otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend admin OTP
+         * @description Resend the OTP code to admin. Limited to 3 requests per 15 minutes for security.
+         */
+        post: operations["AdminController_resendAdminOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/team": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List admin team members
+         * @description Get list of all admin team members with their roles and status.
+         */
+        get: operations["AdminTeamController_listAdmins"];
+        put?: never;
+        /**
+         * Create admin team member
+         * @description Create a new admin with specified role. Returns temporary password.
+         */
+        post: operations["AdminTeamController_createAdmin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/team/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get admin details
+         * @description Get detailed information about a specific admin.
+         */
+        get: operations["AdminTeamController_getAdmin"];
+        /**
+         * Update admin team member
+         * @description Update admin role, status, or name.
+         */
+        put: operations["AdminTeamController_updateAdmin"];
+        post?: never;
+        /**
+         * Deactivate admin
+         * @description Deactivate an admin account. Cannot deactivate yourself.
+         */
+        delete: operations["AdminTeamController_deactivateAdmin"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/impersonate/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start impersonation session
+         * @description Start impersonating a user. Super Admin only. Returns session token.
+         */
+        post: operations["ImpersonationController_startImpersonation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/impersonate/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * End impersonation session
+         * @description End the current impersonation session.
+         */
+        post: operations["ImpersonationController_endImpersonation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/impersonation-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get impersonation logs
+         * @description View history of all impersonation sessions.
+         */
+        get: operations["ImpersonationLogsController_getImpersonationLogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Setup MFA
+         * @description Generate TOTP secret and QR code for MFA setup.
+         */
+        post: operations["MfaController_setupMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/enable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Enable MFA
+         * @description Enable MFA after verifying the TOTP code from authenticator app.
+         */
+        post: operations["MfaController_enableMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Disable MFA
+         * @description Disable MFA. Requires current TOTP code. Super Admins cannot disable MFA.
+         */
+        post: operations["MfaController_disableMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/backup-codes/regenerate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Regenerate backup codes
+         * @description Generate new backup codes. Old codes are invalidated.
+         */
+        post: operations["MfaController_regenerateBackupCodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get MFA status
+         * @description Get current MFA status including whether it is required and enabled.
+         */
+        get: operations["MfaController_getMfaStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List broadcasts
+         * @description Get list of all broadcasts with pagination and optional status filter.
+         */
+        get: operations["BroadcastController_listBroadcasts"];
+        put?: never;
+        /**
+         * Create broadcast
+         * @description Create a new broadcast notification. Can be saved as draft or scheduled.
+         */
+        post: operations["BroadcastController_createBroadcast"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get broadcast templates
+         * @description Get list of predefined broadcast templates.
+         */
+        get: operations["BroadcastController_getTemplates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get broadcast details
+         * @description Get detailed information about a specific broadcast.
+         */
+        get: operations["BroadcastController_getBroadcast"];
+        /**
+         * Update broadcast
+         * @description Update a draft or scheduled broadcast.
+         */
+        put: operations["BroadcastController_updateBroadcast"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/{id}/send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send broadcast immediately
+         * @description Send a draft or scheduled broadcast immediately.
+         */
+        post: operations["BroadcastController_sendBroadcast"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel scheduled broadcast
+         * @description Cancel a scheduled broadcast.
+         */
+        post: operations["BroadcastController_cancelBroadcast"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List all services in catalogue
+         * @description Get all services with optional filters by category, status, and search term. Supports pagination.
+         */
+        get: operations["ServiceCatalogueController_listServices"];
+        put?: never;
+        /**
+         * Add a new service to catalogue
+         * @description Create a new service/category in the platform catalogue. Upload icon file via "icon" field.
+         */
+        post: operations["ServiceCatalogueController_createService"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/services/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get service details
+         * @description Get details of a specific service by ID
+         */
+        get: operations["ServiceCatalogueController_getService"];
+        /**
+         * Update a service
+         * @description Update service details like name, category, description, or icon.
+         */
+        put: operations["ServiceCatalogueController_updateService"];
+        post?: never;
+        /**
+         * Delete a service
+         * @description Soft delete a service from the catalogue.
+         */
+        delete: operations["ServiceCatalogueController_deleteService"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/services/{id}/toggle-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Toggle service status (enable/disable)
+         * @description Enable or disable a service. Disabled services are hidden from users.
+         */
+        put: operations["ServiceCatalogueController_toggleServiceStatus"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Dashboard overview metrics
+         * @description Fetch high-level dashboard statistics including active users, ongoing jobs, open disputes, and escrow balance.
+         */
+        get: operations["DashboardController_getOverviewMetrics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/app-downloads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * App downloads analytics
+         * @description Provide total app downloads by platform (iOS and Android).
+         */
+        get: operations["DashboardController_getAppDownloads"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/registration-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Registration statistics
+         * @description Fetch user and artisan registration counts for today and this month.
+         */
+        get: operations["DashboardController_getRegistrationStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/registration-trend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Registration trend graph
+         * @description Return monthly registration data for chart display. Data grouped by month (Jan-Dec).
+         */
+        get: operations["DashboardController_getRegistrationTrend"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/recent-activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Recent activity feed
+         * @description Provide a list of recent platform activities including job completions, dispute openings, artisan verifications, and withdrawal requests.
+         */
+        get: operations["DashboardController_getRecentActivity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/cancellation-reasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Cancellation reasons analytics
+         * @description Return job cancellation reasons with counts and percentages.
+         */
+        get: operations["DashboardController_getCancellationReasons"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/state-analytics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * State analytics
+         * @description Provide state-based analytics for signups, users, artisans, and active jobs.
+         */
+        get: operations["DashboardController_getStateAnalytics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/best-booked-services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Best booked service types
+         * @description Return analytics for most booked service categories including bookings, revenue, artisan count, and percentage contribution.
+         */
+        get: operations["DashboardController_getBestBookedServices"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2306,6 +3157,18 @@ export interface components {
              */
             password: string;
         };
+        MfaVerifyDto: {
+            /**
+             * @description Temporary MFA token from login response
+             * @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+             */
+            mfaToken: string;
+            /**
+             * @description TOTP code (6 digits) or backup code (XXXX-XXXX format)
+             * @example 123456
+             */
+            code: string;
+        };
         RefreshTokenDto: {
             /**
              * @description Refresh token obtained from login/register response
@@ -2489,13 +3352,6 @@ export interface components {
              * @example false
              */
             hasPrev: boolean;
-        };
-        UnreadCountResponseDto: {
-            /**
-             * @description Total unread message count
-             * @example 5
-             */
-            count: number;
         };
         MarkNotificationsAsReadDto: {
             /**
@@ -3477,6 +4333,40 @@ export interface components {
              */
             matchingArtisansCount: number;
         };
+        PaginatedServiceRequestsResponseDto: {
+            /** @description List of service requests */
+            requests: components["schemas"]["ServiceRequestResponseDto"][];
+            /**
+             * @description Total number of requests matching the criteria
+             * @example 50
+             */
+            total: number;
+            /**
+             * @description Current page number
+             * @example 1
+             */
+            page: number;
+            /**
+             * @description Number of items per page
+             * @example 20
+             */
+            limit: number;
+            /**
+             * @description Total number of pages
+             * @example 3
+             */
+            totalPages: number;
+            /**
+             * @description Whether there is a next page
+             * @example true
+             */
+            hasNext: boolean;
+            /**
+             * @description Whether there is a previous page
+             * @example false
+             */
+            hasPrev: boolean;
+        };
         MatchingArtisanResponseDto: {
             /**
              * @description Artisan unique identifier (UUID)
@@ -3618,6 +4508,16 @@ export interface components {
             artisanReviewCount?: number;
             /** @description Artisan statistics (jobs completed, punctuality, response time, recent work) */
             artisanStats?: components["schemas"]["OfferArtisanStatsDto"];
+            /**
+             * @description Artisan latitude coordinate (from profile location)
+             * @example 6.5244
+             */
+            artisanLatitude?: Record<string, never> | null;
+            /**
+             * @description Artisan longitude coordinate (from profile location)
+             * @example 3.3792
+             */
+            artisanLongitude?: Record<string, never> | null;
             /**
              * @description Who made the offer
              * @example artisan
@@ -3779,6 +4679,16 @@ export interface components {
             artisanId: string;
             /** @description Artisan details (included when relations are loaded) */
             artisan?: components["schemas"]["UserResponseDto"];
+            /**
+             * @description Artisan average rating (0-5)
+             * @example 4.5
+             */
+            artisanRating?: Record<string, never> | null;
+            /**
+             * @description Artisan total number of reviews
+             * @example 25
+             */
+            artisanReviewCount?: Record<string, never> | null;
             /**
              * @description Accepted Offer ID
              * @example 550e8400-e29b-41d4-a716-446655440000
@@ -4155,6 +5065,13 @@ export interface components {
              */
             updated: number;
         };
+        UnreadCountResponseDto: {
+            /**
+             * @description Total unread message count
+             * @example 5
+             */
+            count: number;
+        };
         EarningsOverviewResponseDto: {
             /**
              * @description Available balance that can be withdrawn
@@ -4181,6 +5098,33 @@ export interface components {
              * @example ₦
              */
             currency: string;
+        };
+        TransactionJobDetailsDto: {
+            /**
+             * @description Job unique identifier
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            jobId: string;
+            /**
+             * @description Customer's full name
+             * @example John Doe
+             */
+            customerName: string;
+            /**
+             * @description Service category name
+             * @example Plumbing
+             */
+            categoryName: string;
+            /**
+             * @description Commission charged by Xervices
+             * @example 750
+             */
+            xervicesCharge: number;
+            /**
+             * @description Gross amount before commission
+             * @example 5000
+             */
+            grossAmount: number;
         };
         TransactionItemDto: {
             /**
@@ -4219,6 +5163,8 @@ export interface components {
              * @example 550e8400-e29b-41d4-a716-446655440000
              */
             referenceId?: string;
+            /** @description Job details (only present for payment transactions) */
+            jobDetails?: components["schemas"]["TransactionJobDetailsDto"];
             /**
              * Format: date-time
              * @description When the transaction was created
@@ -4263,7 +5209,24 @@ export interface components {
              */
             currency: string;
         };
+        PinOtpResponseDto: {
+            /**
+             * @description Operation success status
+             * @example true
+             */
+            success: boolean;
+            /**
+             * @description Response message
+             * @example OTP sent to your email address
+             */
+            message: string;
+        };
         CreatePinDto: {
+            /**
+             * @description OTP code received via email
+             * @example 123456
+             */
+            otp: string;
             /**
              * @description New PIN (4-6 digits)
              * @example 1234
@@ -4451,23 +5414,95 @@ export interface components {
              */
             createdAt: string;
         };
-        CreateDisputeDto: {
+        VerifyBankAccountDto: {
             /**
-             * @description ID of the job to dispute
-             * @example 123e4567-e89b-12d3-a456-426614174000
+             * @description Bank account number
+             * @example 0123456789
              */
-            jobId: string;
+            accountNumber: string;
             /**
-             * @description Type of dispute
-             * @example service_quality
-             * @enum {string}
+             * @description Bank code (from /payments/banks)
+             * @example 058
              */
-            disputeType: "service_quality" | "payment" | "behavior" | "cancellation" | "other";
+            bankCode: string;
+        };
+        VerifyBankAccountResponseDto: {
             /**
-             * @description Detailed description of the dispute
-             * @example The artisan did not complete the work as agreed.
+             * @description Account holder name from bank
+             * @example John Doe
              */
-            description: string;
+            accountName: string;
+            /**
+             * @description Account number
+             * @example 0123456789
+             */
+            accountNumber: string;
+        };
+        AddBankAccountDto: {
+            /**
+             * @description Bank account number
+             * @example 0123456789
+             */
+            accountNumber: string;
+            /**
+             * @description Bank code (from /payments/banks)
+             * @example 058
+             */
+            bankCode: string;
+            /**
+             * @description Bank name
+             * @example Guaranty Trust Bank
+             */
+            bankName: string;
+            /**
+             * @description Set as default account for withdrawals
+             * @default false
+             * @example true
+             */
+            setAsDefault: boolean;
+        };
+        BankAccountResponseDto: {
+            /**
+             * @description Bank account unique identifier
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            id: string;
+            /**
+             * @description Account holder name
+             * @example John Doe
+             */
+            accountName: string;
+            /**
+             * @description Masked account number (last 4 digits)
+             * @example ******6789
+             */
+            maskedAccountNumber: string;
+            /**
+             * @description Bank name
+             * @example Guaranty Trust Bank
+             */
+            bankName: string;
+            /**
+             * @description Bank code
+             * @example 058
+             */
+            bankCode: string;
+            /**
+             * @description Whether account is verified
+             * @example true
+             */
+            isVerified: boolean;
+            /**
+             * @description Whether this is the default account for withdrawals
+             * @example true
+             */
+            isDefault: boolean;
+            /**
+             * Format: date-time
+             * @description When the account was created
+             * @example 2025-12-07T10:00:00.000Z
+             */
+            createdAt: string;
         };
         DisputeEvidenceResponseDto: {
             id: string;
@@ -4500,24 +5535,6 @@ export interface components {
             /** Format: date-time */
             resolvedAt?: string;
             evidence?: components["schemas"]["DisputeEvidenceResponseDto"][];
-        };
-        AddEvidenceDto: {
-            /**
-             * @description Type of media
-             * @example image
-             * @enum {string}
-             */
-            mediaType: "image" | "video";
-            /**
-             * @description URL to the uploaded media file
-             * @example https://storage.example.com/evidence/image.jpg
-             */
-            mediaUrl: string;
-            /**
-             * @description Description of the evidence
-             * @example Photo showing the unfinished work
-             */
-            description?: string;
         };
         CreateReviewDto: {
             /**
@@ -4569,6 +5586,39 @@ export interface components {
              */
             completedAt: string;
         };
+        ReviewUserDto: {
+            /**
+             * @description User unique identifier (UUID)
+             * @example 550e8400-e29b-41d4-a716-446655440000
+             */
+            id: string;
+            /**
+             * @description User email address
+             * @example user@example.com
+             */
+            email: string;
+            /**
+             * @description User phone number
+             * @example +2348012345678
+             */
+            phoneNumber: string;
+            /**
+             * @description User role
+             * @example user
+             * @enum {string}
+             */
+            role: "user" | "artisan" | "admin";
+            /**
+             * @description User full name (from profile)
+             * @example John Doe
+             */
+            fullName?: string;
+            /**
+             * @description User avatar URL (from profile)
+             * @example https://storage.example.com/avatars/user1.jpg
+             */
+            avatarUrl?: string | null;
+        };
         ReviewResponseDto: {
             /**
              * @description Review unique identifier (UUID)
@@ -4587,15 +5637,15 @@ export interface components {
              * @example 550e8400-e29b-41d4-a716-446655440000
              */
             reviewerId: string;
-            /** @description Reviewer details */
-            reviewer?: components["schemas"]["UserResponseDto"];
+            /** @description Reviewer details with flattened profile info */
+            reviewer?: components["schemas"]["ReviewUserDto"];
             /**
              * @description Reviewee (artisan) user ID
              * @example 550e8400-e29b-41d4-a716-446655440000
              */
             revieweeId: string;
-            /** @description Reviewee (artisan) details */
-            reviewee?: components["schemas"]["UserResponseDto"];
+            /** @description Reviewee (artisan) details with flattened profile info */
+            reviewee?: components["schemas"]["ReviewUserDto"];
             /**
              * @description Punctuality rating (1-5 stars) - how punctual was the artisan
              * @example 5
@@ -4934,6 +5984,554 @@ export interface components {
             /** @description Updated terms and conditions */
             data: components["schemas"]["TermsAndConditionsResponseDto"];
         };
+        AdminNotificationSettingResponseDto: {
+            /**
+             * @description Notification setting ID
+             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
+             */
+            id: string;
+            /**
+             * @description Admin user ID
+             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
+             */
+            adminId: string;
+            /**
+             * @description Notify when new disputes are opened
+             * @example true
+             */
+            notifyNewDisputes: boolean;
+            /**
+             * @description Notify for high-value transactions
+             * @example true
+             */
+            notifyHighValueTransactions: boolean;
+            /**
+             * @description Threshold amount for high-value transaction alerts
+             * @example 1000
+             */
+            highValueThreshold: number;
+            /**
+             * @description Notify when artisans request withdrawals
+             * @example true
+             */
+            notifyWithdrawalRequests: boolean;
+            /**
+             * @description Notify when new artisans submit for verification
+             * @example true
+             */
+            notifyNewArtisanVerification: boolean;
+            /**
+             * @description Notify when artisans update job status
+             * @example true
+             */
+            notifyArtisanStatusChanges: boolean;
+            /**
+             * @description Enable real-time WebSocket updates
+             * @example true
+             */
+            realtimeWebsocketUpdates: boolean;
+            /**
+             * Format: date-time
+             * @description Created timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated timestamp
+             */
+            updatedAt: string;
+        };
+        UpdateAdminNotificationSettingDto: {
+            /**
+             * @description Receive notifications when new disputes are opened
+             * @default true
+             * @example true
+             */
+            notifyNewDisputes: boolean;
+            /**
+             * @description Receive notifications for high-value transactions
+             * @default true
+             * @example true
+             */
+            notifyHighValueTransactions: boolean;
+            /**
+             * @description Threshold amount for high-value transaction alerts
+             * @example 1000
+             */
+            highValueThreshold?: number;
+            /**
+             * @description Receive notifications when artisans request withdrawals
+             * @default true
+             * @example true
+             */
+            notifyWithdrawalRequests: boolean;
+            /**
+             * @description Receive notifications when new artisans submit for verification
+             * @default true
+             * @example true
+             */
+            notifyNewArtisanVerification: boolean;
+            /**
+             * @description Receive real-time notifications when artisans update job status
+             * @default true
+             * @example true
+             */
+            notifyArtisanStatusChanges: boolean;
+            /**
+             * @description Enable real-time WebSocket updates without page refresh
+             * @default true
+             * @example true
+             */
+            realtimeWebsocketUpdates: boolean;
+        };
+        UpdateAdminNotificationSettingResponseDto: {
+            /**
+             * @description Success message
+             * @example Notification settings updated successfully
+             */
+            message: string;
+            /** @description Updated notification settings */
+            data: components["schemas"]["AdminNotificationSettingResponseDto"];
+        };
+        ReferralProgramSettingResponseDto: {
+            /**
+             * @description Referral program setting ID
+             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
+             */
+            id: string;
+            /**
+             * @description Whether the referral program is enabled
+             * @example true
+             */
+            isEnabled: boolean;
+            /**
+             * @description Amount given to the person who refers
+             * @example 25
+             */
+            referrerBonus: number;
+            /**
+             * @description Percentage bonus given to the new user
+             * @example 15
+             */
+            referredUserBonus: number;
+            /**
+             * @description Days to complete required jobs for referral bonus
+             * @example 90
+             */
+            referralExpiryDays: number;
+            /**
+             * @description Minimum completed jobs required for referral bonus
+             * @example 1
+             */
+            minJobsRequired: number;
+            /**
+             * @description Maximum referral bonuses a user can earn
+             * @example 0
+             */
+            maxReferralsPerUser: number;
+            /**
+             * @description Description or notes
+             * @example Holiday promotion referral program
+             */
+            description?: string;
+            /**
+             * @description Whether this setting is active
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * Format: date-time
+             * @description Created timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated timestamp
+             */
+            updatedAt: string;
+        };
+        UpdateReferralProgramSettingDto: {
+            /**
+             * @description Enable or disable the referral program
+             * @default true
+             * @example true
+             */
+            isEnabled: boolean;
+            /**
+             * @description Amount given to the person who refers (in base currency)
+             * @example 25
+             */
+            referrerBonus?: number;
+            /**
+             * @description Percentage bonus given to the new user
+             * @example 15
+             */
+            referredUserBonus?: number;
+            /**
+             * @description Number of days the referred user has to complete required jobs
+             * @example 90
+             */
+            referralExpiryDays?: number;
+            /**
+             * @description Minimum number of completed jobs required for referral bonus
+             * @example 1
+             */
+            minJobsRequired?: number;
+            /**
+             * @description Maximum referral bonuses a user can earn (0 = unlimited)
+             * @example 0
+             */
+            maxReferralsPerUser?: number;
+            /**
+             * @description Optional description or notes about current referral program
+             * @example Holiday promotion referral program
+             */
+            description?: string;
+        };
+        UpdateReferralProgramSettingResponseDto: {
+            /**
+             * @description Success message
+             * @example Referral program settings updated successfully
+             */
+            message: string;
+            /** @description Updated referral program settings */
+            data: components["schemas"]["ReferralProgramSettingResponseDto"];
+        };
+        RequestAdminOtpDto: {
+            /**
+             * @description Purpose of the OTP (e.g., "sensitive_action", "login_verification"). Defaults to "verification".
+             * @default verification
+             * @example sensitive_action
+             */
+            purpose: string;
+        };
+        AdminOtpSentResponseDto: {
+            /**
+             * @description Success message
+             * @example OTP sent successfully
+             */
+            message: string;
+            /**
+             * @description Email where OTP was sent (masked)
+             * @example a***n@xervices.com
+             */
+            emailSentTo: string;
+            /**
+             * @description Phone number where OTP was sent (masked)
+             * @example +234***7890
+             */
+            phoneSentTo: string;
+            /**
+             * @description OTP expiry time in minutes
+             * @example 15
+             */
+            expiresInMinutes: number;
+        };
+        VerifyAdminOtpDto: {
+            /**
+             * @description The 6-digit OTP code sent to admin email/phone
+             * @example 123456
+             */
+            code: string;
+        };
+        AdminOtpVerifiedResponseDto: {
+            /**
+             * @description Success message
+             * @example OTP verified successfully
+             */
+            message: string;
+            /**
+             * @description Whether the OTP was valid
+             * @example true
+             */
+            verified: boolean;
+            /**
+             * @description Session token for authorized action (if applicable)
+             * @example abc123xyz...
+             */
+            sessionToken?: string;
+        };
+        CreateAdminDto: {
+            /**
+             * Format: email
+             * @description Admin email address
+             * @example admin@xervices.com
+             */
+            email: string;
+            /**
+             * @description Phone number in international or local format
+             * @example 08012345678
+             */
+            phoneNumber: string;
+            /**
+             * @description Admin full name
+             * @example John Admin
+             */
+            fullName: string;
+            /**
+             * @description Admin role
+             * @example admin
+             * @enum {string}
+             */
+            adminRole: "super_admin" | "admin" | "finance" | "support";
+        };
+        UpdateAdminDto: {
+            /**
+             * @description Admin role
+             * @enum {string}
+             */
+            adminRole?: "super_admin" | "admin" | "finance" | "support";
+            /**
+             * @description Admin status
+             * @enum {string}
+             */
+            status?: "active" | "inactive" | "disabled";
+            /** @description Admin full name */
+            fullName?: string;
+        };
+        StartImpersonationDto: {
+            /**
+             * @description Reason for impersonation
+             * @example Investigating support ticket #12345
+             */
+            reason: string;
+        };
+        MfaSetupResponseDto: {
+            /**
+             * @description Base32 encoded TOTP secret (for manual entry)
+             * @example JBSWY3DPEHPK3PXP
+             */
+            secret: string;
+            /**
+             * @description QR code as data URL for scanning with authenticator app
+             * @example data:image/png;base64,...
+             */
+            qrCodeDataUrl: string;
+            /**
+             * @description Backup codes for account recovery
+             * @example [
+             *       "XXXX-XXXX",
+             *       "YYYY-YYYY"
+             *     ]
+             */
+            backupCodes: string[];
+        };
+        EnableMfaDto: {
+            /**
+             * @description TOTP code from authenticator app (6 digits)
+             * @example 123456
+             */
+            code: string;
+        };
+        DisableMfaDto: {
+            /**
+             * @description Current TOTP code to verify
+             * @example 123456
+             */
+            code: string;
+        };
+        RegenerateBackupCodesDto: {
+            /**
+             * @description Current TOTP code to verify
+             * @example 123456
+             */
+            code: string;
+        };
+        BackupCodesResponseDto: {
+            /** @description New backup codes (only shown once) */
+            backupCodes: string[];
+        };
+        MfaStatusResponseDto: {
+            /** @description Whether MFA is enabled */
+            mfaEnabled: boolean;
+            /** @description Number of backup codes remaining */
+            backupCodesRemaining: number;
+            /** @description Whether MFA is required for this admin role */
+            mfaRequired: boolean;
+        };
+        CreateBroadcastDto: {
+            /**
+             * @description Notification title
+             * @example New Feature Available
+             */
+            title: string;
+            /**
+             * @description Notification body
+             * @example Check out our latest update with exciting new features!
+             */
+            body: string;
+            /**
+             * @description Template type to use as base
+             * @enum {string}
+             */
+            templateType?: "app_update" | "maintenance" | "promotion" | "policy_update" | "safety_alert" | "new_feature";
+            /**
+             * @description Target audience
+             * @default all_users
+             * @enum {string}
+             */
+            targetAudience: "all_users" | "customers" | "artisans";
+            /**
+             * @description Target platform
+             * @default all
+             * @enum {string}
+             */
+            platform: "all" | "android" | "ios" | "web";
+            /**
+             * @description Additional data for deep linking
+             * @example {
+             *       "screen": "promotions",
+             *       "promotionId": "123"
+             *     }
+             */
+            data?: Record<string, never>;
+            /**
+             * Format: date-time
+             * @description Schedule send time (ISO 8601 format)
+             * @example 2025-01-15T10:00:00Z
+             */
+            scheduledAt?: string;
+        };
+        BroadcastResponseDto: {
+            /** @description Broadcast ID */
+            id: string;
+            /** @description Notification title */
+            title: string;
+            /** @description Notification body */
+            body: string;
+            /**
+             * @description Template type
+             * @enum {string}
+             */
+            templateType?: "app_update" | "maintenance" | "promotion" | "policy_update" | "safety_alert" | "new_feature";
+            /**
+             * @description Target audience
+             * @enum {string}
+             */
+            targetAudience: "all_users" | "customers" | "artisans";
+            /**
+             * @description Target platform
+             * @enum {string}
+             */
+            platform: "all" | "android" | "ios" | "web";
+            /**
+             * @description Broadcast status
+             * @enum {string}
+             */
+            status: "draft" | "scheduled" | "sending" | "completed" | "failed" | "cancelled";
+            /** @description Additional data */
+            data?: Record<string, never>;
+            /** @description Total recipient count */
+            recipientCount: number;
+            /** @description Delivered count */
+            deliveredCount: number;
+            /** @description Failed count */
+            failedCount: number;
+            /** @description Scheduled send time */
+            scheduledAt?: Record<string, never>;
+            /** @description Actual send time */
+            sentAt?: Record<string, never>;
+            /** @description Completion time */
+            completedAt?: Record<string, never>;
+            /** @description Creator ID */
+            createdBy: string;
+            /** @description Creator name */
+            createdByName: string;
+            /**
+             * Format: date-time
+             * @description Created at timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated at timestamp
+             */
+            updatedAt: string;
+        };
+        BroadcastListResponseDto: {
+            data: components["schemas"]["BroadcastResponseDto"][];
+            /** @description Total count */
+            total: number;
+            /** @description Current page */
+            page: number;
+            /** @description Items per page */
+            limit: number;
+        };
+        BroadcastTemplatesResponseDto: {
+            /**
+             * @description Available templates
+             * @example {
+             *       "app_update": {
+             *         "title": "App Update Available",
+             *         "body": "A new version..."
+             *       }
+             *     }
+             */
+            templates: Record<string, never>;
+        };
+        UpdateBroadcastDto: {
+            /** @description Notification title */
+            title?: string;
+            /** @description Notification body */
+            body?: string;
+            /**
+             * @description Target audience
+             * @enum {string}
+             */
+            targetAudience?: "all_users" | "customers" | "artisans";
+            /**
+             * @description Target platform
+             * @enum {string}
+             */
+            platform?: "all" | "android" | "ios" | "web";
+            /** @description Additional data for deep linking */
+            data?: Record<string, never>;
+            /** @description Schedule send time (ISO 8601 format, null to unschedule) */
+            scheduledAt?: Record<string, never>;
+        };
+        CreateServiceDto: {
+            /**
+             * @description Service name
+             * @example Home Cleaning
+             */
+            name: string;
+            /**
+             * @description URL-friendly slug (auto-generated from name if not provided)
+             * @example home-cleaning
+             */
+            slug?: string;
+            /**
+             * @description Service category/group
+             * @example Cleaning
+             */
+            category: string;
+            /**
+             * @description Service description
+             * @example Residential and commercial cleaning services
+             */
+            description?: string;
+            /** @description Icon URL for the service */
+            iconUrl?: string;
+            /**
+             * @description Whether this service is featured
+             * @default false
+             */
+            isFeatured: boolean;
+        };
+        UpdateServiceDto: {
+            /** @description Service name */
+            name?: string;
+            /** @description URL-friendly slug */
+            slug?: string;
+            /** @description Service category/group */
+            category?: string;
+            /** @description Service description */
+            description?: string;
+            /** @description Icon URL */
+            iconUrl?: string;
+            /** @description Whether this service is featured */
+            isFeatured?: boolean;
+        };
         CreateSupportTicketDto: {
             /**
              * @description Brief subject/title for the support ticket
@@ -5215,6 +6813,39 @@ export interface operations {
                 };
             };
             /** @description Invalid credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AuthController_verifyMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaVerifyDto"];
+            };
+        };
+        responses: {
+            /** @description MFA verification successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokensResponseDto"];
+                };
+            };
+            /** @description Invalid MFA token or code */
             401: {
                 headers: {
                     [name: string]: unknown;
@@ -5542,7 +7173,13 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UnreadCountResponseDto"];
+                    "application/json": {
+                        /**
+                         * @description Number of unread notifications
+                         * @example 5
+                         */
+                        unreadCount?: number;
+                    };
                 };
             };
         };
@@ -6899,6 +8536,62 @@ export interface operations {
                 };
             };
             /** @description Category not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ServiceRequestsController_browseNearby: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: string;
+                /** @description Items per page (max 50) */
+                limit?: string;
+                /** @description Filter by specific category ID (optional) */
+                categoryId?: string;
+                /** @description Search radius in kilometers (defaults to artisan service radius) */
+                radiusKm?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Nearby service requests retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedServiceRequestsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Artisan access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Artisan profile not found */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -8272,6 +9965,42 @@ export interface operations {
             };
         };
     };
+    EarningsController_getCommissionRate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current commission rate retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Artisan access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     EarningsController_getTransactionHistory: {
         parameters: {
             query?: {
@@ -8357,6 +10086,73 @@ export interface operations {
             };
         };
     };
+    TransactionsController_getTransactions: {
+        parameters: {
+            query?: {
+                /** @description Filter by period */
+                period?: "today" | "this_week" | "this_month" | "previous_month" | "this_year";
+                /** @description Start date (ISO format) */
+                startDate?: string;
+                /** @description End date (ISO format) */
+                endDate?: string;
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Transaction history retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    SecurityController_requestPinOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OTP sent successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PinOtpResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     SecurityController_createOrUpdatePin: {
         parameters: {
             query?: never;
@@ -8379,7 +10175,7 @@ export interface operations {
                     "application/json": components["schemas"]["PinResponseDto"];
                 };
             };
-            /** @description Invalid PIN format */
+            /** @description Invalid PIN format or OTP */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -8746,6 +10542,188 @@ export interface operations {
             };
         };
     };
+    BankAccountsController_verifyAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyBankAccountDto"];
+            };
+        };
+        responses: {
+            /** @description Account verified successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerifyBankAccountResponseDto"];
+                };
+            };
+            /** @description Invalid account number or bank code */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    BankAccountsController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bank accounts retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankAccountResponseDto"][];
+                };
+            };
+        };
+    };
+    BankAccountsController_addAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddBankAccountDto"];
+            };
+        };
+        responses: {
+            /** @description Bank account added successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankAccountResponseDto"];
+                };
+            };
+            /** @description Invalid account details or account already exists */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    BankAccountsController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Bank account ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bank account retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankAccountResponseDto"];
+                };
+            };
+            /** @description Bank account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    BankAccountsController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Bank account ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bank account removed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+            /** @description Bank account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    BankAccountsController_setAsDefault: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Bank account ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bank account set as default */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankAccountResponseDto"];
+                };
+            };
+            /** @description Bank account not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     DisputesController_getDisputes: {
         parameters: {
             query?: never;
@@ -8782,9 +10760,25 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
+        /** @description Dispute data with optional media files */
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateDisputeDto"];
+                "multipart/form-data": {
+                    /**
+                     * Format: uuid
+                     * @description ID of the job to dispute
+                     */
+                    jobId: string;
+                    /**
+                     * @description Type of dispute
+                     * @enum {string}
+                     */
+                    disputeType: "service_quality" | "payment" | "behavior" | "cancellation" | "other";
+                    /** @description Detailed description of the dispute */
+                    description: string;
+                    /** @description Evidence files (images/videos) - max 10 files */
+                    media?: string[];
+                };
             };
         };
         responses: {
@@ -8893,9 +10887,18 @@ export interface operations {
             };
             cookie?: never;
         };
+        /** @description Evidence file with optional description */
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AddEvidenceDto"];
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description Evidence file (image or video)
+                     */
+                    media: string;
+                    /** @description Optional description of the evidence */
+                    description?: string;
+                };
             };
         };
         responses: {
@@ -8908,7 +10911,7 @@ export interface operations {
                     "application/json": components["schemas"]["DisputeEvidenceResponseDto"];
                 };
             };
-            /** @description Dispute is not accepting evidence */
+            /** @description Dispute is not accepting evidence or no file provided */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -9010,9 +11013,9 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Page number */
-                page?: number;
+                page?: string;
                 /** @description Items per page */
-                limit?: number;
+                limit?: string;
             };
             header?: never;
             path: {
@@ -9047,9 +11050,9 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Page number */
-                page?: number;
+                page?: string;
                 /** @description Items per page */
-                limit?: number;
+                limit?: string;
             };
             header?: never;
             path?: never;
@@ -9748,6 +11751,1246 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
+            };
+        };
+    };
+    AdminController_getAdminNotificationSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin notification settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNotificationSettingResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updateAdminNotificationSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAdminNotificationSettingDto"];
+            };
+        };
+        responses: {
+            /** @description Notification settings updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateAdminNotificationSettingResponseDto"];
+                };
+            };
+            /** @description Bad Request - Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getReferralProgramSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Referral program settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReferralProgramSettingResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updateReferralProgramSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateReferralProgramSettingDto"];
+            };
+        };
+        responses: {
+            /** @description Referral program settings updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateReferralProgramSettingResponseDto"];
+                };
+            };
+            /** @description Bad Request - Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_requestAdminOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestAdminOtpDto"];
+            };
+        };
+        responses: {
+            /** @description OTP sent successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOtpSentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Too many requests - Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_verifyAdminOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyAdminOtpDto"];
+            };
+        };
+        responses: {
+            /** @description OTP verified successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOtpVerifiedResponseDto"];
+                };
+            };
+            /** @description Bad Request - Invalid or expired OTP */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_resendAdminOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestAdminOtpDto"];
+            };
+        };
+        responses: {
+            /** @description OTP resent successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOtpSentResponseDto"];
+                };
+            };
+            /** @description Bad Request - Too many attempts */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminTeamController_listAdmins: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of admins */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTeamController_createAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAdminDto"];
+            };
+        };
+        responses: {
+            /** @description Admin created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Email or phone already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTeamController_getAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Admin profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Admin not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTeamController_updateAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Admin profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAdminDto"];
+            };
+        };
+        responses: {
+            /** @description Admin updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Admin not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTeamController_deactivateAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Admin profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin deactivated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Cannot deactivate yourself */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Admin not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ImpersonationController_startImpersonation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User ID to impersonate */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartImpersonationDto"];
+            };
+        };
+        responses: {
+            /** @description Impersonation session started */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not authorized or cannot impersonate admins */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Target user not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ImpersonationController_endImpersonation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Impersonation session ended */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No active session found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ImpersonationLogsController_getImpersonationLogs: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Impersonation logs */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_setupMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MFA setup data */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaSetupResponseDto"];
+                };
+            };
+            /** @description MFA already enabled */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_enableMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EnableMfaDto"];
+            };
+        };
+        responses: {
+            /** @description MFA enabled successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid verification code or MFA not set up */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_disableMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DisableMfaDto"];
+            };
+        };
+        responses: {
+            /** @description MFA disabled successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid verification code or MFA not enabled */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Super Admins cannot disable MFA */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_regenerateBackupCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegenerateBackupCodesDto"];
+            };
+        };
+        responses: {
+            /** @description New backup codes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BackupCodesResponseDto"];
+                };
+            };
+            /** @description Invalid verification code or MFA not enabled */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_getMfaStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MFA status */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaStatusResponseDto"];
+                };
+            };
+        };
+    };
+    BroadcastController_listBroadcasts: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+                /** @description Filter by status */
+                status?: "draft" | "scheduled" | "sending" | "completed" | "failed" | "cancelled";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of broadcasts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BroadcastListResponseDto"];
+                };
+            };
+        };
+    };
+    BroadcastController_createBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBroadcastDto"];
+            };
+        };
+        responses: {
+            /** @description Broadcast created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastController_getTemplates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Available templates */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BroadcastTemplatesResponseDto"];
+                };
+            };
+        };
+    };
+    BroadcastController_getBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastController_updateBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBroadcastDto"];
+            };
+        };
+        responses: {
+            /** @description Broadcast updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Cannot update broadcast in current status */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastController_sendBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast sending started */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Cannot send broadcast in current status */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastController_cancelBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast cancelled */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Can only cancel scheduled broadcasts */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_listServices: {
+        parameters: {
+            query?: {
+                /** @description Filter by category name */
+                category?: string;
+                /** @description Search services by name or description */
+                search?: string;
+                /** @description Filter by status */
+                status?: "active" | "inactive";
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of services */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_createService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["CreateServiceDto"];
+            };
+        };
+        responses: {
+            /** @description Service created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service with this name or slug already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_getService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Service/Category ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_updateService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Service/Category ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UpdateServiceDto"];
+            };
+        };
+        responses: {
+            /** @description Service updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service with this name or slug already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_deleteService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Service/Category ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service deleted successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_toggleServiceStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Service/Category ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service status toggled */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getOverviewMetrics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dashboard overview metrics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getAppDownloads: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description App download statistics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getRegistrationStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Registration statistics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getRegistrationTrend: {
+        parameters: {
+            query?: {
+                /** @description Year for trend data (default: current year) */
+                year?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Monthly registration trend data */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getRecentActivity: {
+        parameters: {
+            query?: {
+                /** @description Number of activities to return (default: 20) */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recent platform activities */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getCancellationReasons: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cancellation reasons breakdown */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getStateAnalytics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Per-state analytics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getBestBookedServices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Best booked service analytics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

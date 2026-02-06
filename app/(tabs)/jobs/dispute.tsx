@@ -110,8 +110,10 @@ export default function Screen() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      const data = { ...value, media };
+
       // @ts-ignore
-      createDispute?.mutate(value, {
+      createDispute?.mutate(data, {
         onSuccess: (res) => {
           SheetManager.show('success-sheet', {
             payload: {

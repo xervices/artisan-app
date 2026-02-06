@@ -123,6 +123,10 @@ export default function Screen() {
               type={transaction?.type}
               amount={transaction?.amount}
               date={transaction?.createdAt}
+              charge={transaction?.jobDetails?.xervicesCharge}
+              customer={transaction?.jobDetails?.customerName}
+              category={transaction?.jobDetails?.categoryName}
+              jobId={transaction?.jobDetails?.jobId}
             />
           ))}
         </View>

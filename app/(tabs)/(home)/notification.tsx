@@ -11,11 +11,12 @@ import {
 } from '@/components/ui/accordion';
 import { Text } from '@/components/ui/text';
 import { formatRelativeTime } from '@/lib/utils';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { View } from 'react-native';
 
 export default function Screen() {
   const { data, isLoading, isRefetching, refetch } = useQuery(api.getMyNotifications());
+  const unreadCount = useQuery(api.getUnreadNotificationCount());
 
   return (
     <Layout
@@ -33,31 +34,18 @@ export default function Screen() {
         <View className="flex-1 gap-6">
           <Accordion className="gap-4" type="single" collapsible>
             {data?.notifications?.map((notification) => (
-              <AccordionItem
-                key={notification?.id}
-                className="rounded-[8px] bg-[#F4F4F5] px-4 py-1"
-                value={notification?.id}>
-                <AccordionTrigger>
-                  <View className="flex gap-2">
-                    <View className="flex flex-row items-center gap-1">
-                      <View className="flex h-4 w-4 items-center justify-center rounded-full bg-[#FE6A00]">
-                        <View className="h-2 w-2 rounded-full bg-white" />
-                      </View>
-
-                      <Text className="font-cabinet-extrabold text-sm text-primary">Xervices</Text>
-
-                      <Text className="text-xs text-[#737381]">
-                        {formatRelativeTime(notification?.sentAt)}
-                      </Text>
-                    </View>
-
-                    <Text className="font-cabinet-bold text-[#737381]">{notification?.title}</Text>
-                  </View>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <Text className="text-sm text-[#737381]">{notification?.message}</Text>
-                </AccordionContent>
-              </AccordionItem>
+              <NotificationCard
+                key={notification.id}
+                id={notification.id}
+                isRead={notification.isRead}
+                message={notification.message}
+                sentAt={notification.sentAt}
+                title={notification.title}
+                onMarkedReadSuccessFn={() => {
+                  refetch();
+                  unreadCount?.refetch();
+                }}
+              />
             ))}
           </Accordion>
         </View>
@@ -65,5 +53,61 @@ export default function Screen() {
         <EmptyState title="No Notifications" subtitle="You do not have any notifications ye" />
       )}
     </Layout>
+  );
+}
+
+interface NotificationCardProps {
+  id: string;
+  sentAt: string;
+  title: string;
+  message: string;
+  isRead: boolean;
+  onMarkedReadSuccessFn?: () => void;
+}
+
+function NotificationCard({
+  id,
+  message,
+  sentAt,
+  title,
+  isRead,
+  onMarkedReadSuccessFn,
+}: NotificationCardProps) {
+  const { mutate, isPending, data } = useMutation(api.markNotificationAsRead());
+
+  return (
+    <AccordionItem className="rounded-[8px] bg-[#F4F4F5] px-4 py-1" value={id}>
+      <AccordionTrigger
+        onPress={() => {
+          if (!isPending && !isRead && !data) {
+            mutate(
+              // @ts-ignore
+              { notificationIds: [id] },
+              {
+                onSuccess: (res) => {
+                  onMarkedReadSuccessFn?.();
+                },
+              }
+            );
+          }
+        }}>
+        <View className="flex gap-2">
+          <View className="flex flex-row items-center gap-1">
+            <View className="flex h-4 w-4 items-center justify-center rounded-full bg-[#FE6A00]">
+              <View className="h-2 w-2 rounded-full bg-white" />
+            </View>
+
+            <Text className="font-cabinet-extrabold text-sm text-primary">Xervices</Text>
+
+            <Text className="text-xs text-[#737381]">{formatRelativeTime(sentAt)}</Text>
+          </View>
+
+          <Text className="font-cabinet-bold text-[#737381]">{title}</Text>
+        </View>
+      </AccordionTrigger>
+      <AccordionContent>
+        <Text className="text-sm text-[#737381]">{message}</Text>
+      </AccordionContent>
+    </AccordionItem>
   );
 }

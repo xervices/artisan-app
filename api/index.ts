@@ -538,9 +538,9 @@ export const api = {
     }),
   getAllServiceRequest: () =>
     queryOptions({
-      queryKey: ['service-request', 'all'],
+      queryKey: ['service-request', 'all', 'nearby'],
       queryFn: async () => {
-        const { data } = await apiClient.GET('/api/service-requests');
+        const { data } = await apiClient.GET('/api/service-requests/browse/nearby');
 
         return data;
       },
@@ -855,6 +855,21 @@ export const api = {
       },
     };
   },
+  markNotificationAsRead: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/notifications/mark-read', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/notifications/mark-read', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to mark notification as read.'));
+        }
+
+        return data;
+      },
+    };
+  },
   registerDeviceForPushNotification: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/notifications/devices', 'post'>) => {
@@ -918,6 +933,21 @@ export const api = {
         return data;
       },
     }),
+  applyReferralCode: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/referrals/apply', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/referrals/apply', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to apply referral code.'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // Support tickets endpoints
   createSupportTicket: () => {
@@ -991,13 +1021,155 @@ export const api = {
       },
     };
   },
+  requestOtpForPin: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/security/pin/request-otp', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/security/pin/request-otp');
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to send otp.'));
+        }
+
+        return data;
+      },
+    };
+  },
+
+  // bank endpoints
+  getBankAccounts: () =>
+    queryOptions({
+      queryKey: ['bank-accounts'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/bank-accounts');
+
+        return data;
+      },
+    }),
+  addBankAccount: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/bank-accounts', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/bank-accounts', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to add bank account.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  verifyBankAccount: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/bank-accounts/verify', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/bank-accounts/verify', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to verify bank account.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  removeBankAccount: (id: string) => {
+    return {
+      mutationFn: async () => {
+        const { data, error } = await apiClient.DELETE('/api/bank-accounts/{id}', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to remove bank account.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  setDefaultBankAccount: (id: string) => {
+    return {
+      mutationFn: async (
+        credentials: RequestBody<'/api/bank-accounts/{id}/set-default', 'post'>
+      ) => {
+        const { data, error } = await apiClient.POST('/api/bank-accounts/{id}/set-default', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to set default bank account.'));
+        }
+
+        return data;
+      },
+    };
+  },
+
+  // withdraw endpoints
+  requestWithdrawal: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/withdrawals', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/withdrawals', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to process withdrawal.'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // disputes endpoints
   createDispute: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/disputes', 'post'>) => {
+        const formData = new FormData();
+
+        const fields = ['jobId', 'disputeType', 'description'];
+
+        // Append only non-empty fields
+        fields.forEach((field) => {
+          const value = credentials[field];
+
+          if (value !== undefined && value !== null && value !== '') {
+            formData.append(field, String(value));
+          }
+        });
+
+        // @ts-ignore
+        if (credentials.media && credentials.media.length > 0) {
+          // @ts-ignore
+          credentials.media.forEach((media, index) => {
+            const extension = getFileExtension(media.url, media.mimeType);
+
+            const file = {
+              uri: normalizePath(media.url),
+              type: media.mimeType || 'image/jpg',
+              name: media.name || `media_${index}_${Date.now()}.${extension}`,
+            };
+            // @ts-ignore - FormData typing issue in React Native
+            formData.append('media', file);
+          });
+        }
+
         const { data, error } = await apiClient.POST('/api/disputes', {
-          body: credentials,
+          // @ts-ignore - FormData not properly typed in openapi-fetch
+          body: formData,
+          bodySerializer: () => formData,
         });
 
         if (error) {

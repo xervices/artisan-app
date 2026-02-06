@@ -33,7 +33,7 @@ export default function Screen() {
       if (eventType === 'offer:accepted') {
         showSuccessMessage('Offer accepted');
         artisanOffers?.refetch();
-        router.replace('/');
+        // router.replace('/');
       } else {
         artisanOffers?.refetch();
       }

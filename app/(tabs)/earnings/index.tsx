@@ -17,8 +17,13 @@ import { LoadingState } from '@/components/loading-state';
 import { copyToClipboard, formatCurrency } from '@/lib/utils';
 
 export default function Screen() {
-  const [promotions, earnings, transactions] = useQueries({
-    queries: [api.getMyPromotions(), api.getMyEarnings(), api.getTransactionHistory({})],
+  const [promotions, earnings, transactions, banks] = useQueries({
+    queries: [
+      api.getMyPromotions(),
+      api.getMyEarnings(),
+      api.getTransactionHistory({}),
+      api.getBankAccounts(),
+    ],
   });
 
   const [value, setValue] = React.useState('earnings');
@@ -66,10 +71,13 @@ export default function Screen() {
           <ScrollView
             refreshControl={
               <RefreshControl
-                refreshing={earnings?.isRefetching || transactions?.isRefetching}
+                refreshing={
+                  earnings?.isRefetching || transactions?.isRefetching || banks?.isRefetching
+                }
                 onRefresh={() => {
                   earnings?.refetch();
                   transactions?.refetch();
+                  banks?.refetch();
                 }}
                 tintColor={'#E15D02'}
                 colors={['#E15D02']}
@@ -78,17 +86,19 @@ export default function Screen() {
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={false}>
             <TabsContent value="earnings" className="flex gap-4 pb-16 pt-4">
-              {earnings?.isLoading || transactions?.isLoading ? (
+              {earnings?.isLoading || transactions?.isLoading || banks?.isLoading ? (
                 <LoadingState title="Loading your earnings..." />
               ) : (
                 <>
                   <BalanceCard
                     balance={earnings?.data?.availableBalance}
+                    totalEarned={earnings?.data?.totalEarned}
                     incomingPayment={earnings?.data?.pendingBalance}
+                    hasSavedBank={banks?.data && banks?.data?.length > 0}
                   />
 
                   <View className="flex flex-row items-center justify-between">
-                    <Text className="font-cabinet-medium text-xs uppercase text-[#737381]">
+                    <Text className="flex-1 font-cabinet-medium text-xs uppercase text-[#737381]">
                       Transaction History
                     </Text>
 
@@ -109,6 +119,10 @@ export default function Screen() {
                       type={transaction?.type}
                       amount={transaction?.amount}
                       date={transaction?.createdAt}
+                      charge={transaction?.jobDetails?.xervicesCharge}
+                      customer={transaction?.jobDetails?.customerName}
+                      category={transaction?.jobDetails?.categoryName}
+                      jobId={transaction?.jobDetails?.jobId}
                     />
                   ))}
                 </>

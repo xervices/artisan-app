@@ -6,28 +6,39 @@ interface TransactionCardProps {
   type?: string;
   amount?: number;
   date?: string;
+  customer?: string;
+  jobId?: string;
+  charge?: number;
+  category?: string;
 }
 
 export default function TransactionCard({
   type = 'income',
   amount = 0,
   date,
+  category = '',
+  charge = 0,
+  customer = '',
+  jobId = '',
 }: TransactionCardProps) {
   return (
     <View className="flex flex-shrink-0 flex-row gap-2 rounded-[8px] border border-[#F4F4F5] bg-white p-4">
       <View className="flex-1 gap-1">
-        <Text className="font-cabinet-bold text-sm text-[#737381]">
-          {type === 'withdrawal' ? 'Withdrawal' : 'Plumber'}{' '}
-          <Text className="text-xs text-[#FF6A00]">
-            {type === 'withdrawal' ? 'WD ● #25667' : 'JOB ID ● #25667'}
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          className="font-cabinet-bold text-sm text-[#737381]">
+          {type === 'withdrawal' ? 'Withdrawal' : category}{' '}
+          <Text className="text-xs text-[#FF6A00]" numberOfLines={1} ellipsizeMode="tail">
+            {type === 'withdrawal' ? 'WD ● #25667' : `JOB ID ● ${jobId}`}
           </Text>
         </Text>
 
         {type === 'payment_received' && (
           <Text className="font-cabinet-bold text-sm text-[#737381]">
-            Alex Baker
+            {customer}
             <Text className="font-cabinet-bold text-sm text-[#22973B]">
-              +{formatCurrency(amount)}
+              +{formatCurrency(amount + charge)}
             </Text>
           </Text>
         )}
@@ -43,7 +54,7 @@ export default function TransactionCard({
 
         {type === 'dispute' && (
           <Text className="font-cabinet-bold text-sm text-[#737381]">
-            Alex Baker
+            {customer}
             <Text className="font-cabinet-bold text-sm text-[#B3031E]">
               +{formatCurrency(amount)}
             </Text>
@@ -64,7 +75,9 @@ export default function TransactionCard({
         {type === 'payment_received' && (
           <Text className="text-sm text-[#737381]">
             Charges
-            <Text className="font-cabinet-bold text-sm text-[#737381]">₦425</Text>
+            <Text className="font-cabinet-bold text-sm text-[#737381]">
+              {formatCurrency(charge)}
+            </Text>
           </Text>
         )}
 
