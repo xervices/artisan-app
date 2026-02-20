@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { Platform, Pressable, View } from 'react-native';
+import { AppState, Platform, Pressable, View } from 'react-native';
 import { Layout } from '@/components/layout';
 import { router, useLocalSearchParams, useNavigation, usePathname } from 'expo-router';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -19,6 +19,7 @@ import { useCurrentLocation, useLocation } from 'solomo';
 import { useJobsSocket } from '@/hooks/use-jobs-socket';
 import { useCameraPermissions } from 'expo-camera';
 import { makePhoneCall } from '@/lib/utils';
+import { LoadingState } from '@/components/loading-state';
 
 const routeCoordinates = [
   { latitude: 37.78825, longitude: -122.4324 }, // Start point
@@ -34,12 +35,14 @@ export default function Screen() {
   const { id }: { id: string } = useLocalSearchParams();
 
   const { data, isLoading, refetch, isRefetching } = useQuery(api.getJobDetail(id));
-  const [artisanProfile, earnings] = useQueries({
-    queries: [api.getCurrentArtisanProfile(), api.getMyEarnings()],
+  const [artisanProfile, earnings, jobs] = useQueries({
+    queries: [api.getCurrentArtisanProfile(), api.getMyEarnings(), api.getUserJobs()],
   });
 
   const [permission] = useCameraPermissions();
   const [showPermissionModal, setShowPermissionModal] = React.useState(false);
+
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
 
   const mapRef = React.useRef<MapView>(null);
 
@@ -51,7 +54,7 @@ export default function Screen() {
     autoWatch: true,
   });
 
-  const { startTracking, stopTracking, updateLocation } = useJobsSocket({
+  const { startTracking, stopTracking, updateLocation, isConnected } = useJobsSocket({
     autoConnect: true,
     jobId: id,
   });
@@ -81,6 +84,22 @@ export default function Screen() {
   const lastEtaFetchLocationRef = React.useRef<{ latitude: number; longitude: number } | null>(
     null
   );
+
+  const handleOnRefresh = async () => {
+    setIsRefreshing(true);
+
+    try {
+      await Promise.all([
+        refetch(),
+        artisanProfile?.refetch(),
+        earnings?.refetch(),
+        jobs?.refetch(),
+      ]);
+    } catch (error) {
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const R = 6371000; // Earth's radius in meters
@@ -189,7 +208,6 @@ export default function Screen() {
       if (isTrackable) {
         try {
           await startTracking();
-          console.log('✅ Tracking started (distance-based)');
 
           // Helper function to fetch and update on distance change
           const broadcastLocationIfMoved = async () => {
@@ -232,16 +250,23 @@ export default function Screen() {
                         )
                       : 999999;
 
-                    if (
-                      distSinceLastEta >= 200 &&
-                      data.serviceRequest.serviceLatitude &&
-                      data.serviceRequest.serviceLongitude
-                    ) {
+                    const serviceLatitude =
+                      data?.serviceRequest?.destinationAddress &&
+                      (data?.status === 'completed' || data?.status === 'in_progress')
+                        ? data.serviceRequest.destinationLatitude
+                        : data.serviceRequest.serviceLatitude;
+                    const serviceLongitude =
+                      data?.serviceRequest?.destinationAddress &&
+                      (data?.status === 'completed' || data?.status === 'in_progress')
+                        ? data.serviceRequest.destinationLongitude
+                        : data.serviceRequest.serviceLongitude;
+
+                    if (distSinceLastEta >= 200 && serviceLatitude && serviceLongitude) {
                       fetchEta(
                         { latitude: currentCoords.latitude, longitude: currentCoords.longitude },
                         {
-                          latitude: data.serviceRequest.serviceLatitude,
-                          longitude: data.serviceRequest.serviceLongitude,
+                          latitude: serviceLatitude,
+                          longitude: serviceLongitude,
                         }
                       );
                       lastEtaFetchLocationRef.current = {
@@ -265,16 +290,24 @@ export default function Screen() {
                   longitude: currentCoords.longitude,
                 };
 
+                const serviceLatitude =
+                  data?.serviceRequest?.destinationAddress &&
+                  (data?.status === 'completed' || data?.status === 'in_progress')
+                    ? data.serviceRequest.destinationLatitude
+                    : data?.serviceRequest?.serviceLatitude;
+                const serviceLongitude =
+                  data?.serviceRequest?.destinationAddress &&
+                  (data?.status === 'completed' || data?.status === 'in_progress')
+                    ? data.serviceRequest.destinationLongitude
+                    : data?.serviceRequest?.serviceLongitude;
+
                 // Initial ETA fetch
-                if (
-                  data?.serviceRequest?.serviceLatitude &&
-                  data?.serviceRequest?.serviceLongitude
-                ) {
+                if (serviceLatitude && serviceLongitude) {
                   fetchEta(
                     { latitude: currentCoords.latitude, longitude: currentCoords.longitude },
                     {
-                      latitude: data.serviceRequest.serviceLatitude,
-                      longitude: data.serviceRequest.serviceLongitude,
+                      latitude: serviceLatitude,
+                      longitude: serviceLongitude,
                     }
                   );
                   lastEtaFetchLocationRef.current = {
@@ -312,14 +345,28 @@ export default function Screen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.status]);
 
-  // React.useEffect(() => {
-  //   if (mapRef.current) {
-  //     mapRef.current.fitToCoordinates(routeCoordinates, {
-  //       edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-  //       animated: true,
-  //     });
-  //   }
-  // }, []);
+  React.useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        // App came to foreground
+        // Reconnect socket if disconnected
+        if (!isConnected) {
+          startTracking();
+        }
+
+        // Refetch all data
+
+        refetch();
+        artisanProfile?.refetch();
+        earnings?.refetch();
+        jobs?.refetch();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [isConnected, id]);
 
   const handleOnMarkArrived = () => {
     if (beforePhotos?.length < 1)
@@ -335,6 +382,7 @@ export default function Screen() {
           showSuccessMessage('Job marked as started.');
           artisanProfile?.refetch();
           earnings?.refetch();
+          jobs?.refetch();
           refetch();
         },
         onError: (err) => {
@@ -358,6 +406,7 @@ export default function Screen() {
           showSuccessMessage('Job marked as completed.');
           artisanProfile?.refetch();
           earnings?.refetch();
+          jobs?.refetch();
           refetch();
         },
         onError: (err) => {
@@ -370,453 +419,490 @@ export default function Screen() {
   return (
     <Layout
       useBackground
-      isRefreshing={isRefetching}
-      onRefresh={refetch}
+      isRefreshing={isRefreshing}
+      onRefresh={handleOnRefresh}
       horizontalPadding={false}
       bottomPadding={0}>
-      <View className="flex-1">
-        <View className="relative flex flex-1 items-center justify-center">
-          <MapView
-            ref={mapRef}
-            provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
-            style={{ width: '100%', height: '100%' }}
-            initialRegion={{
-              latitude: data?.serviceRequest?.serviceLatitude || 4.7425431,
-              longitude: data?.serviceRequest?.serviceLongitude || 7.0379143,
-              latitudeDelta: 0.02,
-              longitudeDelta: 0.02,
-            }}>
-            {routeCoords.length > 0 && (
-              <Polyline
-                coordinates={routeCoords}
-                strokeColor="#FE6A00"
-                strokeWidth={4}
-                lineCap="round"
-                lineJoin="round"
-              />
-            )}
-
-            {/* User Marker */}
-            <Marker coordinate={userLocation} anchor={{ x: 0.5, y: 1 }}>
-              <View
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 99999999,
-                  backgroundColor: '#FFDCC1',
-                  borderWidth: 1,
-                  borderColor: '#606D5D1F',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 4,
-                  elevation: 5,
-                }}>
-                <Image
-                  style={{ width: 16, height: 16 }}
-                  contentFit="contain"
-                  source={require('@/assets/icons/map-pin.svg')}
-                />
-              </View>
-            </Marker>
-
-            <Marker
-              coordinate={{
+      {isLoading ? (
+        <LoadingState title="Loading job activity..." />
+      ) : (
+        <View className="flex-1">
+          <View className="relative flex flex-1 items-center justify-center">
+            <MapView
+              ref={mapRef}
+              provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+              style={{ width: '100%', height: '100%' }}
+              initialRegion={{
                 latitude: data?.serviceRequest?.serviceLatitude || 4.7425431,
                 longitude: data?.serviceRequest?.serviceLongitude || 7.0379143,
-              }}
-              anchor={{ x: 0.5, y: 0.5 }}>
-              <View
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 99999999,
-                  backgroundColor: '#1B1B1E',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 4,
-                  elevation: 5,
-                }}>
-                <Image
-                  style={{ width: 16, height: 16 }}
-                  contentFit="contain"
-                  source={require('@/assets/icons/map-home.svg')}
+                latitudeDelta: 0.02,
+                longitudeDelta: 0.02,
+              }}>
+              {routeCoords.length > 0 && (
+                <Polyline
+                  coordinates={routeCoords}
+                  strokeColor="#FE6A00"
+                  strokeWidth={4}
+                  lineCap="round"
+                  lineJoin="round"
                 />
-              </View>
-            </Marker>
-          </MapView>
+              )}
 
-          <View className="absolute top-7 flex h-[76px] w-[250px] items-center justify-center rounded-full border border-[#DFDFE1] bg-white">
-            <Text className="text-center font-cabinet-bold text-xl text-[#1B1B1E]">
-              Destination
-            </Text>
-
-            <Text className="text-center text-xs text-[#1B1B1E]">
-              {eta ? `You are ${eta} away` : 'Calculating arrival time...'}
-            </Text>
-          </View>
-
-          <BottomSheet
-            ref={bottomSheetRef}
-            index={0} // Start at first snap point (20% - peek)
-            snapPoints={snapPoints}
-            enablePanDownToClose={false} // Prevent closing completely
-            backgroundStyle={{
-              backgroundColor: 'white',
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: -2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 10,
-              elevation: 5,
-            }}
-            handleIndicatorStyle={{
-              width: 38,
-              height: 6,
-              backgroundColor: '#FFF4EA',
-            }}>
-            <BottomSheetScrollView>
-              <View className="flex gap-6 p-6">
-                <View className="relative flex w-full flex-row items-center justify-center">
-                  <Pressable
-                    onPress={() => {
-                      router.back();
-                    }}
-                    className="absolute left-0 h-8 w-8 justify-center">
-                    <ArrowLeft size={24} color={'#B4B4BC'} />
-                  </Pressable>
+              {/* User Marker */}
+              <Marker coordinate={userLocation} anchor={{ x: 0.5, y: 1 }}>
+                <View
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 99999999,
+                    backgroundColor: '#FFDCC1',
+                    borderWidth: 1,
+                    borderColor: '#606D5D1F',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 4,
+                    elevation: 5,
+                  }}>
+                  <Image
+                    style={{ width: 16, height: 16 }}
+                    contentFit="contain"
+                    source={require('@/assets/icons/map-pin.svg')}
+                  />
                 </View>
+              </Marker>
 
-                <View>
-                  <Text className="font-cabinet-bold text-[#1B1B1E]">
-                    Don’t forget to check in when you arrive
-                  </Text>
+              {data?.serviceRequest?.destinationAddress &&
+              (data?.status === 'in_progress' || data?.status === 'completed') ? (
+                <Marker
+                  coordinate={{
+                    latitude: data?.serviceRequest?.destinationLatitude || 4.7425431,
+                    longitude: data?.serviceRequest?.destinationLongitude || 7.0379143,
+                  }}
+                  anchor={{ x: 0.5, y: 0.5 }}>
+                  <View
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 99999999,
+                      backgroundColor: '#1B1B1E',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.25,
+                      shadowRadius: 4,
+                      elevation: 5,
+                    }}>
+                    <Image
+                      style={{ width: 16, height: 16 }}
+                      contentFit="contain"
+                      source={require('@/assets/icons/map-home.svg')}
+                    />
+                  </View>
+                </Marker>
+              ) : (
+                <Marker
+                  coordinate={{
+                    latitude: data?.serviceRequest?.serviceLatitude || 4.7425431,
+                    longitude: data?.serviceRequest?.serviceLongitude || 7.0379143,
+                  }}
+                  anchor={{ x: 0.5, y: 0.5 }}>
+                  <View
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 99999999,
+                      backgroundColor: '#1B1B1E',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.25,
+                      shadowRadius: 4,
+                      elevation: 5,
+                    }}>
+                    <Image
+                      style={{ width: 16, height: 16 }}
+                      contentFit="contain"
+                      source={require('@/assets/icons/map-home.svg')}
+                    />
+                  </View>
+                </Marker>
+              )}
+            </MapView>
 
-                  {/* <Text className="text-xs text-[#737381]">She'll check in when he arrives</Text> */}
-                </View>
+            <View className="absolute top-7 flex h-[76px] w-[250px] items-center justify-center rounded-full border border-[#DFDFE1] bg-white">
+              <Text className="text-center font-cabinet-bold text-xl text-[#1B1B1E]">
+                Destination
+              </Text>
 
-                <View className="flex w-full flex-row">
-                  <View className="flex w-1/2 flex-row items-center gap-2">
-                    <Avatar alt="User's Avatar" className="h-6 w-6">
-                      <AvatarImage source={{ uri: data?.user?.profile?.avatarUrl }} />
-                      <AvatarFallback className="bg-primary">
-                        <Text className="font-cabinet-bold text-xs uppercase leading-none">
-                          {data?.user?.profile?.fullName?.substring(0, 2)}
-                        </Text>
-                      </AvatarFallback>
-                    </Avatar>
+              <Text className="text-center text-xs text-[#1B1B1E]">
+                {eta ? `You are ${eta} away` : 'Calculating arrival time...'}
+              </Text>
+            </View>
 
-                    <View>
-                      <View className="flex flex-row items-center">
-                        <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">
-                          {data?.user?.profile?.fullName}
-                        </Text>
+            <BottomSheet
+              ref={bottomSheetRef}
+              index={0} // Start at first snap point (20% - peek)
+              snapPoints={snapPoints}
+              enablePanDownToClose={false} // Prevent closing completely
+              backgroundStyle={{
+                backgroundColor: 'white',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: -2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 10,
+                elevation: 5,
+              }}
+              handleIndicatorStyle={{
+                width: 38,
+                height: 6,
+                backgroundColor: '#FFF4EA',
+              }}>
+              <BottomSheetScrollView>
+                <View className="flex gap-6 p-6">
+                  <View className="relative flex w-full flex-row items-center justify-center">
+                    <Pressable
+                      onPress={() => {
+                        router.back();
+                      }}
+                      className="absolute left-0 h-8 w-8 justify-center">
+                      <ArrowLeft size={24} color={'#B4B4BC'} />
+                    </Pressable>
+                  </View>
+
+                  <View>
+                    <Text className="font-cabinet-bold text-[#1B1B1E]">
+                      Don’t forget to check in when you arrive
+                    </Text>
+
+                    {/* <Text className="text-xs text-[#737381]">She'll check in when he arrives</Text> */}
+                  </View>
+
+                  <View className="flex w-full flex-row">
+                    <View className="flex w-1/2 flex-row items-center gap-2">
+                      <Avatar alt="User's Avatar" className="h-6 w-6">
+                        <AvatarImage source={{ uri: data?.user?.profile?.avatarUrl }} />
+                        <AvatarFallback className="bg-primary">
+                          <Text className="font-cabinet-bold text-xs uppercase leading-none">
+                            {data?.user?.profile?.fullName?.substring(0, 2)}
+                          </Text>
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <View>
+                        <View className="flex flex-row items-center">
+                          <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">
+                            {data?.user?.profile?.fullName}
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   </View>
-                </View>
 
-                <View className="flex flex-row gap-4">
-                  <Button
-                    disabled={!data?.user?.phoneVerified}
-                    onPress={() => {
-                      makePhoneCall(data?.user?.phoneNumber);
-                    }}
-                    className="flex-1 border-[#1B1B1E] bg-white">
-                    <PhoneCall size={16} fill={'#1B1B1E'} />
+                  <View className="flex flex-row gap-4">
+                    <Button
+                      disabled={!data?.user?.phoneVerified}
+                      onPress={() => {
+                        makePhoneCall(data?.user?.phoneNumber);
+                      }}
+                      className="flex-1 border-[#1B1B1E] bg-white">
+                      <PhoneCall size={16} fill={'#1B1B1E'} />
 
-                    <Text className="font-cabinet-bold text-[#1B1B1E]">Call</Text>
-                  </Button>
+                      <Text className="font-cabinet-bold text-[#1B1B1E]">Call</Text>
+                    </Button>
 
-                  <Button
-                    onPress={() => {
-                      SheetManager.hideAll();
-                      router.navigate({
-                        pathname: '/chat',
-                        params: {
-                          id: id,
-                        },
-                      });
-                    }}
-                    className="flex-1 border-[#FE6A00] bg-white">
-                    <Image
-                      source={require('@/assets/icons/message-notif.svg')}
-                      style={{ width: 16, height: 16 }}
-                      contentFit="contain"
-                    />
+                    <Button
+                      onPress={() => {
+                        SheetManager.hideAll();
+                        router.navigate({
+                          pathname: '/chat',
+                          params: {
+                            id: id,
+                          },
+                        });
+                      }}
+                      className="flex-1 border-[#FE6A00] bg-white">
+                      <Image
+                        source={require('@/assets/icons/message-notif.svg')}
+                        style={{ width: 16, height: 16 }}
+                        contentFit="contain"
+                      />
 
-                    <Text className="font-cabinet-bold text-[#FE6A00]">Message</Text>
-                  </Button>
-                </View>
+                      <Text className="font-cabinet-bold text-[#FE6A00]">Message</Text>
+                    </Button>
+                  </View>
 
-                <View className="flex gap-4">
-                  {data?.status === 'paid' ? (
-                    <View className="flex flex-1 gap-2">
-                      <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
-                        Before Photo
-                      </Text>
-
-                      <Pressable
-                        onPress={() => {
-                          if (permission?.granted) {
-                            SheetManager.show('camera-sheet', {
-                              payload: {
-                                onSelect(value) {
-                                  setBeforePhotos((prev) => {
-                                    return [...prev, value];
-                                  });
-                                },
-                              },
-                            });
-                          } else {
-                            setShowPermissionModal(true);
-                          }
-                        }}
-                        className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
-                        <Camera size={24} color={'#737381'} />
-                      </Pressable>
-
-                      <View className="mt-1 flex flex-row flex-wrap gap-2">
-                        {beforePhotos?.map((photo, index) => (
-                          <View
-                            key={index}
-                            className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
-                            <Image
-                              source={photo?.url}
-                              style={{ width: '100%', height: '100%' }}
-                              contentFit="cover"
-                            />
-
-                            <Pressable
-                              onPress={() =>
-                                SheetManager.show('delete-image-sheet', {
-                                  payload: {
-                                    onDelete() {
-                                      setBeforePhotos((prev) =>
-                                        prev.filter((media) => media.url !== photo.url)
-                                      );
-                                    },
-                                  },
-                                })
-                              }
-                              className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
-                              <Image
-                                source={require('@/assets/icons/trash.svg')}
-                                style={{ width: 12, height: 12 }}
-                                contentFit="contain"
-                              />
-                            </Pressable>
-                          </View>
-                        ))}
-                      </View>
-                    </View>
-                  ) : null}
-
-                  {beforeEvidence && beforeEvidence?.length > 0 ? (
-                    <View className="flex flex-1 gap-2">
-                      <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
-                        Before Photo
-                      </Text>
-
-                      <View className="flex flex-row flex-wrap gap-2">
-                        {beforeEvidence
-                          ? beforeEvidence?.map((i) => (
-                              <View
-                                key={i?.id}
-                                className="aspect-square w-20 overflow-hidden rounded-[4px]">
-                                <Image
-                                  source={i?.mediaUrl}
-                                  style={{ width: '100%', height: '100%' }}
-                                  contentFit="cover"
-                                />
-                              </View>
-                            ))
-                          : null}
-                      </View>
-                    </View>
-                  ) : null}
-
-                  {data?.status === 'in_progress' ? (
-                    <View className="flex gap-2">
-                      <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
-                        After Photo
-                      </Text>
-
-                      <Pressable
-                        onPress={() => {
-                          if (permission?.granted) {
-                            SheetManager.show('camera-sheet', {
-                              payload: {
-                                onSelect(value) {
-                                  setAfterPhotos((prev) => {
-                                    return [...prev, value];
-                                  });
-                                },
-                              },
-                            });
-                          } else {
-                            setShowPermissionModal(true);
-                          }
-                        }}
-                        className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
-                        <Camera size={24} color={'#737381'} />
-                      </Pressable>
-
-                      <View className="mt-1 flex flex-row flex-wrap gap-2">
-                        {afterPhotos.map((photo, index) => (
-                          <View
-                            key={index}
-                            className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
-                            <Image
-                              source={photo?.url}
-                              style={{ width: '100%', height: '100%' }}
-                              contentFit="cover"
-                            />
-
-                            <Pressable
-                              onPress={() =>
-                                SheetManager.show('delete-image-sheet', {
-                                  payload: {
-                                    onDelete() {
-                                      setAfterPhotos((prev) =>
-                                        prev.filter((media) => media.url !== photo.url)
-                                      );
-                                    },
-                                  },
-                                })
-                              }
-                              className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
-                              <Image
-                                source={require('@/assets/icons/trash.svg')}
-                                style={{ width: 12, height: 12 }}
-                                contentFit="contain"
-                              />
-                            </Pressable>
-                          </View>
-                        ))}
-                      </View>
-                    </View>
-                  ) : null}
-
-                  {afterEvidence && afterEvidence?.length > 0 ? (
-                    <View className="flex flex-1 gap-2">
-                      <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
-                        After Photo
-                      </Text>
-
-                      <View className="flex flex-row flex-wrap gap-2">
-                        {afterEvidence
-                          ? afterEvidence?.map((i) => (
-                              <View
-                                key={i?.id}
-                                className="aspect-square w-20 overflow-hidden rounded-[4px]">
-                                <Image
-                                  source={i?.mediaUrl}
-                                  style={{ width: '100%', height: '100%' }}
-                                  contentFit="cover"
-                                />
-                              </View>
-                            ))
-                          : null}
-                      </View>
-                    </View>
-                  ) : null}
-
-                  <View className="flex flex-1 gap-4">
+                  <View className="flex gap-4">
                     {data?.status === 'paid' ? (
-                      <Button
-                        isLoading={cancelJob?.isPending}
-                        disabled={cancelJob?.isPending}
-                        onPress={() => {
-                          cancelJob?.mutate(
-                            {},
-                            {
-                              onSuccess: (res) => {
-                                showSuccessMessage('Job cancelled successfully.');
-                                refetch();
-                                SheetManager.hideAll();
-                                router.replace('/jobs');
-                              },
-                              onError: (err) => {
-                                showErrorMessage(err?.message);
-                              },
+                      <View className="flex flex-1 gap-2">
+                        <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
+                          Before Photo
+                        </Text>
+
+                        <Pressable
+                          onPress={() => {
+                            if (permission?.granted) {
+                              SheetManager.show('camera-sheet', {
+                                payload: {
+                                  onSelect(value) {
+                                    setBeforePhotos((prev) => {
+                                      return [...prev, value];
+                                    });
+                                  },
+                                },
+                              });
+                            } else {
+                              setShowPermissionModal(true);
                             }
-                          );
-                        }}
-                        className="flex-1 border-[#DFDFE1] bg-white">
-                        <Text className="font-cabinet-extrabold text-[#737381]">Cancel offer</Text>
-                      </Button>
+                          }}
+                          className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
+                          <Camera size={24} color={'#737381'} />
+                        </Pressable>
+
+                        <View className="mt-1 flex flex-row flex-wrap gap-2">
+                          {beforePhotos?.map((photo, index) => (
+                            <View
+                              key={index}
+                              className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
+                              <Image
+                                source={photo?.url}
+                                style={{ width: '100%', height: '100%' }}
+                                contentFit="cover"
+                              />
+
+                              <Pressable
+                                onPress={() =>
+                                  SheetManager.show('delete-image-sheet', {
+                                    payload: {
+                                      onDelete() {
+                                        setBeforePhotos((prev) =>
+                                          prev.filter((media) => media.url !== photo.url)
+                                        );
+                                      },
+                                    },
+                                  })
+                                }
+                                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
+                                <Image
+                                  source={require('@/assets/icons/trash.svg')}
+                                  style={{ width: 12, height: 12 }}
+                                  contentFit="contain"
+                                />
+                              </Pressable>
+                            </View>
+                          ))}
+                        </View>
+                      </View>
                     ) : null}
 
-                    {data?.status === 'paid' ? (
-                      <Button
-                        isLoading={startJob?.isPending}
-                        disabled={startJob?.isPending}
-                        onPress={handleOnMarkArrived}
-                        className="">
-                        Mark Arrived
-                      </Button>
+                    {beforeEvidence && beforeEvidence?.length > 0 ? (
+                      <View className="flex flex-1 gap-2">
+                        <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
+                          Before Photo
+                        </Text>
+
+                        <View className="flex flex-row flex-wrap gap-2">
+                          {beforeEvidence
+                            ? beforeEvidence?.map((i) => (
+                                <View
+                                  key={i?.id}
+                                  className="aspect-square w-20 overflow-hidden rounded-[4px]">
+                                  <Image
+                                    source={i?.mediaUrl}
+                                    style={{ width: '100%', height: '100%' }}
+                                    contentFit="cover"
+                                  />
+                                </View>
+                              ))
+                            : null}
+                        </View>
+                      </View>
                     ) : null}
 
                     {data?.status === 'in_progress' ? (
-                      <Button
-                        isLoading={completeJob?.isPending}
-                        disabled={completeJob?.isPending}
-                        onPress={() => {
-                          handleOnMarkCompleted();
-                        }}
-                        className="">
-                        Mark complete
-                      </Button>
-                    ) : null}
+                      <View className="flex gap-2">
+                        <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
+                          After Photo
+                        </Text>
 
-                    {data?.status === 'completed' ? (
-                      <>
-                        <Button
+                        <Pressable
                           onPress={() => {
-                            SheetManager.show('success-sheet', {
-                              payload: {
-                                title: 'Job Completed Successfully ',
-                                subtitle:
-                                  'The client will review your work, and upon approval, your payment will be released to you from escrow. You will be redirected to the home page shortly.',
-                                hideBackButton: true,
-                                useCheckImage: true,
-                                onRedirect: () => {
-                                  router.replace('/(tabs)/(home)');
+                            if (permission?.granted) {
+                              SheetManager.show('camera-sheet', {
+                                payload: {
+                                  onSelect(value) {
+                                    setAfterPhotos((prev) => {
+                                      return [...prev, value];
+                                    });
+                                  },
                                 },
-                              },
-                            });
-                          }}>
-                          Submit for review
-                        </Button>
+                              });
+                            } else {
+                              setShowPermissionModal(true);
+                            }
+                          }}
+                          className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
+                          <Camera size={24} color={'#737381'} />
+                        </Pressable>
 
-                        <Button
-                          onPress={() =>
-                            router.navigate({
-                              pathname: '/jobs/dispute',
-                              params: {
-                                id: id,
-                              },
-                            })
-                          }
-                          variant={'outline'}>
-                          Dispute
-                        </Button>
-                      </>
+                        <View className="mt-1 flex flex-row flex-wrap gap-2">
+                          {afterPhotos.map((photo, index) => (
+                            <View
+                              key={index}
+                              className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
+                              <Image
+                                source={photo?.url}
+                                style={{ width: '100%', height: '100%' }}
+                                contentFit="cover"
+                              />
+
+                              <Pressable
+                                onPress={() =>
+                                  SheetManager.show('delete-image-sheet', {
+                                    payload: {
+                                      onDelete() {
+                                        setAfterPhotos((prev) =>
+                                          prev.filter((media) => media.url !== photo.url)
+                                        );
+                                      },
+                                    },
+                                  })
+                                }
+                                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
+                                <Image
+                                  source={require('@/assets/icons/trash.svg')}
+                                  style={{ width: 12, height: 12 }}
+                                  contentFit="contain"
+                                />
+                              </Pressable>
+                            </View>
+                          ))}
+                        </View>
+                      </View>
                     ) : null}
+
+                    {afterEvidence && afterEvidence?.length > 0 ? (
+                      <View className="flex flex-1 gap-2">
+                        <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
+                          After Photo
+                        </Text>
+
+                        <View className="flex flex-row flex-wrap gap-2">
+                          {afterEvidence
+                            ? afterEvidence?.map((i) => (
+                                <View
+                                  key={i?.id}
+                                  className="aspect-square w-20 overflow-hidden rounded-[4px]">
+                                  <Image
+                                    source={i?.mediaUrl}
+                                    style={{ width: '100%', height: '100%' }}
+                                    contentFit="cover"
+                                  />
+                                </View>
+                              ))
+                            : null}
+                        </View>
+                      </View>
+                    ) : null}
+
+                    <View className="flex flex-1 gap-4">
+                      {data?.status === 'paid' ? (
+                        <Button
+                          isLoading={cancelJob?.isPending}
+                          disabled={cancelJob?.isPending}
+                          onPress={() => {
+                            cancelJob?.mutate(
+                              {},
+                              {
+                                onSuccess: (res) => {
+                                  showSuccessMessage('Job cancelled successfully.');
+                                  refetch();
+                                  SheetManager.hideAll();
+                                  router.replace('/jobs');
+                                },
+                                onError: (err) => {
+                                  showErrorMessage(err?.message);
+                                },
+                              }
+                            );
+                          }}
+                          className="flex-1 border-[#DFDFE1] bg-white">
+                          <Text className="font-cabinet-extrabold text-[#737381]">
+                            Cancel offer
+                          </Text>
+                        </Button>
+                      ) : null}
+
+                      {data?.status === 'paid' ? (
+                        <Button
+                          isLoading={startJob?.isPending}
+                          disabled={startJob?.isPending}
+                          onPress={handleOnMarkArrived}
+                          className="">
+                          Mark Arrived
+                        </Button>
+                      ) : null}
+
+                      {data?.status === 'in_progress' ? (
+                        <Button
+                          isLoading={completeJob?.isPending}
+                          disabled={completeJob?.isPending}
+                          onPress={() => {
+                            handleOnMarkCompleted();
+                          }}
+                          className="">
+                          Mark complete
+                        </Button>
+                      ) : null}
+
+                      {data?.status === 'completed' ? (
+                        <>
+                          <Button
+                            onPress={() => {
+                              SheetManager.show('success-sheet', {
+                                payload: {
+                                  title: 'Job Completed Successfully ',
+                                  subtitle:
+                                    'The client will review your work, and upon approval, your payment will be released to you from escrow. You will be redirected to the home page shortly.',
+                                  hideBackButton: true,
+                                  useCheckImage: true,
+                                  onRedirect: () => {
+                                    router.replace('/(tabs)/(home)');
+                                  },
+                                },
+                              });
+                            }}>
+                            Submit for review
+                          </Button>
+
+                          <Button
+                            onPress={() =>
+                              router.navigate({
+                                pathname: '/dispute',
+                                params: {
+                                  id: id,
+                                },
+                              })
+                            }
+                            variant={'outline'}>
+                            Dispute
+                          </Button>
+                        </>
+                      ) : null}
+                    </View>
                   </View>
                 </View>
-              </View>
-            </BottomSheetScrollView>
-          </BottomSheet>
+              </BottomSheetScrollView>
+            </BottomSheet>
+          </View>
         </View>
-      </View>
+      )}
 
       <CameraPermissionDialog
         onPermissionsGranted={() => {

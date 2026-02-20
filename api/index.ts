@@ -300,8 +300,8 @@ export const api = {
 
         const fields = [
           'categoryIds',
-          'identificationType',
-          'identificationNumber',
+          // 'identificationType',
+          // 'identificationNumber',
           'yearsOfExperience',
           'professionalLicenseNumber',
           'licenseIssueState',
@@ -540,7 +540,14 @@ export const api = {
     queryOptions({
       queryKey: ['service-request', 'all', 'nearby'],
       queryFn: async () => {
-        const { data } = await apiClient.GET('/api/service-requests/browse/nearby');
+        const { data } = await apiClient.GET('/api/service-requests/browse/nearby', {
+          params: {
+            query: {
+              limit: '50',
+              radiusKm: '25',
+            },
+          },
+        });
 
         return data;
       },
@@ -949,6 +956,36 @@ export const api = {
     };
   },
 
+  // broadcast endpoints
+  getActiveBroadcasts: () =>
+    queryOptions({
+      queryKey: ['broadcasts', 'active'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/broadcasts/active');
+
+        return data;
+      },
+    }),
+  dismissBroadcast: (id: string) => {
+    return {
+      mutationFn: async () => {
+        const { data, error } = await apiClient.POST('/api/broadcasts/{id}/dismiss', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Dismiss broadcast request failed'));
+        }
+
+        return data;
+      },
+    };
+  },
+
   // Support tickets endpoints
   createSupportTicket: () => {
     return {
@@ -1259,6 +1296,35 @@ export const api = {
             },
           },
         });
+
+        return data;
+      },
+    }),
+  getCommissionRate: () =>
+    queryOptions({
+      queryKey: ['commission', 'rate'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/earnings/commission-rate');
+
+        return data;
+      },
+    }),
+
+  // legal endpoints
+  getPrivacyPolicy: () =>
+    queryOptions({
+      queryKey: ['privacy'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/privacy-policy');
+
+        return data;
+      },
+    }),
+  getTerms: () =>
+    queryOptions({
+      queryKey: ['terms'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/terms-and-conditions');
 
         return data;
       },

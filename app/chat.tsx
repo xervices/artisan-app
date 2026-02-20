@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { Platform, Pressable, ScrollView, View } from 'react-native';
+import { AppState, Platform, Pressable, ScrollView, View } from 'react-native';
 import * as Application from 'expo-application';
 import { Layout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -71,7 +71,20 @@ export default function Screen() {
   const queryClient = useQueryClient();
   const roomId = chatRoom?.data?.id;
 
-  const { sendMessage } = useChatSocket({
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+
+  const handleOnRefresh = async () => {
+    setIsRefreshing(true);
+
+    try {
+      await Promise.all([job?.refetch(), chatRoom?.refetch(), messages?.refetch()]);
+    } catch (error) {
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  const { sendMessage, isConnected } = useChatSocket({
     roomId,
     onNewMessage: (message) => {
       messages?.refetch();
@@ -102,6 +115,21 @@ export default function Screen() {
       });
     },
   });
+
+  React.useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        // Refetch all data
+        job?.refetch();
+        chatRoom?.refetch();
+        messages?.refetch();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [isConnected, id]);
 
   const form = useForm({
     defaultValues: {
@@ -185,8 +213,8 @@ export default function Screen() {
 
   return (
     <Layout
-      isRefreshing={messages?.isRefetching}
-      onRefresh={messages?.refetch}
+      isRefreshing={isRefreshing}
+      onRefresh={handleOnRefresh}
       useBackground
       scrollable={false}
       keyboardAvoiding>

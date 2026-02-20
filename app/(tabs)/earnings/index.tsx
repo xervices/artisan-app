@@ -17,12 +17,13 @@ import { LoadingState } from '@/components/loading-state';
 import { copyToClipboard, formatCurrency } from '@/lib/utils';
 
 export default function Screen() {
-  const [promotions, earnings, transactions, banks] = useQueries({
+  const [promotions, earnings, transactions, banks, commissionRate] = useQueries({
     queries: [
       api.getMyPromotions(),
       api.getMyEarnings(),
       api.getTransactionHistory({}),
       api.getBankAccounts(),
+      api.getCommissionRate(),
     ],
   });
 
@@ -78,6 +79,7 @@ export default function Screen() {
                   earnings?.refetch();
                   transactions?.refetch();
                   banks?.refetch();
+                  commissionRate?.refetch();
                 }}
                 tintColor={'#E15D02'}
                 colors={['#E15D02']}
@@ -95,6 +97,8 @@ export default function Screen() {
                     totalEarned={earnings?.data?.totalEarned}
                     incomingPayment={earnings?.data?.pendingBalance}
                     hasSavedBank={banks?.data && banks?.data?.length > 0}
+                    commissionRate={commissionRate?.data?.commissionValue}
+                    isPercentage={commissionRate?.data?.isPercentage}
                   />
 
                   <View className="flex flex-row items-center justify-between">

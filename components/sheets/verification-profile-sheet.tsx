@@ -43,6 +43,7 @@ const buildVerificationUrl = (
 ): string => {
   const widgetId = '697360505dae32fe5044be3b';
   const baseUrl = 'https://identity.dojah.io';
+
   const params = new URLSearchParams();
 
   params.append('widget_id', widgetId);
@@ -72,6 +73,8 @@ export function VerificationProfileSheet(props: SheetProps<'verification-profile
   const { userData, metadata, onSuccess, onError, onClose } = props.payload ?? {};
 
   const verificationUrl = buildVerificationUrl(userData, metadata);
+
+  const callbackUrl = 'https://example.com/';
 
   const handleWebViewMessage = (event: WebViewMessageEvent) => {
     try {
@@ -116,7 +119,7 @@ export function VerificationProfileSheet(props: SheetProps<'verification-profile
     const { url } = navState;
 
     // Check for success/error URLs if Dojah redirects
-    if (url.includes('success') || url.includes('verification-complete')) {
+    if (url === callbackUrl) {
       onSuccess?.({
         status: 'success',
         message: 'Verification completed successfully',
@@ -157,8 +160,8 @@ export function VerificationProfileSheet(props: SheetProps<'verification-profile
         height: 6,
         backgroundColor: '#FFF4EA',
       }}>
-      <View style={{ height: screenHeight * 0.9 }} className="flex gap-4 p-4">
-        <View className="flex w-full flex-row items-center gap-4">
+      <View style={{ height: screenHeight * 1 }} className="flex gap-4">
+        <View className="flex w-full flex-row items-center gap-4 px-4 pt-4">
           <Pressable onPress={handleClose} className="h-8 w-8 justify-center">
             <ArrowLeft size={24} color={'#B4B4BC'} />
           </Pressable>
@@ -188,20 +191,6 @@ export function VerificationProfileSheet(props: SheetProps<'verification-profile
             onError={handleWebViewError}
             onLoadStart={() => setIsLoading(true)}
             onLoadEnd={() => setIsLoading(false)}
-            injectedJavaScript={`
-              (function() {
-                const observer = new MutationObserver(function(mutations) {
-                  const bodyText = document.body.innerText;
-                  if (bodyText.includes('Your verification has been successfully completed.')) {
-                    window.ReactNativeWebView.postMessage(JSON.stringify({
-                      type: 'success_message',
-                      text: bodyText
-                    }));
-                  }
-                });
-                observer.observe(document.body, { childList: true, subtree: true, characterData: true });
-              })();
-            `}
             style={{ flex: 1 }}
           />
         </View>

@@ -41,7 +41,9 @@ export default function RootLayout() {
                       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                       <Stack.Screen name="chat" options={{ headerShown: false }} />
                       <Stack.Screen name="ongoing" options={{ headerShown: false }} />
+                      <Stack.Screen name="dispute" options={{ headerShown: false }} />
                       <Stack.Screen name="verify" options={{ headerShown: false }} />
+                      <Stack.Screen name="verification" options={{ headerShown: false }} />
                     </Stack.Protected>
 
                     <Stack.Protected guard={!isLoggedIn && hasCompletedOnboarding}>
@@ -51,6 +53,8 @@ export default function RootLayout() {
                       <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
                       <Stack.Screen name="forgot-password-otp" options={{ headerShown: false }} />
                       <Stack.Screen name="new-password" options={{ headerShown: false }} />
+                      <Stack.Screen name="terms" options={{ headerShown: false }} />
+                      <Stack.Screen name="privacy" options={{ headerShown: false }} />
                     </Stack.Protected>
 
                     <Stack.Protected guard={!hasCompletedOnboarding}>

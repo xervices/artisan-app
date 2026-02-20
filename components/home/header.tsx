@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, AppState } from 'react-native';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { BadgeCheck, Bell } from 'lucide-react-native';
 import { Text } from '../ui/text';
@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { useAuthStore } from '@/store/auth-store';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
+import { useEffect } from 'react';
 
 export function Header() {
   const { user } = useAuthStore();
@@ -13,6 +14,19 @@ export function Header() {
   const [artisanProfile, unreadNotifications] = useQueries({
     queries: [api.getCurrentArtisanProfile(), api.getUnreadNotificationCount()],
   });
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        artisanProfile?.refetch();
+        unreadNotifications?.refetch();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <View className="flex w-full flex-row items-end justify-between">

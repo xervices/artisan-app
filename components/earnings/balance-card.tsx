@@ -6,12 +6,16 @@ import { Button } from '../ui/button';
 import { SheetManager } from 'react-native-actions-sheet';
 import { formatCurrency } from '@/lib/utils';
 import { router } from 'expo-router';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
 
 interface BalanceCardProp {
   balance?: number;
   totalEarned?: number;
   incomingPayment?: number;
   hasSavedBank?: boolean;
+  commissionRate?: number;
+  isPercentage?: boolean;
 }
 
 export function BalanceCard({
@@ -19,7 +23,10 @@ export function BalanceCard({
   incomingPayment,
   totalEarned,
   hasSavedBank,
+  commissionRate,
+  isPercentage,
 }: BalanceCardProp) {
+  const { data } = useQuery(api.getCurrentArtisanProfile());
   const [balanceVisibility, setBalanceVisibility] = useState(true);
 
   return (
@@ -67,7 +74,9 @@ export function BalanceCard({
 
       <Button
         onPress={() => {
-          if (hasSavedBank) {
+          if (!data?.isVerified) {
+            router.navigate('/verification');
+          } else if (hasSavedBank) {
             SheetManager.show('withdraw-sheet');
           } else {
             router.navigate('/earnings/add-bank');
@@ -77,9 +86,12 @@ export function BalanceCard({
         Withdraw
       </Button>
 
-      <Text className="text-center text-xs text-[#FFF4EA]">
-        Xervices collects a 5% service fee{' '}
-      </Text>
+      {commissionRate ? (
+        <Text className="text-center text-xs text-[#FFF4EA]">
+          Xervices collects a {isPercentage ? `${commissionRate}%` : formatCurrency(commissionRate)}{' '}
+          service fee{' '}
+        </Text>
+      ) : null}
     </View>
   );
 }

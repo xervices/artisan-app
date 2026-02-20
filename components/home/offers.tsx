@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native';
+import { AppState, Pressable, View } from 'react-native';
 import { Text } from '../ui/text';
 import { Button } from '../ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
@@ -10,31 +10,47 @@ import { paths } from '@/api/schema';
 import { formatRelativeTime } from '@/lib/utils';
 import { ServiceRequestData } from '@/hooks/types';
 import { useMarketplaceContext } from '@/providers/use-marketplace-context';
+import React from 'react';
 
 export function Offers() {
   const { requests } = useMarketplaceContext();
 
-  const { data } = useQuery(api.getArtisanOffers());
+  const { data, refetch } = useQuery(api.getAllServiceRequest());
 
-  const pendingOffers = data?.filter((i) => i.status === 'pending');
+  const pendingRequests = data?.requests?.filter(
+    (i) => i.status === 'open' || i.status === 'in_negotiation'
+  );
 
-  // Transform pendingOffers to ServiceRequestData format
-  const transformedPendingOffers: ServiceRequestData[] =
-    pendingOffers?.map((offer) => ({
-      categoryId: offer.serviceRequest?.category?.id || '',
-      title: offer.serviceRequest?.title || '',
-      budgetMax: offer.serviceRequest?.budgetMax || 0,
-      budgetMin: offer.serviceRequest?.budgetMin || 0,
-      createdAt: offer.serviceRequest?.createdAt || '',
-      id: offer.serviceRequest?.id || '',
-      categoryName: offer.serviceRequest?.category?.name || '',
-      description: offer?.serviceRequest?.description || '',
-      preferredDate: offer?.serviceRequest?.createdAt || '',
-      serviceAddress: offer?.serviceRequest?.serviceAddress || '',
-      user: offer?.serviceRequest?.user
+  React.useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        // Refetch all data
+        refetch();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  // Transform pendingRequests to ServiceRequestData format
+  const transformedPendingRequests: ServiceRequestData[] =
+    pendingRequests?.map((request) => ({
+      categoryId: request?.category?.id || '',
+      title: request?.title || '',
+      budgetMax: request?.budgetMax || 0,
+      budgetMin: request?.budgetMin || 0,
+      createdAt: request?.createdAt || '',
+      id: request?.id || '',
+      categoryName: request?.category?.name || '',
+      description: request?.description || '',
+      preferredDate: request?.createdAt || '',
+      serviceAddress: request?.serviceAddress || '',
+      user: request?.user
         ? {
-            name: offer?.serviceRequest?.user?.profile?.fullName || '',
-            avatarUrl: offer?.serviceRequest?.user?.profile?.avatarUrl || '',
+            name: request?.user?.profile?.fullName || '',
+            avatarUrl: request?.user?.profile?.avatarUrl || '',
           }
         : {
             avatarUrl: '',
@@ -42,11 +58,20 @@ export function Offers() {
           },
     })) || [];
 
-  // Unify requests and pendingOffers, sort by createdAt (most recent first), take first 2
-  const unifiedData: ServiceRequestData[] = [
-    ...(requests?.requests || []),
-    ...transformedPendingOffers,
-  ]
+  // Create a Set of IDs from socket requests for efficient lookup
+  const socketRequestIds = new Set(requests?.requests?.map((r) => r.id));
+
+  // Filter API data to exclude items already in socket data
+  const uniqueApiData = transformedPendingRequests.filter(
+    (offer) => !socketRequestIds.has(offer.id)
+  );
+
+  // Unify requests and pendingRequests, sort by createdAt (most recent first), take first 2
+  const oneDayInMs = 24 * 60 * 60 * 1000;
+  const now = new Date().getTime();
+
+  const unifiedData: ServiceRequestData[] = [...(requests?.requests || []), ...uniqueApiData]
+    .filter((item) => now - new Date(item.createdAt).getTime() <= oneDayInMs)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 2);
 

@@ -14,8 +14,8 @@ import { useMutation, useQueries } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { CircleAlert, Play } from 'lucide-react-native';
-import { useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { AppState, Pressable, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 
 export default function Screen() {
@@ -40,6 +40,19 @@ export default function Screen() {
     },
   });
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleOnRefresh = async () => {
+    setIsRefreshing(true);
+
+    try {
+      await Promise.all([service.refetch(), artisanOffers?.refetch()]);
+    } catch (error) {
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const offersMade = artisanOffers?.data?.filter((i) => i.serviceRequestId === id);
 
   const lastOfferId = offersMade && offersMade.length > 0 ? offersMade[0]?.id : '';
@@ -49,14 +62,31 @@ export default function Screen() {
     offers.joinServiceRequest(id);
   }, [id]);
 
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        // App came to foreground
+        // Reconnect socket if disconnected
+        if (!offers?.isConnected) {
+          offers?.joinServiceRequest(id);
+        }
+
+        // Refetch all data
+        service?.refetch();
+        artisanOffers?.refetch();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [offers?.isConnected, id]);
+
   return (
     <Layout
       useBackground
-      isRefreshing={service?.isRefetching || artisanOffers?.isRefetching}
-      onRefresh={() => {
-        service?.refetch();
-        artisanOffers?.refetch();
-      }}
+      isRefreshing={isRefreshing}
+      onRefresh={handleOnRefresh}
       stickyHeader={
         <View className="pb-4">
           <AuthHeader title="Requests" />

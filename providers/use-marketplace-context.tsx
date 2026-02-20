@@ -1,3 +1,5 @@
+import { AppState, type AppStateStatus } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   NewOfferEvent,
   RequestViewedEvent,
@@ -7,6 +9,7 @@ import {
 import { useOffersSocket } from '@/hooks/use-offers-socket';
 import { useServiceRequestsSocket } from '@/hooks/use-service-requests-socket';
 import React, { createContext, useContext, type ReactNode } from 'react';
+import { api } from '@/api';
 
 // Combine the return types of both hooks
 interface MarketplaceContextType {
@@ -34,6 +37,7 @@ export const MarketplaceProvider: React.FC<MarketplaceProviderProps> = ({
     undefined
   );
   const [offersEnabled, setOffersEnabled] = React.useState(false);
+  const queryClient = useQueryClient();
 
   // Offers Socket (Lazy connected)
   const offersData = useOffersSocket({
@@ -69,6 +73,45 @@ export const MarketplaceProvider: React.FC<MarketplaceProviderProps> = ({
       socket.off('offer:accepted', handleOfferAccepted);
     };
   }, [offersData.socket, activeServiceRequestId, requestsData]);
+
+  // Listen for new service request and update the list
+  React.useEffect(() => {
+    const socket = requestsData.socket;
+    if (!socket) return;
+
+    const handleNewServiceRequest = () => {
+      // Invalidate the query to fetch new data
+      queryClient.invalidateQueries({ queryKey: api.getAllServiceRequest().queryKey });
+    };
+
+    socket.on('service_request:new', handleNewServiceRequest);
+
+    return () => {
+      socket.off('service_request:new', handleNewServiceRequest);
+    };
+  }, [requestsData.socket, queryClient]);
+
+  // Reconnect sockets when app comes to foreground
+  React.useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active') {
+        const requestsSocket = requestsData.socket;
+        const offersSocket = offersData.socket;
+
+        if (requestsSocket && !requestsSocket.connected) {
+          requestsSocket.connect();
+        }
+
+        if (offersSocket && !offersSocket.connected && offersEnabled) {
+          offersSocket.connect();
+        }
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [requestsData.socket, offersData.socket, offersEnabled]);
 
   const value: MarketplaceContextType = {
     offers: {

@@ -26,7 +26,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { router } from 'expo-router';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingState } from '@/components/loading-state';
 import { NIGERIAN_STATES } from '@/store/data';
@@ -56,14 +56,14 @@ const formSchema = z.object({
   categoryIds: z.array(z.string()).min(1, 'Select at least 1 category'),
 
   // Required: Identification type
-  identificationType: z.string().min(1, 'Identification type is required.'),
+  // identificationType: z.string().min(1, 'Identification type is required.'),
 
   // Required: Identification number
-  identificationNumber: z
-    .string()
-    .min(1, 'Identification number is required')
-    .min(11, 'Identification number must be at least 11 characters')
-    .max(11, 'Identification number must be 11 characters'),
+  // identificationNumber: z
+  //   .string()
+  //   .min(1, 'Identification number is required')
+  //   .min(11, 'Identification number must be at least 11 characters')
+  //   .max(11, 'Identification number must be 11 characters'),
 
   // Required: Years of experience
   yearsOfExperience: z.string().min(1, 'Years of experience is required'),
@@ -78,17 +78,19 @@ const formSchema = z.object({
   licenseIssueDate: z.string(),
 });
 
-const idTypes = [
-  // { value: 'BVN', label: 'BVN' },
-  { value: 'NIN', label: 'NIN' },
-];
+// const idTypes = [
+//   // { value: 'BVN', label: 'BVN' },
+//   { value: 'NIN', label: 'NIN' },
+// ];
 
 export default function Screen() {
   const { user } = useAuthStore();
 
   const categories = useQuery(api.getAllCategories());
 
-  const verifyNIN = useMutation(api.verifyNIN());
+  const queryClient = useQueryClient();
+
+  // const verifyNIN = useMutation(api.verifyNIN());
 
   const { mutate, isPending } = useMutation(api.onboardArtisan());
 
@@ -122,8 +124,8 @@ export default function Screen() {
   const form = useForm({
     defaultValues: {
       categoryIds: [''],
-      identificationType: 'NIN',
-      identificationNumber: '',
+      // identificationType: 'NIN',
+      // identificationNumber: '',
       yearsOfExperience: '',
       professionalLicenseNumber: '',
       licenseIssueState: '',
@@ -143,7 +145,10 @@ export default function Screen() {
       // @ts-ignore
       mutate(data, {
         onSuccess: () => {
-          router.replace('/(tabs)/(home)');
+          queryClient.invalidateQueries({
+            queryKey: api.getCurrentArtisanProfile().queryKey,
+          });
+          router.replace('/verification');
         },
         onError: (err) => {
           showErrorMessage(err.message);
@@ -210,21 +215,21 @@ export default function Screen() {
     }
   };
 
-  const verifyNameMatch = () => {
-    const ninFirstName = verifyNIN.data?.data?.firstName;
-    const ninLastName = verifyNIN.data?.data?.lastName;
+  // const verifyNameMatch = () => {
+  //   const ninFirstName = verifyNIN.data?.data?.firstName;
+  //   const ninLastName = verifyNIN.data?.data?.lastName;
 
-    if (ninFirstName && ninLastName) {
-      if (
-        user?.profile?.fullName.includes(ninFirstName) &&
-        user?.profile.fullName.includes(ninLastName)
-      ) {
-        return true;
-      }
-    }
+  //   if (ninFirstName && ninLastName) {
+  //     if (
+  //       user?.profile?.fullName.includes(ninFirstName) &&
+  //       user?.profile.fullName.includes(ninLastName)
+  //     ) {
+  //       return true;
+  //     }
+  //   }
 
-    return false;
-  };
+  //   return false;
+  // };
 
   return (
     <View className="flex-1">
@@ -307,7 +312,7 @@ export default function Screen() {
                 </form.Field>
               )}
 
-              <form.Field name="identificationType">
+              {/* <form.Field name="identificationType">
                 {(field) => (
                   <View>
                     <Label nativeID="idType">Select Identification</Label>
@@ -344,9 +349,9 @@ export default function Screen() {
                     ) : null}
                   </View>
                 )}
-              </form.Field>
+              </form.Field> */}
 
-              <form.Field name="identificationNumber">
+              {/* <form.Field name="identificationNumber">
                 {(field) => (
                   <View>
                     <Label nativeID="idNumber">Enter Identification Number</Label>
@@ -416,7 +421,7 @@ export default function Screen() {
                     />
                   </View>
                 )}
-              </form.Field>
+              </form.Field> */}
 
               <form.Field name="yearsOfExperience">
                 {(field) => (

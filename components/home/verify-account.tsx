@@ -18,7 +18,13 @@ export function VerifyAccount() {
         <Text className="flex-1 text-sm text-[#737381]">You need to verify your account.</Text>
 
         <Pressable
-          onPress={() => router.navigate('/verify/step-2')}
+          onPress={() => {
+            if (data === undefined) {
+              router.navigate('/verify/step-2');
+            } else {
+              router.navigate('/verification');
+            }
+          }}
           className="flex flex-row items-center gap-1">
           <Text className="font-cabinet-bold text-sm text-primary">Verify</Text>
 

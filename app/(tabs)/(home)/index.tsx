@@ -1,6 +1,6 @@
 import { Layout } from '@/components/layout';
 import { Header } from '@/components/home/header';
-import { Platform, View } from 'react-native';
+import { AppState, Platform, View } from 'react-native';
 import { Offers } from '@/components/home/offers';
 import EnableLocationDialog from '@/components/enable-location-dialog';
 import { AvailabilityStatus } from '@/components/home/availability-status';
@@ -11,8 +11,11 @@ import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { useAuthStore } from '@/store/auth-store';
 import { useNotification } from '@/providers/notification-provider';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Storage from 'expo-sqlite/kv-store';
+import { BroadcastDialog } from '@/components/home/broadcast-dialog';
+import { Promotions } from '@/components/home/promotions';
+import { UserOfWeek } from '@/components/home/user-of-week';
 
 export default function Screen() {
   const { isLoggedIn } = useAuthStore();
@@ -28,6 +31,24 @@ export default function Screen() {
       api.getArtisanOffers(),
     ],
   });
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleOnRefresh = async () => {
+    setIsRefreshing(true);
+
+    try {
+      await Promise.all([
+        serviceRequests.refetch(),
+        artisanProfile?.refetch(),
+        earnings?.refetch(),
+        offers?.refetch(),
+      ]);
+    } catch (error) {
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     const handleRegistration = async () => {
@@ -60,38 +81,60 @@ export default function Screen() {
     handleRegistration();
   }, [isLoggedIn, expoPushToken]);
 
-  return (
-    <Layout
-      useBackground
-      isRefreshing={
-        serviceRequests?.isRefetching ||
-        artisanProfile?.isRefetching ||
-        earnings?.isRefetching ||
-        offers?.isRefetching
-      }
-      onRefresh={() => {
-        serviceRequests?.refetch();
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        serviceRequests.refetch();
         artisanProfile?.refetch();
         earnings?.refetch();
         offers?.refetch();
-      }}
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  return (
+    <Layout
+      useBackground
+      isRefreshing={isRefreshing}
+      onRefresh={handleOnRefresh}
+      horizontalPadding={false}
       stickyHeader={
-        <View className="pb-4">
+        <View className="px-6 pb-4">
           <Header />
         </View>
       }>
       <View className="flex-1 gap-4">
         <EnableLocationDialog />
 
-        <AvailabilityStatus />
+        <BroadcastDialog />
 
-        <OverviewCard />
+        <View className="px-6">
+          <AvailabilityStatus />
+        </View>
 
-        <Stats />
+        <View className="px-6">
+          <OverviewCard />
+        </View>
 
-        <VerifyAccount />
+        <View className="px-6">
+          <Stats />
+        </View>
 
-        <Offers />
+        <View className="px-6">
+          <VerifyAccount />
+        </View>
+
+        <View className="px-6">
+          <Offers />
+        </View>
+
+        <Promotions />
+
+        <UserOfWeek />
       </View>
     </Layout>
   );
