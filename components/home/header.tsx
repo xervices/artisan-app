@@ -4,7 +4,7 @@ import { BadgeCheck, Bell } from 'lucide-react-native';
 import { Text } from '../ui/text';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/store/auth-store';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { useEffect } from 'react';
 
@@ -14,6 +14,7 @@ export function Header() {
   const [artisanProfile, unreadNotifications] = useQueries({
     queries: [api.getCurrentArtisanProfile(), api.getUnreadNotificationCount()],
   });
+  const markAllNotifications = useMutation(api.markAllNotificationAsRead());
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -55,7 +56,14 @@ export function Header() {
       </View>
 
       <Pressable
-        onPress={() => router.navigate('/notification')}
+        onPress={() => {
+          markAllNotifications?.mutate(undefined, {
+            onSuccess: () => {
+              unreadNotifications?.refetch();
+            },
+          });
+          router.navigate('/notification');
+        }}
         className="relative flex h-6 w-6 items-center justify-center">
         <Bell fill={'#1B1B1E'} />
 

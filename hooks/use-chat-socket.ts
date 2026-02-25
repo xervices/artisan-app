@@ -9,6 +9,7 @@ import {
   UserTypingEvent,
   SendMessageResponse,
 } from './types';
+import { AppState } from 'react-native';
 
 const SOCKET_URL = 'https://server-api-bibv.onrender.com';
 
@@ -55,6 +56,10 @@ export const useChatSocket = ({
 
       socket = io(`${SOCKET_URL}/chat`, {
         transports: ['websocket'],
+        reconnection: true,
+        reconnectionAttempts: Infinity,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 10000,
         autoConnect: true,
         auth: { token },
       });
@@ -98,9 +103,9 @@ export const useChatSocket = ({
           const others = prev.filter((u) => u.userId !== userId);
           return isTyping ? [...others, event.data] : others;
         });
-        
+
         if (onTypingRef.current) {
-             onTypingRef.current(event.data);
+          onTypingRef.current(event.data);
         }
       });
 
@@ -111,11 +116,27 @@ export const useChatSocket = ({
 
     initSocket();
 
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'active') {
+        if (socketRef.current && !socketRef.current.connected) {
+          socketRef.current.connect();
+        }
+      } else if (nextAppState === 'background') {
+        if (socketRef.current && socketRef.current.connected) {
+          socketRef.current.disconnect();
+        }
+      }
+    };
+
+    const appStateSubscription = AppState.addEventListener('change', handleAppStateChange);
+
     return () => {
       if (socket) {
         socket.disconnect();
         socketRef.current = null;
       }
+
+      appStateSubscription.remove();
     };
   }, [autoConnect, roomId]);
 
@@ -127,9 +148,9 @@ export const useChatSocket = ({
       }
       socketRef.current.emit('send_message', { roomId, content }, (response) => {
         if (response.success) {
-            resolve(response);
+          resolve(response);
         } else {
-            reject(new Error(response.error || 'Failed to send message'));
+          reject(new Error(response.error || 'Failed to send message'));
         }
       });
     });
@@ -141,27 +162,27 @@ export const useChatSocket = ({
   }, []);
 
   const markRead = useCallback((roomId: string, messageIds: string[]) => {
-      return new Promise<{success: boolean, updated?: number}>((resolve, reject) => {
-        if (!socketRef.current?.connected) {
-            reject(new Error('Socket not connected'));
-            return;
+    return new Promise<{ success: boolean; updated?: number }>((resolve, reject) => {
+      if (!socketRef.current?.connected) {
+        reject(new Error('Socket not connected'));
+        return;
+      }
+      socketRef.current.emit('mark_read', { roomId, messageIds }, (response) => {
+        if (response.success) {
+          resolve(response);
+        } else {
+          reject(new Error('Failed to mark messages as read'));
         }
-        socketRef.current.emit('mark_read', { roomId, messageIds }, (response) => {
-            if (response.success) {
-                resolve(response);
-            } else {
-                reject(new Error('Failed to mark messages as read'));
-            }
-        });
       });
+    });
   }, []);
 
-  return { 
-      socket: socketRef.current,
-      isConnected, 
-      sendMessage, 
-      sendTyping,
-      markRead, 
-      typingUsers 
+  return {
+    socket: socketRef.current,
+    isConnected,
+    sendMessage,
+    sendTyping,
+    markRead,
+    typingUsers,
   };
 };

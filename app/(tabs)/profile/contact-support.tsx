@@ -20,7 +20,7 @@ const data = [
     icon: require('@/assets/icons/whatsapp.svg'),
     isLink: true,
     isDestructive: false,
-    onPress: () => router.navigate('/profile/password'),
+    onPress: () => {},
   },
 ];
 

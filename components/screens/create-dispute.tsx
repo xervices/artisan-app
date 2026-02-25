@@ -137,8 +137,8 @@ export function CreateDisputeScreen() {
         <LoadingState title="Loading Job details..." />
       ) : (
         <View className="flex-1 gap-4">
-          <View className="flex w-full flex-row">
-            <View className="flex w-1/2 flex-row items-center gap-2">
+          <View className="flex w-full flex-row gap-4">
+            <View className="flex flex-1 flex-row items-center gap-2">
               <Avatar alt="User's Avatar" className="h-14 w-14">
                 <AvatarImage source={{ uri: data?.user?.profile?.avatarUrl }} />
                 <AvatarFallback className="bg-primary">
@@ -157,8 +157,13 @@ export function CreateDisputeScreen() {
               </View>
             </View>
 
-            <View className="flex w-1/2 justify-between">
-              <Text className="text-right text-xs text-[#FF6A00]">JOB ID ● {id}</Text>
+            <View className="flex flex-1 justify-between">
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                className="text-right text-xs text-[#FF6A00]">
+                JOB ID ● {id}
+              </Text>
 
               <Text className="text-right font-cabinet-bold text-[18px] text-[#FF6A00]">
                 {formatCurrency(data?.finalAmount)}

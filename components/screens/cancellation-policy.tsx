@@ -9,7 +9,7 @@ import { api } from '@/api';
 import { LoadingState } from '../loading-state';
 
 export function CancellationPolicyScreen() {
-  const { data, isLoading, refetch, isRefetching } = useQuery(api.getTerms());
+  const { data, isLoading, refetch, isRefetching } = useQuery(api.getCancellationPolicy());
 
   return (
     <Layout

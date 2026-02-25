@@ -106,18 +106,18 @@ export default function Screen() {
                 </View>
               </View>
 
-              <Text className="text-xs text-[#B4B4BC]">Shown results ({data?.length})</Text>
+              <Text className="text-xs text-[#B4B4BC]">Shown results ({data?.data?.length})</Text>
             </View>
           ) : null}
         </View>
       }>
       {isLoading ? (
         <LoadingState title="Loading your transactions..." />
-      ) : data && data?.length === 0 ? (
+      ) : data && data?.data?.length === 0 ? (
         <EmptyState title="No Transactions" />
       ) : (
         <View className="flex-1 gap-4">
-          {data?.map((transaction) => (
+          {data?.data?.map((transaction) => (
             <TransactionCard
               key={transaction?.id}
               type={transaction?.type}

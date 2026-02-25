@@ -82,6 +82,7 @@ export function BalanceCard({
             router.navigate('/earnings/add-bank');
           }
         }}
+        disabled={balance && balance > 0 ? false : true}
         className="mt-3 border-[#B74C01] bg-[#FE6A00]">
         Withdraw
       </Button>

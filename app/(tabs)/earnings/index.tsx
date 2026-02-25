@@ -11,10 +11,11 @@ import { LegendList } from '@legendapp/list';
 import { BalanceCard } from '@/components/earnings/balance-card';
 import TransactionCard from '@/components/earnings/transaction-card';
 import { Button } from '@/components/ui/button';
-import { useQueries } from '@tanstack/react-query';
+import { useMutation, useQueries } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingState } from '@/components/loading-state';
 import { copyToClipboard, formatCurrency } from '@/lib/utils';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 
 export default function Screen() {
   const [promotions, earnings, transactions, banks, commissionRate] = useQueries({
@@ -26,6 +27,10 @@ export default function Screen() {
       api.getCommissionRate(),
     ],
   });
+
+  const { mutate: withdrawBonus, isPending: isWithdrawing } = useMutation(
+    api.withdrawReferralBonus()
+  );
 
   const [value, setValue] = React.useState('earnings');
 
@@ -117,7 +122,7 @@ export default function Screen() {
                     </Pressable>
                   </View>
 
-                  {transactions?.data?.slice(0, 5)?.map((transaction) => (
+                  {transactions?.data?.data?.slice(0, 5)?.map((transaction) => (
                     <TransactionCard
                       key={transaction?.id}
                       type={transaction?.type}
@@ -160,7 +165,41 @@ export default function Screen() {
                       {formatCurrency(promotions?.data?.availableReferralBalance)}
                     </Text>
 
-                    <Button className="mt-2">Withdraw</Button>
+                    <Button
+                      onPress={() => {
+                        if (
+                          promotions?.data?.availableReferralBalance &&
+                          promotions?.data?.availableReferralBalance > 0
+                        ) {
+                          withdrawBonus(
+                            { amount: promotions?.data?.availableReferralBalance },
+                            {
+                              onError: (err) => {
+                                showErrorMessage(err?.message);
+                              },
+                              onSuccess: () => {
+                                promotions?.refetch();
+                                earnings?.refetch();
+                                transactions?.refetch();
+                                showSuccessMessage(
+                                  'Referral bonus withdrawn to wallet successfully.'
+                                );
+                              },
+                            }
+                          );
+                        }
+                      }}
+                      disabled={
+                        isWithdrawing ||
+                        (promotions?.data?.availableReferralBalance &&
+                        promotions?.data?.availableReferralBalance > 0
+                          ? false
+                          : true)
+                      }
+                      isLoading={isWithdrawing}
+                      className="mt-2">
+                      Withdraw
+                    </Button>
                   </View>
 
                   <View className="flex w-full flex-row gap-4">

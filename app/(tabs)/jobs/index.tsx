@@ -19,7 +19,9 @@ export default function Screen() {
 
   const { isLoading, data, isRefetching, refetch } = useQuery(api.getUserJobs());
 
-  const inProgressJobs = data?.filter((i) => i.status === 'in_progress' || i.status === 'paid');
+  const inProgressJobs = data?.filter(
+    (i) => i.status === 'in_progress' || i.status === 'paid' || i.status === 'pending'
+  );
   const completedJobs = data?.filter((i) => i.status === 'approved');
 
   return (

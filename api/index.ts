@@ -62,6 +62,29 @@ export const api = {
       },
     };
   },
+  verifyDevice: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/auth/verify-device', 'post'>) => {
+        const { data, error } = await publicApiClient.POST('/api/auth/verify-device', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Device verification failed'));
+        }
+
+        if (data?.tokens) {
+          await tokenStorage.setTokens(data.tokens.accessToken, data.tokens.refreshToken);
+        }
+
+        if (data.user) {
+          useAuthStore.getState().setUser(data.user);
+        }
+
+        return data;
+      },
+    };
+  },
   register: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/auth/register', 'post'>) => {
@@ -955,6 +978,21 @@ export const api = {
       },
     };
   },
+  withdrawReferralBonus: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/referrals/withdraw-to-wallet', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/referrals/withdraw-to-wallet', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Referral bonus withdrawal failed'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // broadcast endpoints
   getActiveBroadcasts: () =>
@@ -985,6 +1023,23 @@ export const api = {
       },
     };
   },
+
+  // featured profile endpoints
+  getActiveFeaturedProfiles: () =>
+    queryOptions({
+      queryKey: ['profiles', 'active', 'featured'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/featured-profiles', {
+          params: {
+            query: {
+              type: 'artisan',
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
 
   // Support tickets endpoints
   createSupportTicket: () => {
@@ -1286,7 +1341,7 @@ export const api = {
     queryOptions({
       queryKey: ['transactions', endDate, period, startDate, type],
       queryFn: async () => {
-        const { data } = await apiClient.GET('/api/earnings/transactions', {
+        const { data } = await apiClient.GET('/api/transactions', {
           params: {
             query: {
               endDate,
@@ -1325,6 +1380,15 @@ export const api = {
       queryKey: ['terms'],
       queryFn: async () => {
         const { data } = await apiClient.GET('/api/terms-and-conditions');
+
+        return data;
+      },
+    }),
+  getCancellationPolicy: () =>
+    queryOptions({
+      queryKey: ['cancellation', 'policy'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/cancellation-policy');
 
         return data;
       },
