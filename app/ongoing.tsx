@@ -20,6 +20,7 @@ import { useJobsSocket } from '@/hooks/use-jobs-socket';
 import { useCameraPermissions } from 'expo-camera';
 import { makePhoneCall } from '@/lib/utils';
 import { LoadingState } from '@/components/loading-state';
+import * as Location from 'expo-location';
 
 const routeCoordinates = [
   { latitude: 37.78825, longitude: -122.4324 }, // Start point
@@ -199,163 +200,109 @@ export default function Screen() {
   }, [userLocation]);
 
   React.useEffect(() => {
-    let locationListener: any;
+    let locationSubscription: Location.LocationSubscription | null = null;
 
-    const trackLocation = async () => {
+    const startLocationTracking = async () => {
       const status = data?.status;
       const isTrackable = status === 'paid' || status === 'in_progress';
 
-      if (isTrackable) {
-        try {
-          await startTracking();
+      if (!isTrackable) {
+        stopTracking().catch(console.error);
+        locationSubscription?.remove();
+        return;
+      }
 
-          // Helper function to fetch and update on distance change
-          const broadcastLocationIfMoved = async () => {
-            const location = await fetchLocation();
+      // 1. Check and request permissions upfront
+      const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
+      if (fgStatus !== 'granted') {
+        console.warn('Foreground location permission denied');
+        return;
+      }
 
-            if (location && location.location) {
-              const currentCoords = location.location.coords;
+      // 2. Request background permission on iOS for reliable tracking
+      const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
+      if (bgStatus !== 'granted') {
+        console.warn('Background location permission denied — tracking may stop when backgrounded');
+      }
 
-              // Check if we've moved more than 10 meters
-              if (lastLocationRef.current) {
-                const distance = calculateDistance(
-                  lastLocationRef.current.latitude,
-                  lastLocationRef.current.longitude,
-                  currentCoords.latitude,
-                  currentCoords.longitude
+      try {
+        await startTracking();
+
+        // 3. Use watchPositionAsync instead of setInterval + fetchLocation
+        locationSubscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.High,
+            distanceInterval: 10, // Only fires when moved 10m — no need to manually filter
+            timeInterval: 2000, // Minimum 2s between updates (Android)
+            mayShowUserSettingsDialog: true,
+          },
+          async (location) => {
+            const { latitude, longitude } = location.coords;
+
+            setUserLocation({ latitude, longitude });
+
+            // Broadcast to socket
+            updateLocation(latitude, longitude).catch((err) =>
+              console.error('Failed to update location:', err)
+            );
+
+            // Throttle ETA fetches to every 200m
+            const serviceLatitude =
+              data?.serviceRequest?.destinationAddress &&
+              (data?.status === 'completed' || data?.status === 'in_progress')
+                ? data.serviceRequest.destinationLatitude
+                : data?.serviceRequest?.serviceLatitude;
+
+            const serviceLongitude =
+              data?.serviceRequest?.destinationAddress &&
+              (data?.status === 'completed' || data?.status === 'in_progress')
+                ? data.serviceRequest.destinationLongitude
+                : data?.serviceRequest?.serviceLongitude;
+
+            if (serviceLatitude && serviceLongitude) {
+              const distSinceLastEta = lastEtaFetchLocationRef.current
+                ? calculateDistance(
+                    lastEtaFetchLocationRef.current.latitude,
+                    lastEtaFetchLocationRef.current.longitude,
+                    latitude,
+                    longitude
+                  )
+                : 999999;
+
+              if (distSinceLastEta >= 200) {
+                fetchEta(
+                  { latitude, longitude },
+                  { latitude: serviceLatitude, longitude: serviceLongitude }
                 );
-
-                if (distance >= 10) {
-                  console.log(`📍 Moved ${Math.round(distance)}m, updating location`);
-                  setUserLocation({
-                    latitude: currentCoords.latitude,
-                    longitude: currentCoords.longitude,
-                  });
-                  updateLocation(currentCoords.latitude, currentCoords.longitude).catch((err) =>
-                    console.error('Failed to update location:', err)
-                  );
-                  lastLocationRef.current = {
-                    latitude: currentCoords.latitude,
-                    longitude: currentCoords.longitude,
-                  };
-
-                  // Check if we need to update ETA (throttle by 200m)
-                  if (data?.serviceRequest) {
-                    const distSinceLastEta = lastEtaFetchLocationRef.current
-                      ? calculateDistance(
-                          lastEtaFetchLocationRef.current.latitude,
-                          lastEtaFetchLocationRef.current.longitude,
-                          currentCoords.latitude,
-                          currentCoords.longitude
-                        )
-                      : 999999;
-
-                    const serviceLatitude =
-                      data?.serviceRequest?.destinationAddress &&
-                      (data?.status === 'completed' || data?.status === 'in_progress')
-                        ? data.serviceRequest.destinationLatitude
-                        : data.serviceRequest.serviceLatitude;
-                    const serviceLongitude =
-                      data?.serviceRequest?.destinationAddress &&
-                      (data?.status === 'completed' || data?.status === 'in_progress')
-                        ? data.serviceRequest.destinationLongitude
-                        : data.serviceRequest.serviceLongitude;
-
-                    if (distSinceLastEta >= 200 && serviceLatitude && serviceLongitude) {
-                      fetchEta(
-                        { latitude: currentCoords.latitude, longitude: currentCoords.longitude },
-                        {
-                          latitude: serviceLatitude,
-                          longitude: serviceLongitude,
-                        }
-                      );
-                      lastEtaFetchLocationRef.current = {
-                        latitude: currentCoords.latitude,
-                        longitude: currentCoords.longitude,
-                      };
-                    }
-                  }
-                }
-              } else {
-                // First location, always update
-                setUserLocation({
-                  latitude: currentCoords.latitude,
-                  longitude: currentCoords.longitude,
-                });
-                updateLocation(currentCoords.latitude, currentCoords.longitude).catch((err) =>
-                  console.error('Failed to update location:', err)
-                );
-                lastLocationRef.current = {
-                  latitude: currentCoords.latitude,
-                  longitude: currentCoords.longitude,
-                };
-
-                const serviceLatitude =
-                  data?.serviceRequest?.destinationAddress &&
-                  (data?.status === 'completed' || data?.status === 'in_progress')
-                    ? data.serviceRequest.destinationLatitude
-                    : data?.serviceRequest?.serviceLatitude;
-                const serviceLongitude =
-                  data?.serviceRequest?.destinationAddress &&
-                  (data?.status === 'completed' || data?.status === 'in_progress')
-                    ? data.serviceRequest.destinationLongitude
-                    : data?.serviceRequest?.serviceLongitude;
-
-                // Initial ETA fetch
-                if (serviceLatitude && serviceLongitude) {
-                  fetchEta(
-                    { latitude: currentCoords.latitude, longitude: currentCoords.longitude },
-                    {
-                      latitude: serviceLatitude,
-                      longitude: serviceLongitude,
-                    }
-                  );
-                  lastEtaFetchLocationRef.current = {
-                    latitude: currentCoords.latitude,
-                    longitude: currentCoords.longitude,
-                  };
-                }
+                lastEtaFetchLocationRef.current = { latitude, longitude };
               }
             }
-          };
-
-          // Initial update
-          broadcastLocationIfMoved();
-
-          // Check location every 2 seconds (instead of updating immediately every 5 seconds)
-          locationListener = setInterval(broadcastLocationIfMoved, 2000);
-        } catch (error) {
-          console.error('Failed to start tracking:', error);
-        }
-      } else {
-        stopTracking().catch((err) => console.error('Failed to stop tracking:', err));
-        if (locationListener) clearInterval(locationListener);
+          }
+        );
+      } catch (error) {
+        console.error('Failed to start location tracking:', error);
       }
     };
 
     if (data?.status) {
-      trackLocation();
+      startLocationTracking();
     }
 
     return () => {
-      if (locationListener) clearInterval(locationListener);
+      locationSubscription?.remove();
+      locationSubscription = null;
       lastLocationRef.current = null;
-      stopTracking().catch((err) => console.log(err));
+      stopTracking().catch(console.error);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.status]);
+  }, [data?.status, data?.serviceRequest]);
 
   React.useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
+    const subscription = AppState.addEventListener('change', async (nextAppState) => {
       if (nextAppState === 'active') {
-        // App came to foreground
-        // Reconnect socket if disconnected
         if (!isConnected) {
-          startTracking();
+          await startTracking();
         }
-
-        // Refetch all data
-
+        // Refetch triggers data?.status change → location useEffect re-runs automatically
         refetch();
         artisanProfile?.refetch();
         earnings?.refetch();
@@ -363,10 +310,8 @@ export default function Screen() {
       }
     });
 
-    return () => {
-      subscription.remove();
-    };
-  }, [isConnected, id]);
+    return () => subscription.remove();
+  }, [isConnected]);
 
   const handleOnMarkArrived = () => {
     if (beforePhotos?.length < 1)

@@ -182,7 +182,7 @@ export function PersonalDetails() {
           />
         </View>
 
-        <View>
+        {/* <View>
           <Label nativeID="nin">NIN Number</Label>
           <Input
             className="bg-white"
@@ -192,7 +192,7 @@ export function PersonalDetails() {
             keyboardType="number-pad"
             editable={false}
           />
-        </View>
+        </View> */}
       </View>
 
       <View>

@@ -3550,6 +3550,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/promotion-slides": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List promotion slides
+         * @description Get paginated list of promotion slides with optional filters.
+         */
+        get: operations["PromotionSlidesController_findAll"];
+        put?: never;
+        /**
+         * Create a promotion slide
+         * @description Create a new promotion slide with banner image. Upload image via "image" field.
+         */
+        post: operations["PromotionSlidesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/promotion-slides/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get promotion slide details
+         * @description Get details of a specific promotion slide.
+         */
+        get: operations["PromotionSlidesController_findOne"];
+        /**
+         * Update a promotion slide
+         * @description Update a promotion slide. Optionally upload a new image via "image" field.
+         */
+        put: operations["PromotionSlidesController_update"];
+        post?: never;
+        /**
+         * Delete a promotion slide
+         * @description Permanently delete a promotion slide.
+         */
+        delete: operations["PromotionSlidesController_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/promotion-slides": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active promotion slides
+         * @description Returns active promotion slides for display in the app. Optionally filter by audience (users or artisans).
+         */
+        get: operations["MobilePromotionSlidesController_getActiveSlides"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/support/tickets": {
         parameters: {
             query?: never;
@@ -3982,15 +4054,20 @@ export interface components {
         };
         VerifyAccountDto: {
             /**
-             * @description User email address
+             * @description User email address (provide either email or phoneNumber)
              * @example user@example.com
              */
-            email: string;
+            email?: string;
+            /**
+             * @description User phone number (provide either email or phoneNumber)
+             * @example +2348012345678
+             */
+            phoneNumber?: string;
             /**
              * @description The 6-digit verification code sent to email and phone
              * @example 123456
              */
-            code: string;
+            code?: string;
         };
         ResendVerificationDto: {
             /**
@@ -4863,6 +4940,7 @@ export interface components {
             professionalLicenseNumber?: string;
             /** Format: date-time */
             licenseIssueDate?: string;
+            licenseIssueState?: string;
             /** Format: date-time */
             licenseExpiryDate?: string;
             certificationUrls?: string[];
@@ -4986,6 +5064,11 @@ export interface components {
              * @example 2024-01-15
              */
             licenseIssueDate?: string;
+            /**
+             * @description State where license was issued
+             * @example Lagos
+             */
+            licenseIssueState?: string;
             /**
              * Format: date-time
              * @description License expiry date
@@ -5414,13 +5497,11 @@ export interface components {
             slug: string;
             /** @example All plumbing services */
             description?: string;
-            /** Format: binary */
-            icon?: string;
             /**
-             * @description URL of the icon (if not uploading file)
-             * @example https://example.com/icon.png
+             * Format: binary
+             * @description Icon image file for the category
              */
-            iconUrl?: string;
+            icon?: string;
             /**
              * @description Whether a destination is required for service requests in this category
              * @example false
@@ -7563,8 +7644,11 @@ export interface components {
              * @example Residential and commercial cleaning services
              */
             description?: string;
-            /** @description Icon URL for the service */
-            iconUrl?: string;
+            /**
+             * Format: binary
+             * @description Icon image file for the service
+             */
+            icon?: string;
             /**
              * @description Whether this service is featured
              * @default false
@@ -7585,8 +7669,11 @@ export interface components {
             category?: string;
             /** @description Service description */
             description?: string;
-            /** @description Icon URL */
-            iconUrl?: string;
+            /**
+             * Format: binary
+             * @description Icon image file for the service
+             */
+            icon?: string;
             /** @description Whether this service is featured */
             isFeatured?: boolean;
             /** @description Whether a destination is required for service requests in this category */
@@ -7727,6 +7814,78 @@ export interface components {
              * @default 0
              */
             displayOrder: number;
+        };
+        CreatePromotionSlideDto: {
+            /**
+             * @description Title of the promotion slide
+             * @example Summer Sale
+             */
+            title: string;
+            /**
+             * @description Description of the promotion
+             * @example Get 20% off all services
+             */
+            description?: string;
+            /** @description Image URL (set automatically when uploading via multipart) */
+            imageUrl?: string;
+            /**
+             * @description Deep link or external URL
+             * @example https://example.com/promo
+             */
+            linkUrl?: string;
+            /**
+             * @description Target audience
+             * @example all
+             * @enum {string}
+             */
+            audience: "all" | "users" | "artisans";
+            /**
+             * @description Slide status
+             * @default active
+             * @enum {string}
+             */
+            status: "active" | "inactive";
+            /**
+             * @description Display order (lower = shown first)
+             * @default 0
+             */
+            displayOrder: number;
+            /**
+             * @description Start date for scheduling
+             * @example 2026-03-01T00:00:00Z
+             */
+            startDate?: string;
+            /**
+             * @description End date for expiry
+             * @example 2026-04-01T00:00:00Z
+             */
+            endDate?: string;
+        };
+        UpdatePromotionSlideDto: {
+            /** @description Title of the promotion slide */
+            title?: string;
+            /** @description Description of the promotion */
+            description?: string;
+            /** @description Image URL (set automatically when uploading via multipart) */
+            imageUrl?: string;
+            /** @description Deep link or external URL */
+            linkUrl?: string;
+            /**
+             * @description Target audience
+             * @enum {string}
+             */
+            audience?: "all" | "users" | "artisans";
+            /**
+             * @description Slide status
+             * @enum {string}
+             */
+            status?: "active" | "inactive";
+            /** @description Display order (lower = shown first) */
+            displayOrder?: number;
+            /** @description Start date for scheduling */
+            startDate?: string;
+            /** @description End date for expiry */
+            endDate?: string;
         };
         CreateSupportTicketDto: {
             /**
@@ -15966,6 +16125,187 @@ export interface operations {
                             type?: "user" | "artisan";
                             imageUrl?: string | null;
                             videoLink?: string | null;
+                            displayOrder?: number;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    PromotionSlidesController_findAll: {
+        parameters: {
+            query?: {
+                /** @description Filter by audience */
+                audience?: "all" | "users" | "artisans";
+                /** @description Filter by status */
+                status?: "active" | "inactive";
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promotion slides list retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PromotionSlidesController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["CreatePromotionSlideDto"];
+            };
+        };
+        responses: {
+            /** @description Promotion slide created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request - Validation failed or missing image */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PromotionSlidesController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promotion slide ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promotion slide details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promotion slide not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PromotionSlidesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promotion slide ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UpdatePromotionSlideDto"];
+            };
+        };
+        responses: {
+            /** @description Promotion slide updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promotion slide not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PromotionSlidesController_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promotion slide ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promotion slide deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promotion slide not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MobilePromotionSlidesController_getActiveSlides: {
+        parameters: {
+            query?: {
+                /** @description Filter by audience */
+                audience?: "all" | "users" | "artisans";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Active promotion slides */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Promotion slides retrieved successfully */
+                        message?: string;
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            title?: string;
+                            description?: string | null;
+                            imageUrl?: string;
+                            linkUrl?: string | null;
+                            /** @enum {string} */
+                            audience?: "all" | "users" | "artisans";
                             displayOrder?: number;
                         }[];
                     };

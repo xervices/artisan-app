@@ -33,7 +33,7 @@ export default function Screen() {
       if (eventType === 'offer:accepted') {
         showSuccessMessage('Offer accepted');
         artisanOffers?.refetch();
-        // router.replace('/');
+        router.replace('/jobs');
       } else {
         artisanOffers?.refetch();
       }
@@ -41,6 +41,7 @@ export default function Screen() {
   });
 
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRejectingOffer, setIsRejectingOffer] = useState(false);
 
   const handleOnRefresh = async () => {
     setIsRefreshing(true);
@@ -81,6 +82,12 @@ export default function Screen() {
       subscription.remove();
     };
   }, [offers?.isConnected, id]);
+
+  useEffect(() => {
+    if (service?.data?.status === 'accepted') {
+      router.replace('/jobs');
+    }
+  }, [service?.data]);
 
   return (
     <Layout
@@ -165,11 +172,12 @@ export default function Screen() {
 
                   {offersMade &&
                   offersMade?.length > 0 &&
-                  offersMade[0]?.offeredBy === 'artisan' ? null : respondToOffer?.isPending ? (
+                  offersMade[0]?.offeredBy === 'artisan' ? null : isRejectingOffer ? (
                     <LoadingIndicator size={14} />
-                  ) : (
+                  ) : offersMade[0]?.status === 'accepted' ? null : (
                     <Pressable
                       onPress={() => {
+                        setIsRejectingOffer(true);
                         respondToOffer?.mutate(
                           { action: 'reject' },
                           {
@@ -180,6 +188,9 @@ export default function Screen() {
                             },
                             onError: (err) => {
                               showErrorMessage(err.message);
+                            },
+                            onSettled: () => {
+                              setIsRejectingOffer(false);
                             },
                           }
                         );

@@ -28,13 +28,19 @@ export default function TransactionCard({
           numberOfLines={1}
           ellipsizeMode="tail"
           className="font-cabinet-bold text-sm text-[#737381]">
-          {type === 'withdrawal' ? 'Withdrawal' : category}{' '}
-          <Text className="text-xs text-[#FF6A00]" numberOfLines={1} ellipsizeMode="tail">
-            {type === 'withdrawal' ? 'WD ● #25667' : `JOB ID ● ${jobId}`}
-          </Text>
+          {type === 'withdrawal'
+            ? 'Withdrawal'
+            : type === 'referral_bonus'
+              ? 'Referral Bonus'
+              : category}{' '}
+          {type === 'referral_bonus' ? null : (
+            <Text className="text-xs text-[#FF6A00]" numberOfLines={1} ellipsizeMode="tail">
+              {type === 'withdrawal' ? 'WD ● ' : `JOB ID ● ${jobId}`}
+            </Text>
+          )}
         </Text>
 
-        {type === 'payment_received' && (
+        {(type === 'payment_received' || type === 'earning') && (
           <Text className="font-cabinet-bold text-sm text-[#737381]">
             {customer}
             <Text className="font-cabinet-bold text-sm text-[#22973B]">
@@ -43,14 +49,15 @@ export default function TransactionCard({
           </Text>
         )}
 
-        {type === 'withdrawal' && (
-          <Text className="font-cabinet-bold text-sm text-[#737381]">
-            Amount
-            <Text className="font-cabinet-bold text-sm text-[#22973B]">
-              +{formatCurrency(amount)}
+        {type === 'withdrawal' ||
+          (type === 'referral_bonus' && (
+            <Text className="font-cabinet-bold text-sm text-[#737381]">
+              Amount
+              <Text className="font-cabinet-bold text-sm text-[#22973B]">
+                +{formatCurrency(amount)}
+              </Text>
             </Text>
-          </Text>
-        )}
+          ))}
 
         {type === 'dispute' && (
           <Text className="font-cabinet-bold text-sm text-[#737381]">
@@ -63,7 +70,7 @@ export default function TransactionCard({
       </View>
 
       <View className="flex items-end gap-1">
-        {type === 'payment_received' && (
+        {(type === 'payment_received' || type === 'earning') && (
           <Text className="text-sm text-[#22973B]">
             Income{' '}
             <Text className="font-cabinet-bold text-sm text-[#22973B]">
@@ -72,7 +79,7 @@ export default function TransactionCard({
           </Text>
         )}
 
-        {type === 'payment_received' && (
+        {(type === 'payment_received' || type === 'earning') && (
           <Text className="text-sm text-[#737381]">
             Charges
             <Text className="font-cabinet-bold text-sm text-[#737381]">

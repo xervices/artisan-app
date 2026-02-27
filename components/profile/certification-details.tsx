@@ -88,7 +88,7 @@ export function CertificationDetails() {
       categoryIds: profile?.categories?.map((cat) => cat.id) ?? [],
       yearsOfExperience: profile?.yearsOfExperience?.toString() ?? '',
       professionalLicenseNumber: profile?.professionalLicenseNumber ?? '',
-      licenseIssueState: '',
+      licenseIssueState: profile?.licenseIssueState ?? '',
       licenseIssueDate: profile?.licenseIssueDate ?? '',
     } as FormValues,
     validators: {
@@ -110,9 +110,9 @@ export function CertificationDetails() {
       if (value.professionalLicenseNumber !== profile?.professionalLicenseNumber) {
         payload.professionalLicenseNumber = value.professionalLicenseNumber;
       }
-      // if (value.licenseIssueState !== profile?.licenseIssueState) {
-      //   payload.licenseIssueState = value.licenseIssueState;
-      // }
+      if (value.licenseIssueState !== profile?.licenseIssueState) {
+        payload.licenseIssueState = value.licenseIssueState;
+      }
       if (value.licenseIssueDate !== profile?.licenseIssueDate) {
         payload.licenseIssueDate = value.licenseIssueDate;
       }
@@ -124,8 +124,6 @@ export function CertificationDetails() {
       if (previousJobs.length > 0) {
         payload.previousJobs = previousJobs;
       }
-
-      console.log(payload);
 
       // @ts-ignore
       mutate(payload, {
@@ -146,7 +144,7 @@ export function CertificationDetails() {
       form.setFieldValue('categoryIds', profile.categories?.map((cat) => cat.id) ?? []);
       form.setFieldValue('yearsOfExperience', profile.yearsOfExperience?.toString() ?? '');
       form.setFieldValue('professionalLicenseNumber', profile.professionalLicenseNumber ?? '');
-      // form.setFieldValue('licenseIssueState', profile.licenseIssueState ?? '');
+      form.setFieldValue('licenseIssueState', profile?.licenseIssueState ?? '');
       form.setFieldValue('licenseIssueDate', profile.licenseIssueDate ?? '');
     }
   }, [profile]);
@@ -166,8 +164,7 @@ export function CertificationDetails() {
     const isLicenseChanged =
       currentValues.professionalLicenseNumber !== (profile.professionalLicenseNumber ?? '');
 
-    // const isStateChanged =
-    //   currentValues.licenseIssueState !== (profile.licenseIssueState ?? '');
+    const isStateChanged = currentValues.licenseIssueState !== (profile?.licenseIssueState ?? '');
 
     const isDateChanged = currentValues.licenseIssueDate !== (profile.licenseIssueDate ?? '');
 
@@ -370,7 +367,11 @@ export function CertificationDetails() {
                 <View>
                   <Label nativeID="state">Issue state</Label>
 
-                  <Select>
+                  <Select
+                    defaultValue={{
+                      label: field.state.value || '',
+                      value: field.state.value || '',
+                    }}>
                     <SelectTrigger className="w-full bg-white">
                       <SelectValue id="state" placeholder={field.state.value || 'Select State'} />
                     </SelectTrigger>

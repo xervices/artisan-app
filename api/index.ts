@@ -33,7 +33,7 @@ export const api = {
   login: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/auth/login', 'post'>) => {
-        const { data, error } = await apiClient.POST('/api/auth/login', {
+        const { data, error } = await publicApiClient.POST('/api/auth/login', {
           body: credentials,
         });
 
