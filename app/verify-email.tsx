@@ -105,7 +105,7 @@ export default function Screen() {
             }}
             disabled={otpDisabled}
             onFilled={(value) => {
-              verifyAccount.mutate({ code: value, email });
+              verifyAccount.mutate({ code: value, email, type: 'account_verification' });
             }}
           />
         </View>

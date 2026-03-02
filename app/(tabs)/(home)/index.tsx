@@ -23,14 +23,17 @@ export default function Screen() {
   const { mutateAsync: registerDevice } = useMutation(api.registerDeviceForPushNotification());
   const { mutateAsync: unregisterDevice } = useMutation(api.unregisterDeviceForPushNotification());
 
-  const [serviceRequests, artisanProfile, earnings, offers] = useQueries({
-    queries: [
-      api.getAllServiceRequest(),
-      api.getCurrentArtisanProfile(),
-      api.getMyEarnings(),
-      api.getArtisanOffers(),
-    ],
-  });
+  const [serviceRequests, artisanProfile, earnings, offers, userOfWeek, newsPromotions] =
+    useQueries({
+      queries: [
+        api.getAllServiceRequest(),
+        api.getCurrentArtisanProfile(),
+        api.getMyEarnings(),
+        api.getArtisanOffers(),
+        api.getActiveFeaturedProfiles(),
+        api.getNewsAndPromotions(),
+      ],
+    });
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -43,6 +46,8 @@ export default function Screen() {
         artisanProfile?.refetch(),
         earnings?.refetch(),
         offers?.refetch(),
+        userOfWeek?.refetch(),
+        newsPromotions?.refetch(),
       ]);
     } catch (error) {
     } finally {
@@ -88,6 +93,8 @@ export default function Screen() {
         artisanProfile?.refetch();
         earnings?.refetch();
         offers?.refetch();
+        userOfWeek?.refetch();
+        newsPromotions?.refetch();
       }
     });
 

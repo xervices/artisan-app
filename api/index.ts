@@ -1041,6 +1041,23 @@ export const api = {
       },
     }),
 
+  // news and promotions endpoints
+  getNewsAndPromotions: () =>
+    queryOptions({
+      queryKey: ['news', 'promotions'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/promotion-slides', {
+          params: {
+            query: {
+              audience: 'artisans',
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+
   // Support tickets endpoints
   createSupportTicket: () => {
     return {

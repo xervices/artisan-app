@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
+import { AppState, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import * as Application from 'expo-application';
 import { Layout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -20,9 +20,25 @@ export default function Screen() {
   const { isLoading, data, isRefetching, refetch } = useQuery(api.getUserJobs());
 
   const inProgressJobs = data?.filter(
-    (i) => i.status === 'in_progress' || i.status === 'paid' || i.status === 'pending'
+    (i) =>
+      i.status === 'in_progress' ||
+      i.status === 'paid' ||
+      i.status === 'pending' ||
+      i.status === 'completed'
   );
   const completedJobs = data?.filter((i) => i.status === 'approved');
+
+  React.useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        refetch();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <Layout useBackground scrollable={false}>
@@ -136,17 +152,21 @@ export default function Screen() {
                             </View>
 
                             <Pressable
-                              onPress={() =>
-                                router.navigate({
-                                  pathname: '/ongoing',
-                                  params: {
-                                    id: item?.id,
-                                  },
-                                })
-                              }
+                              onPress={() => {
+                                if (item?.status !== 'pending') {
+                                  router.navigate({
+                                    pathname: '/ongoing',
+                                    params: {
+                                      id: item?.id,
+                                    },
+                                  });
+                                }
+                              }}
                               className="flex flex-row items-center gap-1">
                               <Text className="font-cabinet-bold text-sm text-primary">
-                                Track activities
+                                {item?.status === 'pending'
+                                  ? 'Pending Payment'
+                                  : 'Track activities'}
                               </Text>
 
                               <ArrowUpRight size={14} color={'#FE6A00'} />
