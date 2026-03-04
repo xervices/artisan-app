@@ -20,6 +20,14 @@ const badgeIcons = [
   require('@/assets/icons/level-5.svg'),
 ];
 
+const BADGEICONS = {
+  STARTER: require('@/assets/icons/level-1.svg'),
+  SKILLED: require('@/assets/icons/level-2.svg'),
+  PRO: require('@/assets/icons/level-3.svg'),
+  EXPERT: require('@/assets/icons/level-4.svg'),
+  ELITE: require('@/assets/icons/level-5.svg'),
+};
+
 export default function Screen() {
   const { user } = useAuthStore();
 
@@ -62,11 +70,13 @@ export default function Screen() {
               </View>
             </View>
 
-            <Image
-              source={require('@/assets/icons/level-1.svg')}
-              style={{ width: 56, height: 56 }}
-              contentFit="contain"
-            />
+            {myLevel?.data && BADGEICONS[myLevel?.data?.currentLevel] ? (
+              <Image
+                source={BADGEICONS[myLevel?.data?.currentLevel]}
+                style={{ width: 56, height: 56 }}
+                contentFit="contain"
+              />
+            ) : null}
           </View>
 
           <View className="flex flex-row items-center justify-between rounded-[8px] bg-[#FFF4EA] p-4">
@@ -79,17 +89,22 @@ export default function Screen() {
             </View>
           </View>
 
-          {levels?.data?.map((level, index) => (
+          {levels?.data?.map((level) => (
             <View
               key={level.id}
               className="flex flex-row items-center justify-between gap-2 rounded-[8px] bg-[#F4F4F5] p-4">
-              <Text className="flex-1 text-sm text-[#737381]">{level?.displayName}</Text>
+              <Text className="flex-1 text-sm text-[#737381]">
+                {level?.displayOrder}. {level?.displayName} - {level?.discountedJobsCount} jobs &
+                {level?.commissionPercent}% rating
+              </Text>
 
-              <Image
-                source={badgeIcons[index]}
-                style={{ width: 32, height: 32 }}
-                contentFit="contain"
-              />
+              {BADGEICONS[level?.level] ? (
+                <Image
+                  source={BADGEICONS[level?.level]}
+                  style={{ width: 32, height: 32 }}
+                  contentFit="contain"
+                />
+              ) : null}
             </View>
           ))}
         </View>

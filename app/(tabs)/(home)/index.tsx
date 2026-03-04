@@ -56,35 +56,15 @@ export default function Screen() {
   };
 
   useEffect(() => {
-    const handleRegistration = async () => {
-      if (isLoggedIn && expoPushToken) {
-        const storedToken = Storage.getItemSync('push_token_registered');
-
-        if (storedToken !== expoPushToken) {
-          if (storedToken) {
-            try {
-              await unregisterDevice({ pushToken: storedToken });
-            } catch (error) {
-              console.log('Failed to unregister old token:', error);
-            }
-          }
-
-          try {
-            await registerDevice({
-              pushToken: expoPushToken,
-              platform: Platform.OS === 'ios' ? 'ios' : 'android',
-            });
-            Storage.setItemSync('push_token_registered', expoPushToken);
-            Storage.setItemSync('is_registered_for_push', 'true');
-          } catch (error) {
-            console.log('Failed to register token:', error);
-          }
-        }
-      }
-    };
-
-    handleRegistration();
-  }, [isLoggedIn, expoPushToken]);
+    if (expoPushToken) {
+      registerDevice({
+        pushToken: expoPushToken,
+        platform: Platform.OS === 'ios' ? 'ios' : 'android',
+      }).catch((error) => {
+        console.log('Failed to register device:', error);
+      });
+    }
+  }, [expoPushToken]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {

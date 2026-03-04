@@ -9,13 +9,13 @@ import { router } from 'expo-router';
 import { Button } from '@/components/ui/button';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useAuthStore } from '@/store/auth-store';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api';
 
 export default function Screen() {
   const { user } = useAuthStore();
 
-  const queryClient = useQueryClient();
+  const { refetch, isLoading, isRefetching } = useQuery(api.getArtisanOffers());
 
   return (
     <Layout
@@ -83,6 +83,8 @@ export default function Screen() {
         <View>
           <Button
             className="w-full"
+            isLoading={isLoading || isRefetching}
+            disabled={isLoading || isRefetching}
             onPress={() =>
               SheetManager.show('verification-profile-sheet', {
                 payload: {
@@ -93,15 +95,13 @@ export default function Screen() {
                     email: user?.email,
                   },
                   onSuccess(result) {
-                    queryClient.invalidateQueries({
-                      queryKey: api.getCurrentArtisanProfile().queryKey,
+                    refetch().finally(() => {
+                      if (router.canGoBack()) {
+                        router.back();
+                      } else {
+                        router.replace('/(tabs)/(home)');
+                      }
                     });
-
-                    if (router.canGoBack()) {
-                      router.back();
-                    } else {
-                      router.replace('/(tabs)/(home)');
-                    }
                   },
                 },
               })

@@ -30,18 +30,21 @@ export default function Screen() {
 
   const { offers } = useMarketplaceContext({
     onOfferEvent(eventType, data) {
+      artisanOffers?.refetch();
+
       if (eventType === 'offer:accepted') {
         showSuccessMessage('Offer accepted');
-        artisanOffers?.refetch();
         router.replace('/jobs');
-      } else {
-        artisanOffers?.refetch();
+      }
+
+      if (eventType === 'offer:rejected' || eventType === 'offer:withdrawn') {
+        showSuccessMessage('Offer has been rejected/withdrawn by user.');
+        router.back();
       }
     },
   });
 
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [isRejectingOffer, setIsRejectingOffer] = useState(false);
 
   const handleOnRefresh = async () => {
     setIsRefreshing(true);
@@ -58,6 +61,7 @@ export default function Screen() {
 
   const lastOfferId = offersMade && offersMade.length > 0 ? offersMade[0]?.id : '';
   const respondToOffer = useMutation(api.respondToOffer(lastOfferId));
+  const withdrawOffer = useMutation(api.withdrawOffer(lastOfferId));
 
   useEffect(() => {
     offers.joinServiceRequest(id);
@@ -88,6 +92,18 @@ export default function Screen() {
       router.replace('/jobs');
     }
   }, [service?.data]);
+
+  useEffect(() => {
+    if (offersMade && offersMade.length > 0 && offersMade[0]?.id) {
+      if (
+        offersMade[0]?.status === 'expired' ||
+        offersMade[0]?.status === 'rejected' ||
+        offersMade[0]?.status === 'withdrawn'
+      ) {
+        router.back();
+      }
+    }
+  }, [offersMade]);
 
   return (
     <Layout
@@ -170,27 +186,22 @@ export default function Screen() {
                     Offers
                   </Text>
 
-                  {offersMade &&
-                  offersMade?.length > 0 &&
-                  offersMade[0]?.offeredBy === 'artisan' ? null : isRejectingOffer ? (
+                  {offersMade && offersMade?.length === 0 ? null : withdrawOffer?.isPending ? (
                     <LoadingIndicator size={14} />
                   ) : offersMade[0]?.status === 'accepted' ? null : (
                     <Pressable
                       onPress={() => {
-                        setIsRejectingOffer(true);
-                        respondToOffer?.mutate(
-                          { action: 'reject' },
+                        withdrawOffer?.mutate(
+                          {},
                           {
                             onSuccess: () => {
                               showSuccessMessage('Offer rejected');
                               artisanOffers.refetch();
                               service.refetch();
+                              router.back();
                             },
                             onError: (err) => {
                               showErrorMessage(err.message);
-                            },
-                            onSettled: () => {
-                              setIsRejectingOffer(false);
                             },
                           }
                         );

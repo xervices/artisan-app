@@ -29,34 +29,31 @@ export function DeleteAccountSheet() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      mutate(
-        {},
-        {
-          onSuccess: async () => {
-            SheetManager.hide('delete-account-sheet');
-            tokenStorage.clearTokens();
-            useAuthStore.getState().setLoginState(false);
-            // let deleteSheet = await SheetManager.hide('delete-account-sheet');
+      mutate(value, {
+        onSuccess: async () => {
+          SheetManager.hide('delete-account-sheet');
+          tokenStorage.clearTokens();
+          useAuthStore.getState().setLoginState(false);
+          // let deleteSheet = await SheetManager.hide('delete-account-sheet');
 
-            // if (deleteSheet)
-            //   return await SheetManager.show('success-sheet', {
-            //     payload: {
-            //       subtitle:
-            //         'Your account has been deleted successfully. You will be redirected to the login page shortly',
-            //       title: 'Account deleted successfully',
-            //       useCheckImage: true,
-            //       onRedirect: () => {
-            //         tokenStorage.clearTokens();
-            //         useAuthStore.getState().setLoginState(false);
-            //       },
-            //     },
-            //   });
-          },
-          onError: (err) => {
-            showErrorMessage(err.message);
-          },
-        }
-      );
+          // if (deleteSheet)
+          //   return await SheetManager.show('success-sheet', {
+          //     payload: {
+          //       subtitle:
+          //         'Your account has been deleted successfully. You will be redirected to the login page shortly',
+          //       title: 'Account deleted successfully',
+          //       useCheckImage: true,
+          //       onRedirect: () => {
+          //         tokenStorage.clearTokens();
+          //         useAuthStore.getState().setLoginState(false);
+          //       },
+          //     },
+          //   });
+        },
+        onError: (err) => {
+          showErrorMessage(err.message);
+        },
+      });
     },
   });
 

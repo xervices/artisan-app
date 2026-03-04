@@ -10,8 +10,8 @@ import React, { useState } from 'react';
 import { AppState, View } from 'react-native';
 
 export default function Screen() {
-  const [artisanProfile, serviceRequests] = useQueries({
-    queries: [api.getCurrentArtisanProfile(), api.getAllServiceRequest()],
+  const [artisanProfile, serviceRequests, offers] = useQueries({
+    queries: [api.getCurrentArtisanProfile(), api.getAllServiceRequest(), api.getArtisanOffers()],
   });
 
   const { requests } = useMarketplaceContext({
@@ -26,7 +26,7 @@ export default function Screen() {
     setIsRefreshing(true);
 
     try {
-      await Promise.all([artisanProfile.refetch(), serviceRequests?.refetch()]);
+      await Promise.all([artisanProfile.refetch(), serviceRequests?.refetch(), offers?.refetch()]);
     } catch (error) {
     } finally {
       setIsRefreshing(false);
@@ -39,6 +39,7 @@ export default function Screen() {
         // Refetch all data
         artisanProfile?.refetch();
         serviceRequests?.refetch();
+        offers?.refetch();
       }
     });
 
@@ -49,6 +50,10 @@ export default function Screen() {
 
   const pendingRequests = serviceRequests?.data?.requests?.filter(
     (i) => i.status === 'open' || i.status === 'in_negotiation'
+  );
+
+  const pendingOffers = offers?.data?.filter(
+    (i) => i.serviceRequest?.status === 'in_negotiation' && i.status === 'pending'
   );
 
   // Transform pendingOffers to ServiceRequestData format
@@ -75,6 +80,29 @@ export default function Screen() {
           },
     })) || [];
 
+  const transformedPendingOffers: ServiceRequestData[] =
+    pendingOffers?.map((request) => ({
+      categoryId: request?.serviceRequest?.category?.id || '',
+      title: request?.serviceRequest?.title || '',
+      budgetMax: request?.serviceRequest?.budgetMax || 0,
+      budgetMin: request?.serviceRequest?.budgetMin || 0,
+      createdAt: request?.serviceRequest?.createdAt || '',
+      id: request?.serviceRequest?.id || '',
+      categoryName: request?.serviceRequest?.category?.name || '',
+      description: request?.serviceRequest?.description || '',
+      preferredDate: request?.serviceRequest?.createdAt || '',
+      serviceAddress: request?.serviceRequest?.serviceAddress || '',
+      user: request?.serviceRequest?.user
+        ? {
+            name: request?.serviceRequest?.user?.profile?.fullName || '',
+            avatarUrl: request?.serviceRequest?.user?.profile?.avatarUrl || '',
+          }
+        : {
+            avatarUrl: '',
+            name: '',
+          },
+    })) || [];
+
   // Create a Set of IDs from socket requests for efficient lookup
   const socketRequestIds = new Set(requests?.requests?.map((r) => r.id));
 
@@ -83,11 +111,19 @@ export default function Screen() {
     (offer) => !socketRequestIds.has(offer.id)
   );
 
+  const uniqueOffersData = transformedPendingOffers.filter(
+    (offer) => !socketRequestIds.has(offer.id)
+  );
+
   const oneDayInMs = 24 * 60 * 60 * 1000;
   const now = new Date().getTime();
 
   // Unify requests and pendingRequests, sort by createdAt (most recent first), take first 2
-  const unifiedData: ServiceRequestData[] = [...(requests?.requests || []), ...uniqueApiData]
+  const unifiedData: ServiceRequestData[] = [
+    ...(requests?.requests || []),
+    ...uniqueApiData,
+    ...uniqueOffersData,
+  ]
     .filter((item) => now - new Date(item.createdAt).getTime() <= oneDayInMs)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 

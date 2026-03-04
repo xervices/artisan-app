@@ -304,7 +304,9 @@ export const api = {
   deleteAccount: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/users/me', 'delete'>) => {
-        const { data, error } = await apiClient.DELETE('/api/users/me');
+        const { data, error } = await apiClient.DELETE('/api/users/me', {
+          body: credentials,
+        });
 
         if (error) {
           throw new Error(getErrorMessage(error, 'Delete account failed'));
@@ -659,6 +661,25 @@ export const api = {
       mutationFn: async (credentials: RequestBody<'/api/offers/{id}/respond', 'post'>) => {
         const { data, error } = await apiClient.POST('/api/offers/{id}/respond', {
           body: credentials,
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'response to offer failed to send.'));
+        }
+
+        return data;
+      },
+    };
+  },
+  withdrawOffer: (id: string) => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/offers/{id}/withdraw', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/offers/{id}/withdraw', {
           params: {
             path: {
               id,

@@ -4,6 +4,8 @@ import {
   NewOfferEvent,
   RequestViewedEvent,
   OfferAcceptedEvent,
+  OfferRejectedEvent,
+  OfferWithdrawnEvent,
   CounterOfferEvent,
 } from '@/hooks/types';
 import { useOffersSocket } from '@/hooks/use-offers-socket';
@@ -57,20 +59,23 @@ export const MarketplaceProvider: React.FC<MarketplaceProviderProps> = ({
     setOffersEnabled(true);
   }, []);
 
-  // Listen for offer:accepted and remove the associated request
+  // Listen for offer:accepted, offer:rejected, and offer:withdrawn to remove the associated request
   React.useEffect(() => {
     const socket = offersData.socket;
     if (!socket || !activeServiceRequestId) return;
 
-    const handleOfferAccepted = () => {
-      // When an offer is accepted, remove the associated request
+    const handleRemoveRequest = () => {
       requestsData.removeRequest(activeServiceRequestId);
     };
 
-    socket.on('offer:accepted', handleOfferAccepted);
+    socket.on('offer:accepted', handleRemoveRequest);
+    socket.on('offer:rejected', handleRemoveRequest);
+    socket.on('offer:withdrawn', handleRemoveRequest);
 
     return () => {
-      socket.off('offer:accepted', handleOfferAccepted);
+      socket.off('offer:accepted', handleRemoveRequest);
+      socket.off('offer:rejected', handleRemoveRequest);
+      socket.off('offer:withdrawn', handleRemoveRequest);
     };
   }, [offersData.socket, activeServiceRequestId, requestsData]);
 
@@ -126,7 +131,13 @@ export const MarketplaceProvider: React.FC<MarketplaceProviderProps> = ({
 
 export interface UseMarketplaceContextOptions {
   onOfferEvent?: (
-    eventType: 'offer:new' | 'request:viewed' | 'offer:accepted' | 'offer:counter',
+    eventType:
+      | 'offer:new'
+      | 'request:viewed'
+      | 'offer:accepted'
+      | 'offer:counter'
+      | 'offer:rejected'
+      | 'offer:withdrawn',
     data: any
   ) => void;
 }
@@ -163,16 +174,28 @@ export const useMarketplaceContext = (
       options.onOfferEvent?.('offer:counter', event.data);
     };
 
+    const handleOfferRejected = (event: any) => {
+      options.onOfferEvent?.('offer:rejected', event.data);
+    };
+
+    const handleOfferWithdrawn = (event: any) => {
+      options.onOfferEvent?.('offer:withdrawn', event.data);
+    };
+
     socket.on('offer:new', handleOfferNew);
     socket.on('request:viewed', handleRequestViewed);
     socket.on('offer:accepted', handleOfferAccepted);
     socket.on('offer:counter', handleOfferCounter);
+    socket.on('offer:rejected', handleOfferRejected);
+    socket.on('offer:withdrawn', handleOfferWithdrawn);
 
     return () => {
       socket.off('offer:new', handleOfferNew);
       socket.off('request:viewed', handleRequestViewed);
       socket.off('offer:accepted', handleOfferAccepted);
       socket.off('offer:counter', handleOfferCounter);
+      socket.off('offer:rejected', handleOfferRejected);
+      socket.off('offer:withdrawn', handleOfferWithdrawn);
     };
   }, [context.offers.socket, options?.onOfferEvent]);
 

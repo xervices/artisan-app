@@ -9,6 +9,7 @@ import { Key, useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NotificationSocketProvider } from '@/providers/notification-socket-provider';
 
 export default function TabsLayout() {
   const { isLoggedIn } = useAuthStore();
@@ -29,34 +30,38 @@ export default function TabsLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
-        <MarketplaceProvider artisanId={user?.id}>
-          <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <MyTabBar {...props} />}>
-            <Tabs.Screen
-              name="(home)"
-              options={{
-                title: 'Home',
-              }}
-            />
-            <Tabs.Screen
-              name="jobs"
-              options={{
-                title: 'My Jobs',
-              }}
-            />
-            <Tabs.Screen
-              name="earnings"
-              options={{
-                title: 'Earnings',
-              }}
-            />
-            <Tabs.Screen
-              name="profile"
-              options={{
-                title: 'Profile',
-              }}
-            />
-          </Tabs>
-        </MarketplaceProvider>
+        <NotificationSocketProvider>
+          <MarketplaceProvider artisanId={user?.id}>
+            <Tabs
+              screenOptions={{ headerShown: false }}
+              tabBar={(props) => <MyTabBar {...props} />}>
+              <Tabs.Screen
+                name="(home)"
+                options={{
+                  title: 'Home',
+                }}
+              />
+              <Tabs.Screen
+                name="jobs"
+                options={{
+                  title: 'My Jobs',
+                }}
+              />
+              <Tabs.Screen
+                name="earnings"
+                options={{
+                  title: 'Earnings',
+                }}
+              />
+              <Tabs.Screen
+                name="profile"
+                options={{
+                  title: 'Profile',
+                }}
+              />
+            </Tabs>
+          </MarketplaceProvider>
+        </NotificationSocketProvider>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );

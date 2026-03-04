@@ -16,9 +16,14 @@ export function Offers() {
   const { requests } = useMarketplaceContext();
 
   const { data, refetch } = useQuery(api.getAllServiceRequest());
+  const offers = useQuery(api.getArtisanOffers());
 
   const pendingRequests = data?.requests?.filter(
     (i) => i.status === 'open' || i.status === 'in_negotiation'
+  );
+
+  const pendingOffers = offers?.data?.filter(
+    (i) => i.serviceRequest?.status === 'in_negotiation' && i.status === 'pending'
   );
 
   React.useEffect(() => {
@@ -58,6 +63,29 @@ export function Offers() {
           },
     })) || [];
 
+  const transformedPendingOffers: ServiceRequestData[] =
+    pendingOffers?.map((request) => ({
+      categoryId: request?.serviceRequest?.category?.id || '',
+      title: request?.serviceRequest?.title || '',
+      budgetMax: request?.serviceRequest?.budgetMax || 0,
+      budgetMin: request?.serviceRequest?.budgetMin || 0,
+      createdAt: request?.serviceRequest?.createdAt || '',
+      id: request?.serviceRequest?.id || '',
+      categoryName: request?.serviceRequest?.category?.name || '',
+      description: request?.serviceRequest?.description || '',
+      preferredDate: request?.serviceRequest?.createdAt || '',
+      serviceAddress: request?.serviceRequest?.serviceAddress || '',
+      user: request?.serviceRequest?.user
+        ? {
+            name: request?.serviceRequest?.user?.profile?.fullName || '',
+            avatarUrl: request?.serviceRequest?.user?.profile?.avatarUrl || '',
+          }
+        : {
+            avatarUrl: '',
+            name: '',
+          },
+    })) || [];
+
   // Create a Set of IDs from socket requests for efficient lookup
   const socketRequestIds = new Set(requests?.requests?.map((r) => r.id));
 
@@ -66,11 +94,19 @@ export function Offers() {
     (offer) => !socketRequestIds.has(offer.id)
   );
 
+  const uniqueOffersData = transformedPendingOffers.filter(
+    (offer) => !socketRequestIds.has(offer.id)
+  );
+
   // Unify requests and pendingRequests, sort by createdAt (most recent first), take first 2
   const oneDayInMs = 24 * 60 * 60 * 1000;
   const now = new Date().getTime();
 
-  const unifiedData: ServiceRequestData[] = [...(requests?.requests || []), ...uniqueApiData]
+  const unifiedData: ServiceRequestData[] = [
+    ...(requests?.requests || []),
+    ...uniqueApiData,
+    ...uniqueOffersData,
+  ]
     .filter((item) => now - new Date(item.createdAt).getTime() <= oneDayInMs)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 2);
