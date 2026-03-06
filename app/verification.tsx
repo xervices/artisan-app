@@ -4,18 +4,21 @@ import { Pressable, View } from 'react-native';
 import { Layout } from '@/components/layout';
 import { AuthHeader } from '@/components/auth-header';
 import { Image } from 'expo-image';
-import { ChevronRight, ShieldCheck, IdCard, ScanFace } from 'lucide-react-native';
+import { ChevronRight, ShieldCheck, IdCard, ScanFace, AlertCircle } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { Button } from '@/components/ui/button';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useAuthStore } from '@/store/auth-store';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api';
+import { showErrorMessage } from '@/api/helpers';
 
 export default function Screen() {
   const { user } = useAuthStore();
 
-  const { refetch, isLoading, isRefetching } = useQuery(api.getArtisanOffers());
+  const { refetch, isLoading, isRefetching } = useQuery(api.getCurrentArtisanProfile());
+
+  const { mutate, isPending } = useMutation(api.toggleArtisanVerification());
 
   return (
     <Layout
@@ -53,6 +56,17 @@ export default function Screen() {
             To ensure a secure community for everyone, we need to verify your identity.
           </Text>
 
+          <View className="mb-6 flex-row items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
+            <AlertCircle size={20} color="#3B82F6" className="mt-0.5 flex-shrink-0" />
+            <View className="flex-1">
+              <Text className="font-cabinet-bold text-blue-900">Verification Timeline</Text>
+              <Text className="mt-1 font-cabinet-medium text-sm text-blue-800">
+                Once your profile is verified, you'll be notified. Please note that verification may
+                take some time to process.
+              </Text>
+            </View>
+          </View>
+
           <View className="w-full gap-6">
             <View className="flex-row items-start gap-4 rounded-2xl border border-border bg-card p-4">
               <View className="rounded-full bg-[#0A0A0B]/10 p-2.5">
@@ -61,7 +75,7 @@ export default function Screen() {
               <View className="flex-1 gap-1">
                 <Text className="font-cabinet-bold text-base text-foreground">Government ID</Text>
                 <Text className="font-cabinet-medium text-sm text-muted-foreground">
-                  Upload a clear photo of your National ID or NIN slip.
+                  Government approved id BVN and NIN number
                 </Text>
               </View>
             </View>
@@ -83,8 +97,8 @@ export default function Screen() {
         <View>
           <Button
             className="w-full"
-            isLoading={isLoading || isRefetching}
-            disabled={isLoading || isRefetching}
+            isLoading={isLoading || isRefetching || isPending}
+            disabled={isLoading || isRefetching || isPending}
             onPress={() =>
               SheetManager.show('verification-profile-sheet', {
                 payload: {
@@ -95,13 +109,23 @@ export default function Screen() {
                     email: user?.email,
                   },
                   onSuccess(result) {
-                    refetch().finally(() => {
-                      if (router.canGoBack()) {
-                        router.back();
-                      } else {
-                        router.replace('/(tabs)/(home)');
+                    mutate(
+                      {},
+                      {
+                        onSuccess: () => {
+                          refetch().finally(() => {
+                            if (router.canGoBack()) {
+                              router.back();
+                            } else {
+                              router.replace('/(tabs)/(home)');
+                            }
+                          });
+                        },
+                        onError: (err) => {
+                          showErrorMessage(err?.message);
+                        },
                       }
-                    });
+                    );
                   },
                 },
               })

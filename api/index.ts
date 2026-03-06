@@ -533,6 +533,19 @@ export const api = {
       },
     };
   },
+  toggleArtisanVerification: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/artisans/toggle-verification', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/artisans/toggle-verification');
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Toggle request failed'));
+        }
+
+        return data;
+      },
+    };
+  },
 
   // Categories (Skills) endpoints
   getAllCategories: () =>

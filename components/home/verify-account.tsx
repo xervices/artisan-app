@@ -15,21 +15,27 @@ export function VerifyAccount() {
       <Text className="font-cabinet-bold text-[#1B1B1E]">Hi There! 👋</Text>
 
       <View className="flex flex-row items-center justify-between gap-2">
-        <Text className="flex-1 text-sm text-[#737381]">You need to verify your account.</Text>
+        <Text className="flex-1 text-sm text-[#737381]">
+          {data?.verificationStatus === 'in_progress'
+            ? "Your account verification is in progress. We'll notify you once it's complete."
+            : 'You need to verify your account to get started.'}
+        </Text>
 
-        <Pressable
-          onPress={() => {
-            if (data === undefined) {
-              router.navigate('/verify/step-2');
-            } else {
-              router.navigate('/verification');
-            }
-          }}
-          className="flex flex-row items-center gap-1">
-          <Text className="font-cabinet-bold text-sm text-primary">Verify</Text>
+        {data?.verificationStatus === 'in_progress' ? null : (
+          <Pressable
+            onPress={() => {
+              if (data === undefined) {
+                router.navigate('/verify/step-2');
+              } else {
+                router.navigate('/verification');
+              }
+            }}
+            className="flex flex-row items-center gap-1">
+            <Text className="font-cabinet-bold text-sm text-primary">Verify</Text>
 
-          <ArrowUpRight size={14} color={'#FE6A00'} />
-        </Pressable>
+            <ArrowUpRight size={14} color={'#FE6A00'} />
+          </Pressable>
+        )}
       </View>
     </View>
   );

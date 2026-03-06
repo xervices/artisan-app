@@ -1034,6 +1034,26 @@ export interface paths {
         patch: operations["ArtisansController_updateAvailability"];
         trace?: never;
     };
+    "/api/artisans/toggle-verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Toggle verification status
+         * @description Toggle verification status between pending and in_progress. Only these two statuses can be toggled. Verified or rejected statuses cannot be changed from this endpoint.
+         */
+        post: operations["ArtisansController_toggleVerificationStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/artisans/verify-nin": {
         parameters: {
             query?: never;
@@ -3561,13 +3581,17 @@ export interface paths {
         put?: never;
         post?: never;
         /**
-         * Deactivate a featured profile
-         * @description Deactivate (soft delete) a featured profile.
+         * Delete a featured profile
+         * @description Permanently delete a featured profile.
          */
-        delete: operations["FeaturedProfilesController_deactivate"];
+        delete: operations["FeaturedProfilesController_remove"];
         options?: never;
         head?: never;
-        patch?: never;
+        /**
+         * Update a featured profile
+         * @description Update an existing featured profile. Upload a new image via "image" field.
+         */
+        patch: operations["FeaturedProfilesController_update"];
         trace?: never;
     };
     "/api/featured-profiles": {
@@ -3740,6 +3764,46 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/admin/artisan-levels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all artisan levels
+         * @description Retrieve all artisan level definitions with artisan counts and distribution percentages.
+         */
+        get: operations["ArtisanLevelsController_findAll"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/artisan-levels/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update an artisan level
+         * @description Update artisan level settings including display name, minimum jobs required, and commission rate.
+         */
+        patch: operations["ArtisanLevelsController_update"];
         trace?: never;
     };
     "/api/support/tickets": {
@@ -5059,7 +5123,7 @@ export interface components {
             identificationType?: "BVN" | "NIN";
             identificationNumber?: string;
             /** @enum {string} */
-            verificationStatus: "pending" | "verified" | "rejected";
+            verificationStatus: "pending" | "in_progress" | "verified" | "rejected";
             /** Format: date-time */
             verifiedAt?: string;
             verificationProvider?: string;
@@ -5163,7 +5227,7 @@ export interface components {
              * @example pending
              * @enum {string}
              */
-            verificationStatus: "pending" | "verified" | "rejected";
+            verificationStatus: "pending" | "in_progress" | "verified" | "rejected";
             /**
              * Format: date-time
              * @description Timestamp when verification was completed
@@ -7950,6 +8014,33 @@ export interface components {
              */
             displayOrder: number;
         };
+        UpdateFeaturedProfileDto: {
+            /**
+             * @description Name of the featured profile
+             * @example John Doe
+             */
+            name?: string;
+            /**
+             * @description Type of profile
+             * @example artisan
+             * @enum {string}
+             */
+            type?: "user" | "artisan";
+            /**
+             * @description Image URL (set automatically when uploading via multipart)
+             * @example https://storage.example.com/featured/image.jpg
+             */
+            imageUrl?: string;
+            /**
+             * @description Video link URL
+             * @example https://youtube.com/watch?v=abc123
+             */
+            videoLink?: string;
+            /** @description Whether the profile is active */
+            isActive?: boolean;
+            /** @description Display order (lower = shown first) */
+            displayOrder?: number;
+        };
         CreatePromotionSlideDto: {
             /**
              * @description Title of the promotion slide
@@ -8021,6 +8112,23 @@ export interface components {
             startDate?: string;
             /** @description End date for expiry */
             endDate?: string;
+        };
+        UpdateArtisanLevelDto: {
+            /**
+             * @description Human-readable display name for the level
+             * @example Starter
+             */
+            displayName?: string;
+            /**
+             * @description Minimum number of completed jobs required to reach this level
+             * @example 10
+             */
+            minJobsRequired?: number;
+            /**
+             * @description Standard commission percentage for this level
+             * @example 10
+             */
+            commissionPercent?: number;
         };
         CreateSupportTicketDto: {
             /**
@@ -10355,6 +10463,51 @@ export interface operations {
             };
             /** @description Forbidden - Artisan access required */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    ArtisansController_toggleVerificationStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Verification status toggled successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Current status cannot be toggled (verified or rejected) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Artisan profile not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -16255,7 +16408,7 @@ export interface operations {
             };
         };
     };
-    FeaturedProfilesController_deactivate: {
+    FeaturedProfilesController_remove: {
         parameters: {
             query?: never;
             header?: never;
@@ -16267,7 +16420,39 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Featured profile deactivated */
+            /** @description Featured profile deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Featured profile not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FeaturedProfilesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Featured profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UpdateFeaturedProfileDto"];
+            };
+        };
+        responses: {
+            /** @description Featured profile updated successfully */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -16594,6 +16779,56 @@ export interface operations {
         responses: {
             /** @description Paginated withdrawal history */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ArtisanLevelsController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Artisan levels retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ArtisanLevelsController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Artisan level definition ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateArtisanLevelDto"];
+            };
+        };
+        responses: {
+            /** @description Artisan level updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Artisan level not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
