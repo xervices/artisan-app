@@ -229,9 +229,9 @@ export default function Screen() {
 
             <Pressable
               onPress={() => {
-                if (job?.data?.user?.phoneVerified) {
-                  makePhoneCall(job?.data?.user?.phoneNumber);
-                }
+                // if (job?.data?.user?.phoneVerified) {
+                makePhoneCall(job?.data?.serviceRequest?.contactPhone);
+                // }
               }}>
               <Phone size={24} color={'#FE6A00'} fill={'#FE6A00'} />
             </Pressable>

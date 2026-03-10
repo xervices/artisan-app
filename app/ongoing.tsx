@@ -554,9 +554,9 @@ export default function Screen() {
 
                   <View className="flex flex-row gap-4">
                     <Button
-                      disabled={!data?.user?.phoneVerified}
+                      // disabled={!data?.user?.phoneVerified}
                       onPress={() => {
-                        makePhoneCall(data?.user?.phoneNumber);
+                        makePhoneCall(data?.serviceRequest?.contactPhone);
                       }}
                       className="flex-1 border-[#1B1B1E] bg-white">
                       <PhoneCall size={16} fill={'#1B1B1E'} />

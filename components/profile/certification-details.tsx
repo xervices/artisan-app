@@ -31,16 +31,25 @@ import { LoadingState } from '../loading-state';
 import { NIGERIAN_STATES } from '@/store/data';
 import { DateInput } from '../ui/date-input';
 import { formatSizeToMB } from '@/app/verify/step-2';
+import { emojiRegex } from '@/lib/utils';
 
 const formSchema = z.object({
   // Required: Category IDs for skills/services
   categoryIds: z.array(z.string()).min(1, 'Select at least 1 category'),
 
   // Required: Years of experience
-  yearsOfExperience: z.string().min(1, 'Years of experience is required'),
+  yearsOfExperience: z
+    .string()
+    .min(1, 'Years of experience is required')
+    .refine((val) => {
+      const num = Number(val);
+      return !isNaN(num) && num >= 1 && num <= 50;
+    }, 'Years of experience must be between 1 and 50'),
 
   // Optional: Professional license number
-  professionalLicenseNumber: z.string().optional(),
+  professionalLicenseNumber: z
+    .string()
+    .refine((val) => !emojiRegex.test(val), 'License number cannot contain emojis.'),
 
   // Optional: License issue state
   licenseIssueState: z.string().optional(),
@@ -419,6 +428,7 @@ export function CertificationDetails() {
                     onSelect={(date) => {
                       field.handleChange(date.toISOString());
                     }}
+                    allowFutureDates={false}
                   />
 
                   {!field.state.meta.isValid ? (

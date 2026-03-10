@@ -6,9 +6,14 @@ import { Text } from './text';
 interface DateInputInterface {
   label?: string;
   onSelect?: (date: Date) => void;
+  allowFutureDates?: boolean;
 }
 
-export function DateInput({ label = 'Enter date', onSelect }: DateInputInterface) {
+export function DateInput({
+  label = 'Enter date',
+  onSelect,
+  allowFutureDates = true,
+}: DateInputInterface) {
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<Date>();
 
@@ -43,6 +48,7 @@ export function DateInput({ label = 'Enter date', onSelect }: DateInputInterface
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
+        maximumDate={allowFutureDates ? undefined : new Date()}
       />
     </>
   );

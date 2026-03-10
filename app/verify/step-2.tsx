@@ -36,6 +36,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 import { showErrorMessage } from '@/api/helpers';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { useAuthStore } from '@/store/auth-store';
+import { emojiRegex } from '@/lib/utils';
 
 /**
  * Formats file size in bytes to megabytes with 1 decimal place
@@ -66,10 +67,18 @@ const formSchema = z.object({
   //   .max(11, 'Identification number must be 11 characters'),
 
   // Required: Years of experience
-  yearsOfExperience: z.string().min(1, 'Years of experience is required'),
+  yearsOfExperience: z
+    .string()
+    .min(1, 'Years of experience is required')
+    .refine((val) => {
+      const num = Number(val);
+      return !isNaN(num) && num >= 1 && num <= 50;
+    }, 'Years of experience must be between 1 and 50'),
 
   // Optional: Professional license number
-  professionalLicenseNumber: z.string(),
+  professionalLicenseNumber: z
+    .string()
+    .refine((val) => !emojiRegex.test(val), 'License number cannot contain emojis.'),
 
   // Optional: License issue state
   licenseIssueState: z.string(),
@@ -511,6 +520,7 @@ export default function Screen() {
                       onSelect={(date) => {
                         field.handleChange(date.toISOString());
                       }}
+                      allowFutureDates={false}
                     />
 
                     {!field.state.meta.isValid ? (
