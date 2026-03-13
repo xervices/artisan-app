@@ -1074,6 +1074,1912 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Change default password
+         * @description Allow an admin who was issued a default password to securely change their password. The admin must provide current password, new password, and confirm password.
+         */
+        post: operations["AdminController_changeDefaultPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/artisans/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify an artisan
+         * @description Admin can manually verify or unverify an artisan. Sets the isVerified flag and updates verification status.
+         */
+        post: operations["AdminController_verifyArtisan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/artisans/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get pending artisans
+         * @description Get list of artisans pending verification
+         */
+        get: operations["AdminController_getPendingArtisans"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/artisans/{artisanId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get artisan profile
+         * @description Get detailed artisan profile for admin review
+         */
+        get: operations["AdminController_getArtisanProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/settings/commission": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get commission settings
+         * @description Get the current active commission settings
+         */
+        get: operations["AdminController_getCommissionSetting"];
+        /**
+         * Update commission settings
+         * @description Update the platform commission amount taken from artisans. Enter the amount and save.
+         */
+        put: operations["AdminController_updateCommissionSetting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/terms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all terms and conditions versions
+         * @description Get a paginated list of all terms and conditions versions
+         */
+        get: operations["AdminController_getAllTermsAndConditions"];
+        /**
+         * Update terms and conditions
+         * @description Create a new version or update an existing version of terms and conditions. Specify the version and content.
+         */
+        put: operations["AdminController_updateTermsAndConditions"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/terms/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active terms and conditions
+         * @description Get the currently active terms and conditions
+         */
+        get: operations["AdminController_getActiveTermsAndConditions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/terms/{version}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get terms and conditions by version
+         * @description Get a specific version of terms and conditions
+         */
+        get: operations["AdminController_getTermsAndConditionsByVersion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/privacy-policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all privacy policy versions
+         * @description Get a paginated list of all privacy policy versions
+         */
+        get: operations["AdminController_getAllPrivacyPolicies"];
+        /**
+         * Update privacy policy
+         * @description Create a new version or update an existing version of privacy policy. Specify the version and content.
+         */
+        put: operations["AdminController_updatePrivacyPolicy"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/privacy-policy/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active privacy policy
+         * @description Get the currently active privacy policy
+         */
+        get: operations["AdminController_getActivePrivacyPolicy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/privacy-policy/{version}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get privacy policy by version
+         * @description Get a specific version of privacy policy
+         */
+        get: operations["AdminController_getPrivacyPolicyByVersion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/cancellation-policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all cancellation policy versions
+         * @description Get a paginated list of all cancellation policy versions
+         */
+        get: operations["AdminController_getAllCancellationPolicies"];
+        /**
+         * Update cancellation policy
+         * @description Create a new version or update an existing version of cancellation policy. Specify the version and content.
+         */
+        put: operations["AdminController_updateCancellationPolicy"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/cancellation-policy/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active cancellation policy
+         * @description Get the currently active cancellation policy
+         */
+        get: operations["AdminController_getActiveCancellationPolicy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/cancellation-policy/{version}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get cancellation policy by version
+         * @description Get a specific version of cancellation policy
+         */
+        get: operations["AdminController_getCancellationPolicyByVersion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/settings/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get admin notification settings
+         * @description Get notification preferences for the current admin. Returns default settings (all enabled) if none exist.
+         */
+        get: operations["AdminController_getAdminNotificationSetting"];
+        /**
+         * Update admin notification settings
+         * @description Update notification preferences for the current admin. Configure alerts for disputes, transactions, withdrawals, artisan verification, and WebSocket updates.
+         */
+        put: operations["AdminController_updateAdminNotificationSetting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/settings/referral": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get referral program settings
+         * @description Get the current active referral program settings including bonus amounts, expiry period, and program status.
+         */
+        get: operations["AdminController_getReferralProgramSetting"];
+        /**
+         * Update referral program settings
+         * @description Update referral program configuration including enable/disable, referrer bonus amount, referred user bonus percentage, and referral expiry period.
+         */
+        put: operations["AdminController_updateReferralProgramSetting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/settings/support": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get support settings
+         * @description Get the current support settings including WhatsApp links for customers and artisans.
+         */
+        get: operations["AdminController_getSupportSetting"];
+        /**
+         * Update support settings
+         * @description Update support configuration including WhatsApp links for customers and artisans.
+         */
+        put: operations["AdminController_updateSupportSetting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/auth/request-otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request OTP for admin verification
+         * @description Request a 6-digit OTP code for admin verification. The code is sent to both registered email and phone number. Valid for 15 minutes.
+         */
+        post: operations["AdminController_requestAdminOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/auth/verify-otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify admin OTP
+         * @description Verify the 6-digit OTP code sent to admin. Returns a session token for authorized sensitive actions.
+         */
+        post: operations["AdminController_verifyAdminOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/auth/resend-otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend admin OTP
+         * @description Resend the OTP code to admin. Limited to 3 requests per 15 minutes for security.
+         */
+        post: operations["AdminController_resendAdminOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/team": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List admin team members
+         * @description Get list of all admin team members with their roles and status.
+         */
+        get: operations["AdminTeamController_listAdmins"];
+        put?: never;
+        /**
+         * Create admin team member
+         * @description Create a new admin with specified role. Returns temporary password.
+         */
+        post: operations["AdminTeamController_createAdmin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/team/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get admin details
+         * @description Get detailed information about a specific admin.
+         */
+        get: operations["AdminTeamController_getAdmin"];
+        /**
+         * Update admin team member
+         * @description Update admin role, status, or name.
+         */
+        put: operations["AdminTeamController_updateAdmin"];
+        post?: never;
+        /**
+         * Deactivate admin
+         * @description Deactivate an admin account. Cannot deactivate yourself.
+         */
+        delete: operations["AdminTeamController_deactivateAdmin"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/impersonate/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start impersonation session
+         * @description Start impersonating a user. Super Admin only. Returns session token.
+         */
+        post: operations["ImpersonationController_startImpersonation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/impersonate/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * End impersonation session
+         * @description End the current impersonation session.
+         */
+        post: operations["ImpersonationController_endImpersonation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/impersonation-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get impersonation logs
+         * @description View history of all impersonation sessions.
+         */
+        get: operations["ImpersonationLogsController_getImpersonationLogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Setup MFA
+         * @description Generate TOTP secret and QR code for MFA setup.
+         */
+        post: operations["MfaController_setupMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/enable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Enable MFA
+         * @description Enable MFA after verifying the TOTP code from authenticator app.
+         */
+        post: operations["MfaController_enableMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/disable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Disable MFA
+         * @description Disable MFA. Requires current TOTP code. Super Admins cannot disable MFA.
+         */
+        post: operations["MfaController_disableMfa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/backup-codes/regenerate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Regenerate backup codes
+         * @description Generate new backup codes. Old codes are invalidated.
+         */
+        post: operations["MfaController_regenerateBackupCodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/mfa/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get MFA status
+         * @description Get current MFA status including whether it is required and enabled.
+         */
+        get: operations["MfaController_getMfaStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List broadcasts
+         * @description Get list of all broadcasts with pagination and optional status filter.
+         */
+        get: operations["BroadcastController_listBroadcasts"];
+        put?: never;
+        /**
+         * Create broadcast
+         * @description Create a new broadcast notification. Can be saved as draft or scheduled.
+         */
+        post: operations["BroadcastController_createBroadcast"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get broadcast templates
+         * @description Get list of predefined broadcast templates.
+         */
+        get: operations["BroadcastController_getTemplates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get broadcast details
+         * @description Get detailed information about a specific broadcast.
+         */
+        get: operations["BroadcastController_getBroadcast"];
+        /**
+         * Update broadcast
+         * @description Update a draft or scheduled broadcast.
+         */
+        put: operations["BroadcastController_updateBroadcast"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/{id}/send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send broadcast immediately
+         * @description Send a draft or scheduled broadcast immediately.
+         */
+        post: operations["BroadcastController_sendBroadcast"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel scheduled broadcast
+         * @description Cancel a scheduled broadcast.
+         */
+        post: operations["BroadcastController_cancelBroadcast"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List all services in catalogue
+         * @description Get all services with optional filters by category, status, and search term. Supports pagination.
+         */
+        get: operations["ServiceCatalogueController_listServices"];
+        put?: never;
+        /**
+         * Add a new service to catalogue
+         * @description Create a new service/category in the platform catalogue. Upload icon file via "icon" field.
+         */
+        post: operations["ServiceCatalogueController_createService"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/services/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get service details
+         * @description Get details of a specific service by ID
+         */
+        get: operations["ServiceCatalogueController_getService"];
+        /**
+         * Update a service
+         * @description Update service details like name, category, description, or icon.
+         */
+        put: operations["ServiceCatalogueController_updateService"];
+        post?: never;
+        /**
+         * Delete a service
+         * @description Soft delete a service from the catalogue.
+         */
+        delete: operations["ServiceCatalogueController_deleteService"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/services/{id}/toggle-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Toggle service status (enable/disable)
+         * @description Enable or disable a service. Disabled services are hidden from users.
+         */
+        put: operations["ServiceCatalogueController_toggleServiceStatus"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Dashboard overview metrics
+         * @description Fetch high-level dashboard statistics including active users, ongoing jobs, open disputes, and escrow balance.
+         */
+        get: operations["DashboardController_getOverviewMetrics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/app-downloads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * App downloads analytics
+         * @description Provide total app downloads by platform (iOS and Android).
+         */
+        get: operations["DashboardController_getAppDownloads"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/registration-stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Registration statistics
+         * @description Fetch user and artisan registration counts for today and this month.
+         */
+        get: operations["DashboardController_getRegistrationStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/registration-trend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Registration trend graph
+         * @description Return registration data for chart display. Supports monthly (default), weekly, and daily grouping.
+         */
+        get: operations["DashboardController_getRegistrationTrend"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/recent-activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Recent activity feed
+         * @description Provide a list of recent platform activities including job completions, dispute openings, artisan verifications, and withdrawal requests.
+         */
+        get: operations["DashboardController_getRecentActivity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/cancellation-reasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Cancellation reasons analytics
+         * @description Return job cancellation reasons with counts and percentages.
+         */
+        get: operations["DashboardController_getCancellationReasons"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/state-analytics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * State analytics
+         * @description Provide state-based analytics for signups, users, artisans, and active jobs.
+         */
+        get: operations["DashboardController_getStateAnalytics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard/best-booked-services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Best booked service types
+         * @description Return analytics for most booked service categories including bookings, revenue, artisan count, and percentage contribution.
+         */
+        get: operations["DashboardController_getBestBookedServices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/monitoring/inactive-users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get inactive users
+         * @description Retrieve users and artisans who have been inactive for more than 30 days based on login and job activity.
+         */
+        get: operations["MonitoringController_getInactiveUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/monitoring/low-rating-users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get low rating artisans
+         * @description Retrieve artisans with average rating below 3.5 who have at least 1 review.
+         */
+        get: operations["MonitoringController_getLowRatingUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/top-performers/artisans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get top performing artisans
+         * @description Retrieve top 10 artisans by number of completed bookings for a given month. Defaults to current month.
+         */
+        get: operations["TopPerformersController_getTopArtisans"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/top-performers/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get top performing users
+         * @description Retrieve top 10 users by number of completed bookings for a given month. Defaults to current month.
+         */
+        get: operations["TopPerformersController_getTopUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get users summary
+         * @description Retrieve summary counts for customers, artisans, active users, and pending verifications.
+         */
+        get: operations["UsersManagementController_getSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List customers
+         * @description Retrieve paginated list of customers with filters for status and search.
+         */
+        get: operations["UsersManagementController_getCustomers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/artisans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List artisans
+         * @description Retrieve paginated list of artisans with filters for status, verification, availability, and search.
+         */
+        get: operations["UsersManagementController_getArtisans"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/deleted/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List deleted customers
+         * @description Retrieve paginated list of soft-deleted customers with search.
+         */
+        get: operations["UsersManagementController_getDeletedCustomers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/deleted/artisans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List deleted artisans
+         * @description Retrieve paginated list of soft-deleted artisans with search.
+         */
+        get: operations["UsersManagementController_getDeletedArtisans"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/customers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get customer detail
+         * @description Retrieve detailed information about a specific customer including profile, jobs, and spending.
+         */
+        get: operations["UsersManagementController_getCustomerDetail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/artisans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get artisan detail
+         * @description Retrieve detailed information about a specific artisan including profile, verification, ratings, wallet, and job stats.
+         */
+        get: operations["UsersManagementController_getArtisanDetail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/artisans/{id}/wallet": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get artisan wallet details
+         * @description Retrieve wallet balances and paginated transaction history for a specific artisan.
+         */
+        get: operations["UsersManagementController_getArtisanWallet"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/customers/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update customer status
+         * @description Activate or suspend a customer account.
+         */
+        patch: operations["UsersManagementController_updateCustomerStatus"];
+        trace?: never;
+    };
+    "/api/admin/users/artisans/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update artisan status
+         * @description Activate or suspend an artisan account.
+         */
+        patch: operations["UsersManagementController_updateArtisanStatus"];
+        trace?: never;
+    };
+    "/api/admin/disputes/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get dispute metrics */
+        get: operations["AdminDisputesController_getMetrics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/disputes/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get dispute queue with pagination and filtering */
+        get: operations["AdminDisputesController_getDisputeQueue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/disputes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get dispute detail with chat, evidence, and payment info */
+        get: operations["AdminDisputesController_getDisputeDetail"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/disputes/{id}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Move dispute to under review status */
+        patch: operations["AdminDisputesController_reviewDispute"];
+        trace?: never;
+    };
+    "/api/admin/disputes/{id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Resolve a dispute with resolution type and explanation */
+        patch: operations["AdminDisputesController_resolveDispute"];
+        trace?: never;
+    };
+    "/api/admin/promo-codes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all promo codes with pagination */
+        get: operations["AdminPromoCodesController_findAll"];
+        put?: never;
+        /** Create a new promo code */
+        post: operations["AdminPromoCodesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/promo-codes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get promo code details */
+        get: operations["AdminPromoCodesController_findOne"];
+        put?: never;
+        post?: never;
+        /** Deactivate a promo code (soft delete) */
+        delete: operations["AdminPromoCodesController_deactivate"];
+        options?: never;
+        head?: never;
+        /** Update a promo code */
+        patch: operations["AdminPromoCodesController_update"];
+        trace?: never;
+    };
+    "/api/broadcasts/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active broadcasts
+         * @description Fetch active broadcasts for the current user, excluding dismissed ones.
+         */
+        get: operations["MobileBroadcastController_getActiveBroadcasts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/broadcasts/{id}/dismiss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Dismiss a broadcast
+         * @description Dismiss a broadcast so it no longer appears for the current user.
+         */
+        post: operations["MobileBroadcastController_dismissBroadcast"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/terms-and-conditions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active terms and conditions
+         * @description Returns the currently active terms and conditions for display in the app.
+         */
+        get: operations["MobileTermsController_getActiveTerms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/privacy-policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active privacy policy
+         * @description Returns the currently active privacy policy for display in the app.
+         */
+        get: operations["MobileTermsController_getActivePrivacyPolicy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/cancellation-policy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active cancellation policy
+         * @description Returns the currently active cancellation policy for display in the app.
+         */
+        get: operations["MobileTermsController_getActiveCancellationPolicy"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/featured-profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List featured profiles
+         * @description Get paginated list of featured profiles with optional type and status filters.
+         */
+        get: operations["FeaturedProfilesController_findAll"];
+        put?: never;
+        /**
+         * Create a featured profile
+         * @description Create a new featured user or artisan profile. Upload image via "image" field.
+         */
+        post: operations["FeaturedProfilesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/featured-profiles/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get featured profile details
+         * @description Get details of a specific featured profile.
+         */
+        get: operations["FeaturedProfilesController_findOne"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a featured profile
+         * @description Permanently delete a featured profile.
+         */
+        delete: operations["FeaturedProfilesController_remove"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a featured profile
+         * @description Update an existing featured profile. Upload a new image via "image" field.
+         */
+        patch: operations["FeaturedProfilesController_update"];
+        trace?: never;
+    };
+    "/api/featured-profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active featured profiles
+         * @description Returns active featured profiles for display in the app. Optionally filter by type (user or artisan).
+         */
+        get: operations["MobileFeaturedProfilesController_getActiveProfiles"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/promotion-slides": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List promotion slides
+         * @description Get paginated list of promotion slides with optional filters.
+         */
+        get: operations["PromotionSlidesController_findAll"];
+        put?: never;
+        /**
+         * Create a promotion slide
+         * @description Create a new promotion slide with banner image. Upload image via "image" field.
+         */
+        post: operations["PromotionSlidesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/promotion-slides/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get promotion slide details
+         * @description Get details of a specific promotion slide.
+         */
+        get: operations["PromotionSlidesController_findOne"];
+        /**
+         * Update a promotion slide
+         * @description Update a promotion slide. Optionally upload a new image via "image" field.
+         */
+        put: operations["PromotionSlidesController_update"];
+        post?: never;
+        /**
+         * Delete a promotion slide
+         * @description Permanently delete a promotion slide.
+         */
+        delete: operations["PromotionSlidesController_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/promotion-slides": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active promotion slides
+         * @description Returns active promotion slides for display in the app. Optionally filter by audience (users or artisans).
+         */
+        get: operations["MobilePromotionSlidesController_getActiveSlides"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/financial/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Financial overview metrics
+         * @description Fetch high-level financial metrics including total payments, escrow, platform revenue, withdrawals, and balances.
+         */
+        get: operations["FinancialManagementController_getOverviewMetrics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/financial/revenue-trend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Revenue trend
+         * @description Return revenue data for chart display. Supports monthly (default), weekly, and daily grouping based on payment completion date.
+         */
+        get: operations["FinancialManagementController_getRevenueTrend"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/financial/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Payment history
+         * @description Paginated list of all payments with sender/artisan names, service, amounts, and status. Supports filtering, search, and sorting.
+         */
+        get: operations["FinancialManagementController_getPaymentHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/financial/withdrawals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Withdrawal history
+         * @description Paginated list of all withdrawal requests with artisan details, bank info (masked account numbers), status, and balance after withdrawal.
+         */
+        get: operations["FinancialManagementController_getWithdrawalHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/artisan-levels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all artisan levels
+         * @description Retrieve all artisan level definitions with artisan counts and distribution percentages.
+         */
+        get: operations["ArtisanLevelsController_findAll"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/artisan-levels/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update an artisan level
+         * @description Update artisan level settings including display name, minimum jobs required, and commission rate.
+         */
+        patch: operations["ArtisanLevelsController_update"];
+        trace?: never;
+    };
+    "/api/admin/referrals/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Referral overview metrics
+         * @description Fetch referral program metrics including total referrals, status breakdown, bonus totals, and program settings.
+         */
+        get: operations["ReferralManagementController_getOverviewMetrics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/referrals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Referral activities listing
+         * @description Paginated list of all referral records with referrer/referee details, bonus breakdown, status, and referral code. Supports filtering by status, type, and search.
+         */
+        get: operations["ReferralManagementController_getReferralList"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/audit-logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get audit logs
+         * @description Retrieve paginated audit logs with filtering by action, entity type, admin, date range, and search.
+         */
+        get: operations["AuditLogController_getAuditLogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/audit-logs/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get distinct audit log actions
+         * @description Retrieve list of all distinct action types recorded in audit logs.
+         */
+        get: operations["AuditLogController_getDistinctActions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/sessions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get active admin sessions
+         * @description Retrieve all active sessions for the current admin user.
+         */
+        get: operations["AdminSessionController_getActiveSessions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/sessions/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revoke a specific session
+         * @description Terminate a specific admin session by ID. The session is immediately invalidated.
+         */
+        post: operations["AdminSessionController_revokeSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/sessions/revoke-all-others": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revoke all other sessions
+         * @description Terminate all admin sessions except the current one. Requires the current session ID.
+         */
+        post: operations["AdminSessionController_revokeAllOtherSessions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/support/whatsapp-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get WhatsApp support links
+         * @description Returns the WhatsApp support links for customers and artisans. Used by mobile apps to display support contact options.
+         */
+        get: operations["MobileSupportController_getWhatsappLinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/users/me": {
         parameters: {
             query?: never;
@@ -2082,1728 +3988,6 @@ export interface paths {
          * @description Update an existing review. Only the original reviewer can update.
          */
         patch: operations["ReviewsController_update"];
-        trace?: never;
-    };
-    "/api/admin/change-password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Change default password
-         * @description Allow an admin who was issued a default password to securely change their password. The admin must provide current password, new password, and confirm password.
-         */
-        post: operations["AdminController_changeDefaultPassword"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/artisans/verify": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Verify an artisan
-         * @description Admin can manually verify or unverify an artisan. Sets the isVerified flag and updates verification status.
-         */
-        post: operations["AdminController_verifyArtisan"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/artisans/pending": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get pending artisans
-         * @description Get list of artisans pending verification
-         */
-        get: operations["AdminController_getPendingArtisans"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/artisans/{artisanId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get artisan profile
-         * @description Get detailed artisan profile for admin review
-         */
-        get: operations["AdminController_getArtisanProfile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/settings/commission": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get commission settings
-         * @description Get the current active commission settings
-         */
-        get: operations["AdminController_getCommissionSetting"];
-        /**
-         * Update commission settings
-         * @description Update the platform commission amount taken from artisans. Enter the amount and save.
-         */
-        put: operations["AdminController_updateCommissionSetting"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/terms": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get all terms and conditions versions
-         * @description Get a paginated list of all terms and conditions versions
-         */
-        get: operations["AdminController_getAllTermsAndConditions"];
-        /**
-         * Update terms and conditions
-         * @description Create a new version or update an existing version of terms and conditions. Specify the version and content.
-         */
-        put: operations["AdminController_updateTermsAndConditions"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/terms/active": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active terms and conditions
-         * @description Get the currently active terms and conditions
-         */
-        get: operations["AdminController_getActiveTermsAndConditions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/terms/{version}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get terms and conditions by version
-         * @description Get a specific version of terms and conditions
-         */
-        get: operations["AdminController_getTermsAndConditionsByVersion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/privacy-policy": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get all privacy policy versions
-         * @description Get a paginated list of all privacy policy versions
-         */
-        get: operations["AdminController_getAllPrivacyPolicies"];
-        /**
-         * Update privacy policy
-         * @description Create a new version or update an existing version of privacy policy. Specify the version and content.
-         */
-        put: operations["AdminController_updatePrivacyPolicy"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/privacy-policy/active": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active privacy policy
-         * @description Get the currently active privacy policy
-         */
-        get: operations["AdminController_getActivePrivacyPolicy"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/privacy-policy/{version}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get privacy policy by version
-         * @description Get a specific version of privacy policy
-         */
-        get: operations["AdminController_getPrivacyPolicyByVersion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/cancellation-policy": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get all cancellation policy versions
-         * @description Get a paginated list of all cancellation policy versions
-         */
-        get: operations["AdminController_getAllCancellationPolicies"];
-        /**
-         * Update cancellation policy
-         * @description Create a new version or update an existing version of cancellation policy. Specify the version and content.
-         */
-        put: operations["AdminController_updateCancellationPolicy"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/cancellation-policy/active": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active cancellation policy
-         * @description Get the currently active cancellation policy
-         */
-        get: operations["AdminController_getActiveCancellationPolicy"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/cancellation-policy/{version}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get cancellation policy by version
-         * @description Get a specific version of cancellation policy
-         */
-        get: operations["AdminController_getCancellationPolicyByVersion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/settings/notifications": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get admin notification settings
-         * @description Get notification preferences for the current admin. Returns default settings (all enabled) if none exist.
-         */
-        get: operations["AdminController_getAdminNotificationSetting"];
-        /**
-         * Update admin notification settings
-         * @description Update notification preferences for the current admin. Configure alerts for disputes, transactions, withdrawals, artisan verification, and WebSocket updates.
-         */
-        put: operations["AdminController_updateAdminNotificationSetting"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/settings/referral": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get referral program settings
-         * @description Get the current active referral program settings including bonus amounts, expiry period, and program status.
-         */
-        get: operations["AdminController_getReferralProgramSetting"];
-        /**
-         * Update referral program settings
-         * @description Update referral program configuration including enable/disable, referrer bonus amount, referred user bonus percentage, and referral expiry period.
-         */
-        put: operations["AdminController_updateReferralProgramSetting"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/auth/request-otp": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Request OTP for admin verification
-         * @description Request a 6-digit OTP code for admin verification. The code is sent to both registered email and phone number. Valid for 15 minutes.
-         */
-        post: operations["AdminController_requestAdminOtp"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/auth/verify-otp": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Verify admin OTP
-         * @description Verify the 6-digit OTP code sent to admin. Returns a session token for authorized sensitive actions.
-         */
-        post: operations["AdminController_verifyAdminOtp"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/auth/resend-otp": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Resend admin OTP
-         * @description Resend the OTP code to admin. Limited to 3 requests per 15 minutes for security.
-         */
-        post: operations["AdminController_resendAdminOtp"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/team": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List admin team members
-         * @description Get list of all admin team members with their roles and status.
-         */
-        get: operations["AdminTeamController_listAdmins"];
-        put?: never;
-        /**
-         * Create admin team member
-         * @description Create a new admin with specified role. Returns temporary password.
-         */
-        post: operations["AdminTeamController_createAdmin"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/team/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get admin details
-         * @description Get detailed information about a specific admin.
-         */
-        get: operations["AdminTeamController_getAdmin"];
-        /**
-         * Update admin team member
-         * @description Update admin role, status, or name.
-         */
-        put: operations["AdminTeamController_updateAdmin"];
-        post?: never;
-        /**
-         * Deactivate admin
-         * @description Deactivate an admin account. Cannot deactivate yourself.
-         */
-        delete: operations["AdminTeamController_deactivateAdmin"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/impersonate/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Start impersonation session
-         * @description Start impersonating a user. Super Admin only. Returns session token.
-         */
-        post: operations["ImpersonationController_startImpersonation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/impersonate/end": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * End impersonation session
-         * @description End the current impersonation session.
-         */
-        post: operations["ImpersonationController_endImpersonation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/impersonation-logs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get impersonation logs
-         * @description View history of all impersonation sessions.
-         */
-        get: operations["ImpersonationLogsController_getImpersonationLogs"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/mfa/setup": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Setup MFA
-         * @description Generate TOTP secret and QR code for MFA setup.
-         */
-        post: operations["MfaController_setupMfa"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/mfa/enable": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Enable MFA
-         * @description Enable MFA after verifying the TOTP code from authenticator app.
-         */
-        post: operations["MfaController_enableMfa"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/mfa/disable": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Disable MFA
-         * @description Disable MFA. Requires current TOTP code. Super Admins cannot disable MFA.
-         */
-        post: operations["MfaController_disableMfa"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/mfa/backup-codes/regenerate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Regenerate backup codes
-         * @description Generate new backup codes. Old codes are invalidated.
-         */
-        post: operations["MfaController_regenerateBackupCodes"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/mfa/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get MFA status
-         * @description Get current MFA status including whether it is required and enabled.
-         */
-        get: operations["MfaController_getMfaStatus"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/broadcasts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List broadcasts
-         * @description Get list of all broadcasts with pagination and optional status filter.
-         */
-        get: operations["BroadcastController_listBroadcasts"];
-        put?: never;
-        /**
-         * Create broadcast
-         * @description Create a new broadcast notification. Can be saved as draft or scheduled.
-         */
-        post: operations["BroadcastController_createBroadcast"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/broadcasts/templates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get broadcast templates
-         * @description Get list of predefined broadcast templates.
-         */
-        get: operations["BroadcastController_getTemplates"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/broadcasts/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get broadcast details
-         * @description Get detailed information about a specific broadcast.
-         */
-        get: operations["BroadcastController_getBroadcast"];
-        /**
-         * Update broadcast
-         * @description Update a draft or scheduled broadcast.
-         */
-        put: operations["BroadcastController_updateBroadcast"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/broadcasts/{id}/send": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Send broadcast immediately
-         * @description Send a draft or scheduled broadcast immediately.
-         */
-        post: operations["BroadcastController_sendBroadcast"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/broadcasts/{id}/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Cancel scheduled broadcast
-         * @description Cancel a scheduled broadcast.
-         */
-        post: operations["BroadcastController_cancelBroadcast"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/services": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List all services in catalogue
-         * @description Get all services with optional filters by category, status, and search term. Supports pagination.
-         */
-        get: operations["ServiceCatalogueController_listServices"];
-        put?: never;
-        /**
-         * Add a new service to catalogue
-         * @description Create a new service/category in the platform catalogue. Upload icon file via "icon" field.
-         */
-        post: operations["ServiceCatalogueController_createService"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/services/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get service details
-         * @description Get details of a specific service by ID
-         */
-        get: operations["ServiceCatalogueController_getService"];
-        /**
-         * Update a service
-         * @description Update service details like name, category, description, or icon.
-         */
-        put: operations["ServiceCatalogueController_updateService"];
-        post?: never;
-        /**
-         * Delete a service
-         * @description Soft delete a service from the catalogue.
-         */
-        delete: operations["ServiceCatalogueController_deleteService"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/services/{id}/toggle-status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Toggle service status (enable/disable)
-         * @description Enable or disable a service. Disabled services are hidden from users.
-         */
-        put: operations["ServiceCatalogueController_toggleServiceStatus"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard/overview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Dashboard overview metrics
-         * @description Fetch high-level dashboard statistics including active users, ongoing jobs, open disputes, and escrow balance.
-         */
-        get: operations["DashboardController_getOverviewMetrics"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard/app-downloads": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * App downloads analytics
-         * @description Provide total app downloads by platform (iOS and Android).
-         */
-        get: operations["DashboardController_getAppDownloads"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard/registration-stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Registration statistics
-         * @description Fetch user and artisan registration counts for today and this month.
-         */
-        get: operations["DashboardController_getRegistrationStats"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard/registration-trend": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Registration trend graph
-         * @description Return monthly registration data for chart display. Data grouped by month (Jan-Dec).
-         */
-        get: operations["DashboardController_getRegistrationTrend"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard/recent-activity": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Recent activity feed
-         * @description Provide a list of recent platform activities including job completions, dispute openings, artisan verifications, and withdrawal requests.
-         */
-        get: operations["DashboardController_getRecentActivity"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard/cancellation-reasons": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Cancellation reasons analytics
-         * @description Return job cancellation reasons with counts and percentages.
-         */
-        get: operations["DashboardController_getCancellationReasons"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard/state-analytics": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * State analytics
-         * @description Provide state-based analytics for signups, users, artisans, and active jobs.
-         */
-        get: operations["DashboardController_getStateAnalytics"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard/best-booked-services": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Best booked service types
-         * @description Return analytics for most booked service categories including bookings, revenue, artisan count, and percentage contribution.
-         */
-        get: operations["DashboardController_getBestBookedServices"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/monitoring/inactive-users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get inactive users
-         * @description Retrieve users and artisans who have been inactive for more than 30 days based on login and job activity.
-         */
-        get: operations["MonitoringController_getInactiveUsers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/monitoring/low-rating-users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get low rating artisans
-         * @description Retrieve artisans with average rating below 3.5 who have at least 1 review.
-         */
-        get: operations["MonitoringController_getLowRatingUsers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/top-performers/artisans": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get top performing artisans
-         * @description Retrieve top 10 artisans by number of completed bookings for a given month. Defaults to current month.
-         */
-        get: operations["TopPerformersController_getTopArtisans"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/top-performers/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get top performing users
-         * @description Retrieve top 10 users by number of completed bookings for a given month. Defaults to current month.
-         */
-        get: operations["TopPerformersController_getTopUsers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/summary": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get users summary
-         * @description Retrieve summary counts for customers, artisans, active users, and pending verifications.
-         */
-        get: operations["UsersManagementController_getSummary"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/customers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List customers
-         * @description Retrieve paginated list of customers with filters for status and search.
-         */
-        get: operations["UsersManagementController_getCustomers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/artisans": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List artisans
-         * @description Retrieve paginated list of artisans with filters for status, verification, availability, and search.
-         */
-        get: operations["UsersManagementController_getArtisans"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/deleted/customers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List deleted customers
-         * @description Retrieve paginated list of soft-deleted customers with search.
-         */
-        get: operations["UsersManagementController_getDeletedCustomers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/deleted/artisans": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List deleted artisans
-         * @description Retrieve paginated list of soft-deleted artisans with search.
-         */
-        get: operations["UsersManagementController_getDeletedArtisans"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/customers/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get customer detail
-         * @description Retrieve detailed information about a specific customer including profile, jobs, and spending.
-         */
-        get: operations["UsersManagementController_getCustomerDetail"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/artisans/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get artisan detail
-         * @description Retrieve detailed information about a specific artisan including profile, verification, ratings, wallet, and job stats.
-         */
-        get: operations["UsersManagementController_getArtisanDetail"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/artisans/{id}/wallet": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get artisan wallet details
-         * @description Retrieve wallet balances and paginated transaction history for a specific artisan.
-         */
-        get: operations["UsersManagementController_getArtisanWallet"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/customers/{id}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Update customer status
-         * @description Activate or suspend a customer account.
-         */
-        patch: operations["UsersManagementController_updateCustomerStatus"];
-        trace?: never;
-    };
-    "/api/admin/users/artisans/{id}/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Update artisan status
-         * @description Activate or suspend an artisan account.
-         */
-        patch: operations["UsersManagementController_updateArtisanStatus"];
-        trace?: never;
-    };
-    "/api/admin/disputes/metrics": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get dispute metrics */
-        get: operations["AdminDisputesController_getMetrics"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/disputes/queue": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get dispute queue with pagination and filtering */
-        get: operations["AdminDisputesController_getDisputeQueue"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/disputes/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get dispute detail with chat, evidence, and payment info */
-        get: operations["AdminDisputesController_getDisputeDetail"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/disputes/{id}/review": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Move dispute to under review status */
-        patch: operations["AdminDisputesController_reviewDispute"];
-        trace?: never;
-    };
-    "/api/admin/disputes/{id}/resolve": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Resolve a dispute with resolution type and explanation */
-        patch: operations["AdminDisputesController_resolveDispute"];
-        trace?: never;
-    };
-    "/api/admin/promo-codes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all promo codes with pagination */
-        get: operations["AdminPromoCodesController_findAll"];
-        put?: never;
-        /** Create a new promo code */
-        post: operations["AdminPromoCodesController_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/promo-codes/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get promo code details */
-        get: operations["AdminPromoCodesController_findOne"];
-        put?: never;
-        post?: never;
-        /** Deactivate a promo code (soft delete) */
-        delete: operations["AdminPromoCodesController_deactivate"];
-        options?: never;
-        head?: never;
-        /** Update a promo code */
-        patch: operations["AdminPromoCodesController_update"];
-        trace?: never;
-    };
-    "/api/broadcasts/active": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active broadcasts
-         * @description Fetch active broadcasts for the current user, excluding dismissed ones.
-         */
-        get: operations["MobileBroadcastController_getActiveBroadcasts"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/broadcasts/{id}/dismiss": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Dismiss a broadcast
-         * @description Dismiss a broadcast so it no longer appears for the current user.
-         */
-        post: operations["MobileBroadcastController_dismissBroadcast"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/terms-and-conditions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active terms and conditions
-         * @description Returns the currently active terms and conditions for display in the app.
-         */
-        get: operations["MobileTermsController_getActiveTerms"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/privacy-policy": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active privacy policy
-         * @description Returns the currently active privacy policy for display in the app.
-         */
-        get: operations["MobileTermsController_getActivePrivacyPolicy"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/cancellation-policy": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active cancellation policy
-         * @description Returns the currently active cancellation policy for display in the app.
-         */
-        get: operations["MobileTermsController_getActiveCancellationPolicy"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/featured-profiles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List featured profiles
-         * @description Get paginated list of featured profiles with optional type and status filters.
-         */
-        get: operations["FeaturedProfilesController_findAll"];
-        put?: never;
-        /**
-         * Create a featured profile
-         * @description Create a new featured user or artisan profile. Upload image via "image" field.
-         */
-        post: operations["FeaturedProfilesController_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/featured-profiles/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get featured profile details
-         * @description Get details of a specific featured profile.
-         */
-        get: operations["FeaturedProfilesController_findOne"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete a featured profile
-         * @description Permanently delete a featured profile.
-         */
-        delete: operations["FeaturedProfilesController_remove"];
-        options?: never;
-        head?: never;
-        /**
-         * Update a featured profile
-         * @description Update an existing featured profile. Upload a new image via "image" field.
-         */
-        patch: operations["FeaturedProfilesController_update"];
-        trace?: never;
-    };
-    "/api/featured-profiles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active featured profiles
-         * @description Returns active featured profiles for display in the app. Optionally filter by type (user or artisan).
-         */
-        get: operations["MobileFeaturedProfilesController_getActiveProfiles"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/promotion-slides": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List promotion slides
-         * @description Get paginated list of promotion slides with optional filters.
-         */
-        get: operations["PromotionSlidesController_findAll"];
-        put?: never;
-        /**
-         * Create a promotion slide
-         * @description Create a new promotion slide with banner image. Upload image via "image" field.
-         */
-        post: operations["PromotionSlidesController_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/promotion-slides/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get promotion slide details
-         * @description Get details of a specific promotion slide.
-         */
-        get: operations["PromotionSlidesController_findOne"];
-        /**
-         * Update a promotion slide
-         * @description Update a promotion slide. Optionally upload a new image via "image" field.
-         */
-        put: operations["PromotionSlidesController_update"];
-        post?: never;
-        /**
-         * Delete a promotion slide
-         * @description Permanently delete a promotion slide.
-         */
-        delete: operations["PromotionSlidesController_delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/promotion-slides": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get active promotion slides
-         * @description Returns active promotion slides for display in the app. Optionally filter by audience (users or artisans).
-         */
-        get: operations["MobilePromotionSlidesController_getActiveSlides"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/financial/overview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Financial overview metrics
-         * @description Fetch high-level financial metrics including total payments, escrow, platform revenue, withdrawals, and balances.
-         */
-        get: operations["FinancialManagementController_getOverviewMetrics"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/financial/revenue-trend": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Revenue trend by month
-         * @description Return monthly revenue data for chart display. Data grouped by month (Jan-Dec) based on payment completion date.
-         */
-        get: operations["FinancialManagementController_getRevenueTrend"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/financial/payments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Payment history
-         * @description Paginated list of all payments with sender/artisan names, service, amounts, and status. Supports filtering, search, and sorting.
-         */
-        get: operations["FinancialManagementController_getPaymentHistory"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/financial/withdrawals": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Withdrawal history
-         * @description Paginated list of all withdrawal requests with artisan details, bank info (masked account numbers), status, and balance after withdrawal.
-         */
-        get: operations["FinancialManagementController_getWithdrawalHistory"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/artisan-levels": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get all artisan levels
-         * @description Retrieve all artisan level definitions with artisan counts and distribution percentages.
-         */
-        get: operations["ArtisanLevelsController_findAll"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/artisan-levels/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Update an artisan level
-         * @description Update artisan level settings including display name, minimum jobs required, and commission rate.
-         */
-        patch: operations["ArtisanLevelsController_update"];
         trace?: never;
     };
     "/api/support/tickets": {
@@ -5589,6 +5773,1165 @@ export interface components {
             /** @description Verification details */
             data?: components["schemas"]["NinVerificationDataDto"];
         };
+        TermsAndConditionsResponseDto: {
+            /**
+             * @description Terms and conditions ID
+             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
+             */
+            id: string;
+            /**
+             * @description Version string
+             * @example 1.0
+             */
+            version: string;
+            /** @description Content of the terms */
+            content: string;
+            /**
+             * @description Title of this version
+             * @example Terms of Service v1.0
+             */
+            title?: string;
+            /**
+             * @description Whether this version is active
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * Format: date-time
+             * @description Effective date
+             */
+            effectiveDate?: string;
+            /**
+             * Format: date-time
+             * @description Created timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated timestamp
+             */
+            updatedAt: string;
+        };
+        PrivacyPolicyResponseDto: {
+            /** @description Privacy policy ID */
+            id: string;
+            /**
+             * @description Version string
+             * @example 1.0
+             */
+            version: string;
+            /** @description Content of the privacy policy */
+            content: string;
+            /** @description Title of this version */
+            title?: string;
+            /** @description Whether this version is active */
+            isActive: boolean;
+            /**
+             * Format: date-time
+             * @description Effective date
+             */
+            effectiveDate?: string;
+            /**
+             * Format: date-time
+             * @description Created timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated timestamp
+             */
+            updatedAt: string;
+        };
+        CancellationPolicyResponseDto: {
+            /** @description Cancellation policy ID */
+            id: string;
+            /**
+             * @description Version string
+             * @example 1.0
+             */
+            version: string;
+            /** @description Content of the cancellation policy */
+            content: string;
+            /** @description Title of this version */
+            title?: string;
+            /** @description Whether this version is active */
+            isActive: boolean;
+            /**
+             * Format: date-time
+             * @description Effective date
+             */
+            effectiveDate?: string;
+            /**
+             * Format: date-time
+             * @description Created timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated timestamp
+             */
+            updatedAt: string;
+        };
+        ChangeDefaultPasswordDto: {
+            /**
+             * @description Current/default password for verification
+             * @example DefaultPass123!
+             */
+            currentPassword: string;
+            /**
+             * @description New password (min 8 chars, must contain uppercase, lowercase, number, and special character)
+             * @example NewSecurePass123!
+             */
+            newPassword: string;
+            /**
+             * @description Password confirmation - must match newPassword
+             * @example NewSecurePass123!
+             */
+            confirmPassword: string;
+        };
+        ChangeDefaultPasswordResponseDto: {
+            /**
+             * @description Success message
+             * @example Password changed successfully
+             */
+            message: string;
+        };
+        VerifyArtisanDto: {
+            /**
+             * @description The ID of the artisan to verify
+             * @example 123e4567-e89b-12d3-a456-426614174000
+             */
+            artisanId: string;
+            /**
+             * @description Verification status to set
+             * @default true
+             * @example true
+             */
+            isVerified: boolean;
+            /**
+             * @description Optional note about the verification
+             * @example Verified via manual document review
+             */
+            note?: string;
+        };
+        VerifyArtisanResponseDto: {
+            message: string;
+            artisanId: string;
+            isVerified: boolean;
+            /** Format: date-time */
+            verifiedAt: string;
+        };
+        CommissionSettingResponseDto: {
+            /**
+             * @description Commission setting ID
+             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
+             */
+            id: string;
+            /**
+             * @description Commission value
+             * @example 10
+             */
+            commissionValue: number;
+            /**
+             * @description Whether this is a percentage
+             * @example true
+             */
+            isPercentage: boolean;
+            /**
+             * @description Description
+             * @example Platform commission for service fees
+             */
+            description?: string;
+            /**
+             * @description Whether this setting is active
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * Format: date-time
+             * @description Created timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated timestamp
+             */
+            updatedAt: string;
+        };
+        UpdateCommissionSettingDto: {
+            /**
+             * @description Commission value - percentage or fixed amount
+             * @example 10
+             */
+            commissionValue: number;
+            /**
+             * @description Whether the commission is a percentage (true) or fixed amount (false)
+             * @default true
+             * @example true
+             */
+            isPercentage: boolean;
+            /**
+             * @description Optional description for this commission setting
+             * @example Platform commission for service fees
+             */
+            description?: string;
+        };
+        UpdateCommissionSettingResponseDto: {
+            /**
+             * @description Success message
+             * @example Commission settings updated successfully
+             */
+            message: string;
+            /** @description Updated commission setting */
+            data: components["schemas"]["CommissionSettingResponseDto"];
+        };
+        UpdateTermsAndConditionsDto: {
+            /**
+             * @description Version string for the terms (e.g., "1.0", "2.0")
+             * @example 1.0
+             */
+            version: string;
+            /**
+             * @description Full content of the terms and conditions
+             * @example By using this platform, you agree to...
+             */
+            content: string;
+            /**
+             * @description Optional title for this version
+             * @example Terms of Service v1.0
+             */
+            title?: string;
+            /**
+             * @description Whether to activate this version immediately
+             * @default false
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * @description Date when this version becomes effective
+             * @example 2025-02-01T00:00:00Z
+             */
+            effectiveDate?: string;
+        };
+        UpdateTermsAndConditionsResponseDto: {
+            /**
+             * @description Success message
+             * @example Terms and conditions updated successfully
+             */
+            message: string;
+            /** @description Updated terms and conditions */
+            data: components["schemas"]["TermsAndConditionsResponseDto"];
+        };
+        UpdatePrivacyPolicyDto: {
+            /**
+             * @description Version string for the privacy policy (e.g., "1.0", "2.0")
+             * @example 1.0
+             */
+            version: string;
+            /**
+             * @description Full content of the privacy policy
+             * @example This privacy policy describes how we collect and use your data...
+             */
+            content: string;
+            /**
+             * @description Optional title for this version
+             * @example Privacy Policy v1.0
+             */
+            title?: string;
+            /**
+             * @description Whether to activate this version immediately
+             * @default false
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * @description Date when this version becomes effective
+             * @example 2025-02-01T00:00:00Z
+             */
+            effectiveDate?: string;
+        };
+        UpdatePrivacyPolicyResponseDto: {
+            /** @description Success message */
+            message: string;
+            /** @description Updated privacy policy */
+            data: components["schemas"]["PrivacyPolicyResponseDto"];
+        };
+        UpdateCancellationPolicyDto: {
+            /**
+             * @description Version string for the cancellation policy (e.g., "1.0", "2.0")
+             * @example 1.0
+             */
+            version: string;
+            /**
+             * @description Full content of the cancellation policy
+             * @example This cancellation policy describes the conditions under which a booking can be cancelled...
+             */
+            content: string;
+            /**
+             * @description Optional title for this version
+             * @example Cancellation Policy v1.0
+             */
+            title?: string;
+            /**
+             * @description Whether to activate this version immediately
+             * @default false
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * @description Date when this version becomes effective
+             * @example 2025-02-01T00:00:00Z
+             */
+            effectiveDate?: string;
+        };
+        UpdateCancellationPolicyResponseDto: {
+            /** @description Success message */
+            message: string;
+            /** @description Updated cancellation policy */
+            data: components["schemas"]["CancellationPolicyResponseDto"];
+        };
+        AdminNotificationSettingResponseDto: {
+            /**
+             * @description Notification setting ID
+             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
+             */
+            id: string;
+            /**
+             * @description Admin user ID
+             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
+             */
+            adminId: string;
+            /**
+             * @description Notify when new disputes are opened
+             * @example true
+             */
+            notifyNewDisputes: boolean;
+            /**
+             * @description Notify for high-value transactions
+             * @example true
+             */
+            notifyHighValueTransactions: boolean;
+            /**
+             * @description Threshold amount for high-value transaction alerts
+             * @example 1000
+             */
+            highValueThreshold: number;
+            /**
+             * @description Notify when artisans request withdrawals
+             * @example true
+             */
+            notifyWithdrawalRequests: boolean;
+            /**
+             * @description Notify when new artisans submit for verification
+             * @example true
+             */
+            notifyNewArtisanVerification: boolean;
+            /**
+             * @description Notify when artisans update job status
+             * @example true
+             */
+            notifyArtisanStatusChanges: boolean;
+            /**
+             * @description Enable real-time WebSocket updates
+             * @example true
+             */
+            realtimeWebsocketUpdates: boolean;
+            /**
+             * Format: date-time
+             * @description Created timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated timestamp
+             */
+            updatedAt: string;
+        };
+        UpdateAdminNotificationSettingDto: {
+            /**
+             * @description Receive notifications when new disputes are opened
+             * @default true
+             * @example true
+             */
+            notifyNewDisputes: boolean;
+            /**
+             * @description Receive notifications for high-value transactions
+             * @default true
+             * @example true
+             */
+            notifyHighValueTransactions: boolean;
+            /**
+             * @description Threshold amount for high-value transaction alerts
+             * @example 1000
+             */
+            highValueThreshold?: number;
+            /**
+             * @description Receive notifications when artisans request withdrawals
+             * @default true
+             * @example true
+             */
+            notifyWithdrawalRequests: boolean;
+            /**
+             * @description Receive notifications when new artisans submit for verification
+             * @default true
+             * @example true
+             */
+            notifyNewArtisanVerification: boolean;
+            /**
+             * @description Receive real-time notifications when artisans update job status
+             * @default true
+             * @example true
+             */
+            notifyArtisanStatusChanges: boolean;
+            /**
+             * @description Enable real-time WebSocket updates without page refresh
+             * @default true
+             * @example true
+             */
+            realtimeWebsocketUpdates: boolean;
+        };
+        UpdateAdminNotificationSettingResponseDto: {
+            /**
+             * @description Success message
+             * @example Notification settings updated successfully
+             */
+            message: string;
+            /** @description Updated notification settings */
+            data: components["schemas"]["AdminNotificationSettingResponseDto"];
+        };
+        ReferralProgramSettingResponseDto: {
+            /**
+             * @description Referral program setting ID
+             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
+             */
+            id: string;
+            /**
+             * @description Whether the referral program is enabled
+             * @example true
+             */
+            isEnabled: boolean;
+            /**
+             * @description Amount given to the person who refers
+             * @example 25
+             */
+            referrerBonus: number;
+            /**
+             * @description Percentage bonus given to the new user
+             * @example 15
+             */
+            referredUserBonus: number;
+            /**
+             * @description Days to complete required jobs for referral bonus
+             * @example 90
+             */
+            referralExpiryDays: number;
+            /**
+             * @description Minimum completed jobs required for referral bonus
+             * @example 1
+             */
+            minJobsRequired: number;
+            /**
+             * @description Maximum referral bonuses a user can earn
+             * @example 0
+             */
+            maxReferralsPerUser: number;
+            /**
+             * @description Description or notes
+             * @example Holiday promotion referral program
+             */
+            description?: string;
+            /**
+             * @description Whether this setting is active
+             * @example true
+             */
+            isActive: boolean;
+            /**
+             * Format: date-time
+             * @description Created timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated timestamp
+             */
+            updatedAt: string;
+        };
+        UpdateReferralProgramSettingDto: {
+            /**
+             * @description Enable or disable the referral program
+             * @default true
+             * @example true
+             */
+            isEnabled: boolean;
+            /**
+             * @description Amount given to the person who refers (in base currency)
+             * @example 25
+             */
+            referrerBonus?: number;
+            /**
+             * @description Percentage bonus given to the new user
+             * @example 15
+             */
+            referredUserBonus?: number;
+            /**
+             * @description Number of days the referred user has to complete required jobs
+             * @example 90
+             */
+            referralExpiryDays?: number;
+            /**
+             * @description Minimum number of completed jobs required for referral bonus
+             * @example 1
+             */
+            minJobsRequired?: number;
+            /**
+             * @description Maximum referral bonuses a user can earn (0 = unlimited)
+             * @example 0
+             */
+            maxReferralsPerUser?: number;
+            /**
+             * @description Optional description or notes about current referral program
+             * @example Holiday promotion referral program
+             */
+            description?: string;
+        };
+        UpdateReferralProgramSettingResponseDto: {
+            /**
+             * @description Success message
+             * @example Referral program settings updated successfully
+             */
+            message: string;
+            /** @description Updated referral program settings */
+            data: components["schemas"]["ReferralProgramSettingResponseDto"];
+        };
+        SupportSettingResponseDto: {
+            id: string;
+            customerWhatsappLink: Record<string, never> | null;
+            artisanWhatsappLink: Record<string, never> | null;
+            isActive: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        UpdateSupportSettingDto: {
+            /**
+             * @description WhatsApp support link for customers
+             * @example https://wa.me/2348001234567
+             */
+            customerWhatsappLink?: string;
+            /**
+             * @description WhatsApp support link for artisans
+             * @example https://wa.me/2348007654321
+             */
+            artisanWhatsappLink?: string;
+        };
+        UpdateSupportSettingResponseDto: {
+            message: string;
+            data: components["schemas"]["SupportSettingResponseDto"];
+        };
+        RequestAdminOtpDto: {
+            /**
+             * @description Purpose of the OTP (e.g., "sensitive_action", "login_verification"). Defaults to "verification".
+             * @default verification
+             * @example sensitive_action
+             */
+            purpose: string;
+        };
+        AdminOtpSentResponseDto: {
+            /**
+             * @description Success message
+             * @example OTP sent successfully
+             */
+            message: string;
+            /**
+             * @description Email where OTP was sent (masked)
+             * @example a***n@xervices.com
+             */
+            emailSentTo: string;
+            /**
+             * @description Phone number where OTP was sent (masked)
+             * @example +234***7890
+             */
+            phoneSentTo: string;
+            /**
+             * @description OTP expiry time in minutes
+             * @example 15
+             */
+            expiresInMinutes: number;
+        };
+        VerifyAdminOtpDto: {
+            /**
+             * @description The 6-digit OTP code sent to admin email/phone
+             * @example 123456
+             */
+            code: string;
+        };
+        AdminOtpVerifiedResponseDto: {
+            /**
+             * @description Success message
+             * @example OTP verified successfully
+             */
+            message: string;
+            /**
+             * @description Whether the OTP was valid
+             * @example true
+             */
+            verified: boolean;
+            /**
+             * @description Session token for authorized action (if applicable)
+             * @example abc123xyz...
+             */
+            sessionToken?: string;
+        };
+        CreateAdminDto: {
+            /**
+             * Format: email
+             * @description Admin email address
+             * @example admin@xervices.com
+             */
+            email: string;
+            /**
+             * @description Phone number in international or local format
+             * @example 08012345678
+             */
+            phoneNumber: string;
+            /**
+             * @description Admin full name
+             * @example John Admin
+             */
+            fullName: string;
+            /**
+             * @description Admin role
+             * @example admin
+             * @enum {string}
+             */
+            adminRole: "super_admin" | "admin" | "finance" | "support";
+        };
+        UpdateAdminDto: {
+            /**
+             * @description Admin role
+             * @enum {string}
+             */
+            adminRole?: "super_admin" | "admin" | "finance" | "support";
+            /**
+             * @description Admin status
+             * @enum {string}
+             */
+            status?: "active" | "inactive" | "disabled";
+            /** @description Admin full name */
+            fullName?: string;
+        };
+        StartImpersonationDto: {
+            /**
+             * @description Reason for impersonation
+             * @example Investigating support ticket #12345
+             */
+            reason: string;
+        };
+        MfaSetupResponseDto: {
+            /**
+             * @description Base32 encoded TOTP secret (for manual entry)
+             * @example JBSWY3DPEHPK3PXP
+             */
+            secret: string;
+            /**
+             * @description QR code as data URL for scanning with authenticator app
+             * @example data:image/png;base64,...
+             */
+            qrCodeDataUrl: string;
+            /**
+             * @description Backup codes for account recovery
+             * @example [
+             *       "XXXX-XXXX",
+             *       "YYYY-YYYY"
+             *     ]
+             */
+            backupCodes: string[];
+        };
+        EnableMfaDto: {
+            /**
+             * @description TOTP code from authenticator app (6 digits)
+             * @example 123456
+             */
+            code: string;
+        };
+        DisableMfaDto: {
+            /**
+             * @description Current TOTP code to verify
+             * @example 123456
+             */
+            code: string;
+        };
+        RegenerateBackupCodesDto: {
+            /**
+             * @description Current TOTP code to verify
+             * @example 123456
+             */
+            code: string;
+        };
+        BackupCodesResponseDto: {
+            /** @description New backup codes (only shown once) */
+            backupCodes: string[];
+        };
+        MfaStatusResponseDto: {
+            /** @description Whether MFA is enabled */
+            mfaEnabled: boolean;
+            /** @description Number of backup codes remaining */
+            backupCodesRemaining: number;
+            /** @description Whether MFA is required for this admin role */
+            mfaRequired: boolean;
+        };
+        BroadcastResponseDto: {
+            /** @description Broadcast ID */
+            id: string;
+            /** @description Notification title */
+            title: string;
+            /** @description Notification body */
+            body: string;
+            /**
+             * @description Template type
+             * @enum {string}
+             */
+            templateType?: "app_update" | "maintenance" | "promotion" | "policy_update" | "safety_alert" | "new_feature";
+            /**
+             * @description Target audience
+             * @enum {string}
+             */
+            targetAudience: "all_users" | "customers" | "artisans";
+            /**
+             * @description Target platform
+             * @enum {string}
+             */
+            platform: "all" | "android" | "ios" | "web";
+            /**
+             * @description Broadcast status
+             * @enum {string}
+             */
+            status: "draft" | "scheduled" | "sending" | "completed" | "failed" | "cancelled";
+            /** @description Additional data */
+            data?: Record<string, never>;
+            /** @description Total recipient count */
+            recipientCount: number;
+            /** @description Delivered count */
+            deliveredCount: number;
+            /** @description Failed count */
+            failedCount: number;
+            /** @description Scheduled send time */
+            scheduledAt?: Record<string, never>;
+            /** @description Actual send time */
+            sentAt?: Record<string, never>;
+            /** @description Completion time */
+            completedAt?: Record<string, never>;
+            /** @description Creator ID */
+            createdBy: string;
+            /** @description Creator name */
+            createdByName: string;
+            /**
+             * Format: date-time
+             * @description Created at timestamp
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description Updated at timestamp
+             */
+            updatedAt: string;
+        };
+        CreateBroadcastDto: {
+            /**
+             * @description Notification title
+             * @example New Feature Available
+             */
+            title: string;
+            /**
+             * @description Notification body
+             * @example Check out our latest update with exciting new features!
+             */
+            body: string;
+            /**
+             * @description Template type to use as base
+             * @enum {string}
+             */
+            templateType?: "app_update" | "maintenance" | "promotion" | "policy_update" | "safety_alert" | "new_feature";
+            /**
+             * @description Target audience
+             * @default all_users
+             * @enum {string}
+             */
+            targetAudience: "all_users" | "customers" | "artisans";
+            /**
+             * @description Target platform
+             * @default all
+             * @enum {string}
+             */
+            platform: "all" | "android" | "ios" | "web";
+            /**
+             * @description Additional data for deep linking
+             * @example {
+             *       "screen": "promotions",
+             *       "promotionId": "123"
+             *     }
+             */
+            data?: Record<string, never>;
+            /**
+             * @description Schedule send time (ISO 8601 format)
+             * @example 2025-01-15T10:00:00Z
+             */
+            scheduledAt?: string;
+        };
+        BroadcastListResponseDto: {
+            data: components["schemas"]["BroadcastResponseDto"][];
+            /** @description Total count */
+            total: number;
+            /** @description Current page */
+            page: number;
+            /** @description Items per page */
+            limit: number;
+        };
+        BroadcastTemplatesResponseDto: {
+            /**
+             * @description Available templates
+             * @example {
+             *       "app_update": {
+             *         "title": "App Update Available",
+             *         "body": "A new version..."
+             *       }
+             *     }
+             */
+            templates: Record<string, never>;
+        };
+        UpdateBroadcastDto: {
+            /** @description Notification title */
+            title?: string;
+            /** @description Notification body */
+            body?: string;
+            /**
+             * @description Target audience
+             * @enum {string}
+             */
+            targetAudience?: "all_users" | "customers" | "artisans";
+            /**
+             * @description Target platform
+             * @enum {string}
+             */
+            platform?: "all" | "android" | "ios" | "web";
+            /** @description Additional data for deep linking */
+            data?: Record<string, never>;
+            /** @description Schedule send time (ISO 8601 format, null to unschedule) */
+            scheduledAt?: Record<string, never>;
+        };
+        CreateServiceDto: {
+            /**
+             * @description Service name
+             * @example Home Cleaning
+             */
+            name: string;
+            /**
+             * @description URL-friendly slug (auto-generated from name if not provided)
+             * @example home-cleaning
+             */
+            slug?: string;
+            /**
+             * @description Service category/group
+             * @example Cleaning
+             */
+            category: string;
+            /**
+             * @description Service description
+             * @example Residential and commercial cleaning services
+             */
+            description?: string;
+            /**
+             * Format: binary
+             * @description Icon image file for the service
+             */
+            icon?: string;
+            /**
+             * @description Whether this service is featured
+             * @default false
+             */
+            isFeatured: boolean;
+            /**
+             * @description Whether a destination is required for service requests in this category
+             * @default false
+             */
+            isDestinationRequired: boolean;
+        };
+        UpdateServiceDto: {
+            /** @description Service name */
+            name?: string;
+            /** @description URL-friendly slug */
+            slug?: string;
+            /** @description Service category/group */
+            category?: string;
+            /** @description Service description */
+            description?: string;
+            /**
+             * Format: binary
+             * @description Icon image file for the service
+             */
+            icon?: string;
+            /** @description Whether this service is featured */
+            isFeatured?: boolean;
+            /** @description Whether a destination is required for service requests in this category */
+            isDestinationRequired?: boolean;
+        };
+        UpdateUserStatusDto: {
+            /** @enum {string} */
+            status: "active" | "suspended";
+        };
+        ReviewDisputeDto: {
+            /** @enum {string} */
+            priority?: "low" | "medium" | "high";
+        };
+        ResolveDisputeDto: {
+            /** @enum {string} */
+            resolutionType: "full_refund" | "partial_refund" | "no_refund" | "full_payment" | "partial_payment";
+            /** @description Resolution explanation */
+            resolution: string;
+            /** @description Refund amount (required for partial refund/payment) */
+            refundAmount?: number;
+        };
+        CreatePromoCodeDto: {
+            /**
+             * @description Promo code string
+             * @example SAVE20
+             */
+            code: string;
+            /**
+             * @description Code description
+             * @example 20% off platform fee
+             */
+            description?: string;
+            /**
+             * @description Discount type
+             * @enum {string}
+             */
+            discountType: "percentage" | "fixed";
+            /**
+             * @description Discount value (percentage 0-100 or fixed amount)
+             * @example 20
+             */
+            discountValue: number;
+            /**
+             * @description Maximum discount amount (for percentage type)
+             * @example 500
+             */
+            maxDiscountAmount?: number;
+            /**
+             * @description Minimum order amount to use code
+             * @example 5000
+             */
+            minOrderAmount?: number;
+            /**
+             * @description Total usage limit across all users
+             * @example 100
+             */
+            usageLimit?: number;
+            /**
+             * @description Usage limit per user
+             * @default 1
+             * @example 1
+             */
+            perUserLimit: number;
+            /** @description Code validity start date (ISO 8601) */
+            validFrom?: string;
+            /** @description Code validity end date (ISO 8601) */
+            validUntil?: string;
+        };
+        UpdatePromoCodeDto: {
+            /** @description Code description */
+            description?: string;
+            /**
+             * @description Discount type
+             * @enum {string}
+             */
+            discountType?: "percentage" | "fixed";
+            /** @description Discount value */
+            discountValue?: number;
+            /** @description Maximum discount amount */
+            maxDiscountAmount?: number;
+            /** @description Minimum order amount */
+            minOrderAmount?: number;
+            /** @description Total usage limit */
+            usageLimit?: number;
+            /** @description Usage limit per user */
+            perUserLimit?: number;
+            /** @description Code validity start date (ISO 8601) */
+            validFrom?: string;
+            /** @description Code validity end date (ISO 8601) */
+            validUntil?: string;
+            /** @description Whether code is active */
+            isActive?: boolean;
+        };
+        ActiveBroadcastResponseDto: {
+            /** @description Broadcast ID */
+            id: string;
+            /** @description Notification title */
+            title: string;
+            /** @description Notification body */
+            body: string;
+            /**
+             * @description Template type
+             * @enum {string}
+             */
+            templateType?: "app_update" | "maintenance" | "promotion" | "policy_update" | "safety_alert" | "new_feature";
+            /** @description Additional data for deep linking */
+            data?: Record<string, never>;
+        };
+        CreateFeaturedProfileDto: {
+            /**
+             * @description Name of the featured profile
+             * @example John Doe
+             */
+            name: string;
+            /**
+             * @description Type of profile
+             * @example artisan
+             * @enum {string}
+             */
+            type: "user" | "artisan";
+            /**
+             * @description Image URL (set automatically when uploading via multipart)
+             * @example https://storage.example.com/featured/image.jpg
+             */
+            imageUrl?: string;
+            /**
+             * @description Video link URL
+             * @example https://youtube.com/watch?v=abc123
+             */
+            videoLink?: string;
+            /**
+             * @description Whether the profile is active
+             * @default true
+             */
+            isActive: boolean;
+            /**
+             * @description Display order (lower = shown first)
+             * @default 0
+             */
+            displayOrder: number;
+        };
+        UpdateFeaturedProfileDto: {
+            /**
+             * @description Name of the featured profile
+             * @example John Doe
+             */
+            name?: string;
+            /**
+             * @description Type of profile
+             * @example artisan
+             * @enum {string}
+             */
+            type?: "user" | "artisan";
+            /**
+             * @description Image URL (set automatically when uploading via multipart)
+             * @example https://storage.example.com/featured/image.jpg
+             */
+            imageUrl?: string;
+            /**
+             * @description Video link URL
+             * @example https://youtube.com/watch?v=abc123
+             */
+            videoLink?: string;
+            /** @description Whether the profile is active */
+            isActive?: boolean;
+            /** @description Display order (lower = shown first) */
+            displayOrder?: number;
+        };
+        CreatePromotionSlideDto: {
+            /**
+             * @description Title of the promotion slide
+             * @example Summer Sale
+             */
+            title: string;
+            /**
+             * @description Description of the promotion
+             * @example Get 20% off all services
+             */
+            description?: string;
+            /** @description Image URL (set automatically when uploading via multipart) */
+            imageUrl?: string;
+            /**
+             * @description Deep link or external URL
+             * @example https://example.com/promo
+             */
+            linkUrl?: string;
+            /**
+             * @description Target audience
+             * @example all
+             * @enum {string}
+             */
+            audience: "all" | "users" | "artisans";
+            /**
+             * @description Slide status
+             * @default active
+             * @enum {string}
+             */
+            status: "active" | "inactive";
+            /**
+             * @description Display order (lower = shown first)
+             * @default 0
+             */
+            displayOrder: number;
+            /**
+             * @description Start date for scheduling
+             * @example 2026-03-01T00:00:00Z
+             */
+            startDate?: string;
+            /**
+             * @description End date for expiry
+             * @example 2026-04-01T00:00:00Z
+             */
+            endDate?: string;
+        };
+        UpdatePromotionSlideDto: {
+            /** @description Title of the promotion slide */
+            title?: string;
+            /** @description Description of the promotion */
+            description?: string;
+            /** @description Image URL (set automatically when uploading via multipart) */
+            imageUrl?: string;
+            /** @description Deep link or external URL */
+            linkUrl?: string;
+            /**
+             * @description Target audience
+             * @enum {string}
+             */
+            audience?: "all" | "users" | "artisans";
+            /**
+             * @description Slide status
+             * @enum {string}
+             */
+            status?: "active" | "inactive";
+            /** @description Display order (lower = shown first) */
+            displayOrder?: number;
+            /** @description Start date for scheduling */
+            startDate?: string;
+            /** @description End date for expiry */
+            endDate?: string;
+        };
+        UpdateArtisanLevelDto: {
+            /**
+             * @description Human-readable display name for the level
+             * @example Starter
+             */
+            displayName?: string;
+            /**
+             * @description Minimum number of completed jobs required to reach this level
+             * @example 10
+             */
+            minJobsRequired?: number;
+            /**
+             * @description Standard commission percentage for this level
+             * @example 10
+             */
+            commissionPercent?: number;
+        };
+        RevokeSessionDto: {
+            /** @description ID of the session to revoke */
+            sessionId: string;
+        };
         UserSettingsResponseDto: {
             notificationEnabled: boolean;
             emailNotification: boolean;
@@ -7000,1135 +8343,6 @@ export interface components {
              * @example Good work overall, but could improve on communication.
              */
             comment?: string;
-        };
-        TermsAndConditionsResponseDto: {
-            /**
-             * @description Terms and conditions ID
-             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
-             */
-            id: string;
-            /**
-             * @description Version string
-             * @example 1.0
-             */
-            version: string;
-            /** @description Content of the terms */
-            content: string;
-            /**
-             * @description Title of this version
-             * @example Terms of Service v1.0
-             */
-            title?: string;
-            /**
-             * @description Whether this version is active
-             * @example true
-             */
-            isActive: boolean;
-            /**
-             * Format: date-time
-             * @description Effective date
-             */
-            effectiveDate?: string;
-            /**
-             * Format: date-time
-             * @description Created timestamp
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Updated timestamp
-             */
-            updatedAt: string;
-        };
-        PrivacyPolicyResponseDto: {
-            /** @description Privacy policy ID */
-            id: string;
-            /**
-             * @description Version string
-             * @example 1.0
-             */
-            version: string;
-            /** @description Content of the privacy policy */
-            content: string;
-            /** @description Title of this version */
-            title?: string;
-            /** @description Whether this version is active */
-            isActive: boolean;
-            /**
-             * Format: date-time
-             * @description Effective date
-             */
-            effectiveDate?: string;
-            /**
-             * Format: date-time
-             * @description Created timestamp
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Updated timestamp
-             */
-            updatedAt: string;
-        };
-        CancellationPolicyResponseDto: {
-            /** @description Cancellation policy ID */
-            id: string;
-            /**
-             * @description Version string
-             * @example 1.0
-             */
-            version: string;
-            /** @description Content of the cancellation policy */
-            content: string;
-            /** @description Title of this version */
-            title?: string;
-            /** @description Whether this version is active */
-            isActive: boolean;
-            /**
-             * Format: date-time
-             * @description Effective date
-             */
-            effectiveDate?: string;
-            /**
-             * Format: date-time
-             * @description Created timestamp
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Updated timestamp
-             */
-            updatedAt: string;
-        };
-        ChangeDefaultPasswordDto: {
-            /**
-             * @description Current/default password for verification
-             * @example DefaultPass123!
-             */
-            currentPassword: string;
-            /**
-             * @description New password (min 8 chars, must contain uppercase, lowercase, number, and special character)
-             * @example NewSecurePass123!
-             */
-            newPassword: string;
-            /**
-             * @description Password confirmation - must match newPassword
-             * @example NewSecurePass123!
-             */
-            confirmPassword: string;
-        };
-        ChangeDefaultPasswordResponseDto: {
-            /**
-             * @description Success message
-             * @example Password changed successfully
-             */
-            message: string;
-        };
-        VerifyArtisanDto: {
-            /**
-             * @description The ID of the artisan to verify
-             * @example 123e4567-e89b-12d3-a456-426614174000
-             */
-            artisanId: string;
-            /**
-             * @description Verification status to set
-             * @default true
-             * @example true
-             */
-            isVerified: boolean;
-            /**
-             * @description Optional note about the verification
-             * @example Verified via manual document review
-             */
-            note?: string;
-        };
-        VerifyArtisanResponseDto: {
-            message: string;
-            artisanId: string;
-            isVerified: boolean;
-            /** Format: date-time */
-            verifiedAt: string;
-        };
-        CommissionSettingResponseDto: {
-            /**
-             * @description Commission setting ID
-             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
-             */
-            id: string;
-            /**
-             * @description Commission value
-             * @example 10
-             */
-            commissionValue: number;
-            /**
-             * @description Whether this is a percentage
-             * @example true
-             */
-            isPercentage: boolean;
-            /**
-             * @description Description
-             * @example Platform commission for service fees
-             */
-            description?: string;
-            /**
-             * @description Whether this setting is active
-             * @example true
-             */
-            isActive: boolean;
-            /**
-             * Format: date-time
-             * @description Created timestamp
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Updated timestamp
-             */
-            updatedAt: string;
-        };
-        UpdateCommissionSettingDto: {
-            /**
-             * @description Commission value - percentage or fixed amount
-             * @example 10
-             */
-            commissionValue: number;
-            /**
-             * @description Whether the commission is a percentage (true) or fixed amount (false)
-             * @default true
-             * @example true
-             */
-            isPercentage: boolean;
-            /**
-             * @description Optional description for this commission setting
-             * @example Platform commission for service fees
-             */
-            description?: string;
-        };
-        UpdateCommissionSettingResponseDto: {
-            /**
-             * @description Success message
-             * @example Commission settings updated successfully
-             */
-            message: string;
-            /** @description Updated commission setting */
-            data: components["schemas"]["CommissionSettingResponseDto"];
-        };
-        UpdateTermsAndConditionsDto: {
-            /**
-             * @description Version string for the terms (e.g., "1.0", "2.0")
-             * @example 1.0
-             */
-            version: string;
-            /**
-             * @description Full content of the terms and conditions
-             * @example By using this platform, you agree to...
-             */
-            content: string;
-            /**
-             * @description Optional title for this version
-             * @example Terms of Service v1.0
-             */
-            title?: string;
-            /**
-             * @description Whether to activate this version immediately
-             * @default false
-             * @example true
-             */
-            isActive: boolean;
-            /**
-             * @description Date when this version becomes effective
-             * @example 2025-02-01T00:00:00Z
-             */
-            effectiveDate?: string;
-        };
-        UpdateTermsAndConditionsResponseDto: {
-            /**
-             * @description Success message
-             * @example Terms and conditions updated successfully
-             */
-            message: string;
-            /** @description Updated terms and conditions */
-            data: components["schemas"]["TermsAndConditionsResponseDto"];
-        };
-        UpdatePrivacyPolicyDto: {
-            /**
-             * @description Version string for the privacy policy (e.g., "1.0", "2.0")
-             * @example 1.0
-             */
-            version: string;
-            /**
-             * @description Full content of the privacy policy
-             * @example This privacy policy describes how we collect and use your data...
-             */
-            content: string;
-            /**
-             * @description Optional title for this version
-             * @example Privacy Policy v1.0
-             */
-            title?: string;
-            /**
-             * @description Whether to activate this version immediately
-             * @default false
-             * @example true
-             */
-            isActive: boolean;
-            /**
-             * @description Date when this version becomes effective
-             * @example 2025-02-01T00:00:00Z
-             */
-            effectiveDate?: string;
-        };
-        UpdatePrivacyPolicyResponseDto: {
-            /** @description Success message */
-            message: string;
-            /** @description Updated privacy policy */
-            data: components["schemas"]["PrivacyPolicyResponseDto"];
-        };
-        UpdateCancellationPolicyDto: {
-            /**
-             * @description Version string for the cancellation policy (e.g., "1.0", "2.0")
-             * @example 1.0
-             */
-            version: string;
-            /**
-             * @description Full content of the cancellation policy
-             * @example This cancellation policy describes the conditions under which a booking can be cancelled...
-             */
-            content: string;
-            /**
-             * @description Optional title for this version
-             * @example Cancellation Policy v1.0
-             */
-            title?: string;
-            /**
-             * @description Whether to activate this version immediately
-             * @default false
-             * @example true
-             */
-            isActive: boolean;
-            /**
-             * @description Date when this version becomes effective
-             * @example 2025-02-01T00:00:00Z
-             */
-            effectiveDate?: string;
-        };
-        UpdateCancellationPolicyResponseDto: {
-            /** @description Success message */
-            message: string;
-            /** @description Updated cancellation policy */
-            data: components["schemas"]["CancellationPolicyResponseDto"];
-        };
-        AdminNotificationSettingResponseDto: {
-            /**
-             * @description Notification setting ID
-             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
-             */
-            id: string;
-            /**
-             * @description Admin user ID
-             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
-             */
-            adminId: string;
-            /**
-             * @description Notify when new disputes are opened
-             * @example true
-             */
-            notifyNewDisputes: boolean;
-            /**
-             * @description Notify for high-value transactions
-             * @example true
-             */
-            notifyHighValueTransactions: boolean;
-            /**
-             * @description Threshold amount for high-value transaction alerts
-             * @example 1000
-             */
-            highValueThreshold: number;
-            /**
-             * @description Notify when artisans request withdrawals
-             * @example true
-             */
-            notifyWithdrawalRequests: boolean;
-            /**
-             * @description Notify when new artisans submit for verification
-             * @example true
-             */
-            notifyNewArtisanVerification: boolean;
-            /**
-             * @description Notify when artisans update job status
-             * @example true
-             */
-            notifyArtisanStatusChanges: boolean;
-            /**
-             * @description Enable real-time WebSocket updates
-             * @example true
-             */
-            realtimeWebsocketUpdates: boolean;
-            /**
-             * Format: date-time
-             * @description Created timestamp
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Updated timestamp
-             */
-            updatedAt: string;
-        };
-        UpdateAdminNotificationSettingDto: {
-            /**
-             * @description Receive notifications when new disputes are opened
-             * @default true
-             * @example true
-             */
-            notifyNewDisputes: boolean;
-            /**
-             * @description Receive notifications for high-value transactions
-             * @default true
-             * @example true
-             */
-            notifyHighValueTransactions: boolean;
-            /**
-             * @description Threshold amount for high-value transaction alerts
-             * @example 1000
-             */
-            highValueThreshold?: number;
-            /**
-             * @description Receive notifications when artisans request withdrawals
-             * @default true
-             * @example true
-             */
-            notifyWithdrawalRequests: boolean;
-            /**
-             * @description Receive notifications when new artisans submit for verification
-             * @default true
-             * @example true
-             */
-            notifyNewArtisanVerification: boolean;
-            /**
-             * @description Receive real-time notifications when artisans update job status
-             * @default true
-             * @example true
-             */
-            notifyArtisanStatusChanges: boolean;
-            /**
-             * @description Enable real-time WebSocket updates without page refresh
-             * @default true
-             * @example true
-             */
-            realtimeWebsocketUpdates: boolean;
-        };
-        UpdateAdminNotificationSettingResponseDto: {
-            /**
-             * @description Success message
-             * @example Notification settings updated successfully
-             */
-            message: string;
-            /** @description Updated notification settings */
-            data: components["schemas"]["AdminNotificationSettingResponseDto"];
-        };
-        ReferralProgramSettingResponseDto: {
-            /**
-             * @description Referral program setting ID
-             * @example a1b2c3d4-e5f6-7890-abcd-ef1234567890
-             */
-            id: string;
-            /**
-             * @description Whether the referral program is enabled
-             * @example true
-             */
-            isEnabled: boolean;
-            /**
-             * @description Amount given to the person who refers
-             * @example 25
-             */
-            referrerBonus: number;
-            /**
-             * @description Percentage bonus given to the new user
-             * @example 15
-             */
-            referredUserBonus: number;
-            /**
-             * @description Days to complete required jobs for referral bonus
-             * @example 90
-             */
-            referralExpiryDays: number;
-            /**
-             * @description Minimum completed jobs required for referral bonus
-             * @example 1
-             */
-            minJobsRequired: number;
-            /**
-             * @description Maximum referral bonuses a user can earn
-             * @example 0
-             */
-            maxReferralsPerUser: number;
-            /**
-             * @description Description or notes
-             * @example Holiday promotion referral program
-             */
-            description?: string;
-            /**
-             * @description Whether this setting is active
-             * @example true
-             */
-            isActive: boolean;
-            /**
-             * Format: date-time
-             * @description Created timestamp
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Updated timestamp
-             */
-            updatedAt: string;
-        };
-        UpdateReferralProgramSettingDto: {
-            /**
-             * @description Enable or disable the referral program
-             * @default true
-             * @example true
-             */
-            isEnabled: boolean;
-            /**
-             * @description Amount given to the person who refers (in base currency)
-             * @example 25
-             */
-            referrerBonus?: number;
-            /**
-             * @description Percentage bonus given to the new user
-             * @example 15
-             */
-            referredUserBonus?: number;
-            /**
-             * @description Number of days the referred user has to complete required jobs
-             * @example 90
-             */
-            referralExpiryDays?: number;
-            /**
-             * @description Minimum number of completed jobs required for referral bonus
-             * @example 1
-             */
-            minJobsRequired?: number;
-            /**
-             * @description Maximum referral bonuses a user can earn (0 = unlimited)
-             * @example 0
-             */
-            maxReferralsPerUser?: number;
-            /**
-             * @description Optional description or notes about current referral program
-             * @example Holiday promotion referral program
-             */
-            description?: string;
-        };
-        UpdateReferralProgramSettingResponseDto: {
-            /**
-             * @description Success message
-             * @example Referral program settings updated successfully
-             */
-            message: string;
-            /** @description Updated referral program settings */
-            data: components["schemas"]["ReferralProgramSettingResponseDto"];
-        };
-        RequestAdminOtpDto: {
-            /**
-             * @description Purpose of the OTP (e.g., "sensitive_action", "login_verification"). Defaults to "verification".
-             * @default verification
-             * @example sensitive_action
-             */
-            purpose: string;
-        };
-        AdminOtpSentResponseDto: {
-            /**
-             * @description Success message
-             * @example OTP sent successfully
-             */
-            message: string;
-            /**
-             * @description Email where OTP was sent (masked)
-             * @example a***n@xervices.com
-             */
-            emailSentTo: string;
-            /**
-             * @description Phone number where OTP was sent (masked)
-             * @example +234***7890
-             */
-            phoneSentTo: string;
-            /**
-             * @description OTP expiry time in minutes
-             * @example 15
-             */
-            expiresInMinutes: number;
-        };
-        VerifyAdminOtpDto: {
-            /**
-             * @description The 6-digit OTP code sent to admin email/phone
-             * @example 123456
-             */
-            code: string;
-        };
-        AdminOtpVerifiedResponseDto: {
-            /**
-             * @description Success message
-             * @example OTP verified successfully
-             */
-            message: string;
-            /**
-             * @description Whether the OTP was valid
-             * @example true
-             */
-            verified: boolean;
-            /**
-             * @description Session token for authorized action (if applicable)
-             * @example abc123xyz...
-             */
-            sessionToken?: string;
-        };
-        CreateAdminDto: {
-            /**
-             * Format: email
-             * @description Admin email address
-             * @example admin@xervices.com
-             */
-            email: string;
-            /**
-             * @description Phone number in international or local format
-             * @example 08012345678
-             */
-            phoneNumber: string;
-            /**
-             * @description Admin full name
-             * @example John Admin
-             */
-            fullName: string;
-            /**
-             * @description Admin role
-             * @example admin
-             * @enum {string}
-             */
-            adminRole: "super_admin" | "admin" | "finance" | "support";
-        };
-        UpdateAdminDto: {
-            /**
-             * @description Admin role
-             * @enum {string}
-             */
-            adminRole?: "super_admin" | "admin" | "finance" | "support";
-            /**
-             * @description Admin status
-             * @enum {string}
-             */
-            status?: "active" | "inactive" | "disabled";
-            /** @description Admin full name */
-            fullName?: string;
-        };
-        StartImpersonationDto: {
-            /**
-             * @description Reason for impersonation
-             * @example Investigating support ticket #12345
-             */
-            reason: string;
-        };
-        MfaSetupResponseDto: {
-            /**
-             * @description Base32 encoded TOTP secret (for manual entry)
-             * @example JBSWY3DPEHPK3PXP
-             */
-            secret: string;
-            /**
-             * @description QR code as data URL for scanning with authenticator app
-             * @example data:image/png;base64,...
-             */
-            qrCodeDataUrl: string;
-            /**
-             * @description Backup codes for account recovery
-             * @example [
-             *       "XXXX-XXXX",
-             *       "YYYY-YYYY"
-             *     ]
-             */
-            backupCodes: string[];
-        };
-        EnableMfaDto: {
-            /**
-             * @description TOTP code from authenticator app (6 digits)
-             * @example 123456
-             */
-            code: string;
-        };
-        DisableMfaDto: {
-            /**
-             * @description Current TOTP code to verify
-             * @example 123456
-             */
-            code: string;
-        };
-        RegenerateBackupCodesDto: {
-            /**
-             * @description Current TOTP code to verify
-             * @example 123456
-             */
-            code: string;
-        };
-        BackupCodesResponseDto: {
-            /** @description New backup codes (only shown once) */
-            backupCodes: string[];
-        };
-        MfaStatusResponseDto: {
-            /** @description Whether MFA is enabled */
-            mfaEnabled: boolean;
-            /** @description Number of backup codes remaining */
-            backupCodesRemaining: number;
-            /** @description Whether MFA is required for this admin role */
-            mfaRequired: boolean;
-        };
-        BroadcastResponseDto: {
-            /** @description Broadcast ID */
-            id: string;
-            /** @description Notification title */
-            title: string;
-            /** @description Notification body */
-            body: string;
-            /**
-             * @description Template type
-             * @enum {string}
-             */
-            templateType?: "app_update" | "maintenance" | "promotion" | "policy_update" | "safety_alert" | "new_feature";
-            /**
-             * @description Target audience
-             * @enum {string}
-             */
-            targetAudience: "all_users" | "customers" | "artisans";
-            /**
-             * @description Target platform
-             * @enum {string}
-             */
-            platform: "all" | "android" | "ios" | "web";
-            /**
-             * @description Broadcast status
-             * @enum {string}
-             */
-            status: "draft" | "scheduled" | "sending" | "completed" | "failed" | "cancelled";
-            /** @description Additional data */
-            data?: Record<string, never>;
-            /** @description Total recipient count */
-            recipientCount: number;
-            /** @description Delivered count */
-            deliveredCount: number;
-            /** @description Failed count */
-            failedCount: number;
-            /** @description Scheduled send time */
-            scheduledAt?: Record<string, never>;
-            /** @description Actual send time */
-            sentAt?: Record<string, never>;
-            /** @description Completion time */
-            completedAt?: Record<string, never>;
-            /** @description Creator ID */
-            createdBy: string;
-            /** @description Creator name */
-            createdByName: string;
-            /**
-             * Format: date-time
-             * @description Created at timestamp
-             */
-            createdAt: string;
-            /**
-             * Format: date-time
-             * @description Updated at timestamp
-             */
-            updatedAt: string;
-        };
-        CreateBroadcastDto: {
-            /**
-             * @description Notification title
-             * @example New Feature Available
-             */
-            title: string;
-            /**
-             * @description Notification body
-             * @example Check out our latest update with exciting new features!
-             */
-            body: string;
-            /**
-             * @description Template type to use as base
-             * @enum {string}
-             */
-            templateType?: "app_update" | "maintenance" | "promotion" | "policy_update" | "safety_alert" | "new_feature";
-            /**
-             * @description Target audience
-             * @default all_users
-             * @enum {string}
-             */
-            targetAudience: "all_users" | "customers" | "artisans";
-            /**
-             * @description Target platform
-             * @default all
-             * @enum {string}
-             */
-            platform: "all" | "android" | "ios" | "web";
-            /**
-             * @description Additional data for deep linking
-             * @example {
-             *       "screen": "promotions",
-             *       "promotionId": "123"
-             *     }
-             */
-            data?: Record<string, never>;
-            /**
-             * @description Schedule send time (ISO 8601 format)
-             * @example 2025-01-15T10:00:00Z
-             */
-            scheduledAt?: string;
-        };
-        BroadcastListResponseDto: {
-            data: components["schemas"]["BroadcastResponseDto"][];
-            /** @description Total count */
-            total: number;
-            /** @description Current page */
-            page: number;
-            /** @description Items per page */
-            limit: number;
-        };
-        BroadcastTemplatesResponseDto: {
-            /**
-             * @description Available templates
-             * @example {
-             *       "app_update": {
-             *         "title": "App Update Available",
-             *         "body": "A new version..."
-             *       }
-             *     }
-             */
-            templates: Record<string, never>;
-        };
-        UpdateBroadcastDto: {
-            /** @description Notification title */
-            title?: string;
-            /** @description Notification body */
-            body?: string;
-            /**
-             * @description Target audience
-             * @enum {string}
-             */
-            targetAudience?: "all_users" | "customers" | "artisans";
-            /**
-             * @description Target platform
-             * @enum {string}
-             */
-            platform?: "all" | "android" | "ios" | "web";
-            /** @description Additional data for deep linking */
-            data?: Record<string, never>;
-            /** @description Schedule send time (ISO 8601 format, null to unschedule) */
-            scheduledAt?: Record<string, never>;
-        };
-        CreateServiceDto: {
-            /**
-             * @description Service name
-             * @example Home Cleaning
-             */
-            name: string;
-            /**
-             * @description URL-friendly slug (auto-generated from name if not provided)
-             * @example home-cleaning
-             */
-            slug?: string;
-            /**
-             * @description Service category/group
-             * @example Cleaning
-             */
-            category: string;
-            /**
-             * @description Service description
-             * @example Residential and commercial cleaning services
-             */
-            description?: string;
-            /**
-             * Format: binary
-             * @description Icon image file for the service
-             */
-            icon?: string;
-            /**
-             * @description Whether this service is featured
-             * @default false
-             */
-            isFeatured: boolean;
-            /**
-             * @description Whether a destination is required for service requests in this category
-             * @default false
-             */
-            isDestinationRequired: boolean;
-        };
-        UpdateServiceDto: {
-            /** @description Service name */
-            name?: string;
-            /** @description URL-friendly slug */
-            slug?: string;
-            /** @description Service category/group */
-            category?: string;
-            /** @description Service description */
-            description?: string;
-            /**
-             * Format: binary
-             * @description Icon image file for the service
-             */
-            icon?: string;
-            /** @description Whether this service is featured */
-            isFeatured?: boolean;
-            /** @description Whether a destination is required for service requests in this category */
-            isDestinationRequired?: boolean;
-        };
-        UpdateUserStatusDto: {
-            /** @enum {string} */
-            status: "active" | "suspended";
-        };
-        ReviewDisputeDto: {
-            /** @enum {string} */
-            priority?: "low" | "medium" | "high";
-        };
-        ResolveDisputeDto: {
-            /** @enum {string} */
-            resolutionType: "full_refund" | "partial_refund" | "no_refund" | "full_payment" | "partial_payment";
-            /** @description Resolution explanation */
-            resolution: string;
-            /** @description Refund amount (required for partial refund/payment) */
-            refundAmount?: number;
-        };
-        CreatePromoCodeDto: {
-            /**
-             * @description Promo code string
-             * @example SAVE20
-             */
-            code: string;
-            /**
-             * @description Code description
-             * @example 20% off platform fee
-             */
-            description?: string;
-            /**
-             * @description Discount type
-             * @enum {string}
-             */
-            discountType: "percentage" | "fixed";
-            /**
-             * @description Discount value (percentage 0-100 or fixed amount)
-             * @example 20
-             */
-            discountValue: number;
-            /**
-             * @description Maximum discount amount (for percentage type)
-             * @example 500
-             */
-            maxDiscountAmount?: number;
-            /**
-             * @description Minimum order amount to use code
-             * @example 5000
-             */
-            minOrderAmount?: number;
-            /**
-             * @description Total usage limit across all users
-             * @example 100
-             */
-            usageLimit?: number;
-            /**
-             * @description Usage limit per user
-             * @default 1
-             * @example 1
-             */
-            perUserLimit: number;
-            /** @description Code validity start date (ISO 8601) */
-            validFrom?: string;
-            /** @description Code validity end date (ISO 8601) */
-            validUntil?: string;
-        };
-        UpdatePromoCodeDto: {
-            /** @description Code description */
-            description?: string;
-            /**
-             * @description Discount type
-             * @enum {string}
-             */
-            discountType?: "percentage" | "fixed";
-            /** @description Discount value */
-            discountValue?: number;
-            /** @description Maximum discount amount */
-            maxDiscountAmount?: number;
-            /** @description Minimum order amount */
-            minOrderAmount?: number;
-            /** @description Total usage limit */
-            usageLimit?: number;
-            /** @description Usage limit per user */
-            perUserLimit?: number;
-            /** @description Code validity start date (ISO 8601) */
-            validFrom?: string;
-            /** @description Code validity end date (ISO 8601) */
-            validUntil?: string;
-            /** @description Whether code is active */
-            isActive?: boolean;
-        };
-        ActiveBroadcastResponseDto: {
-            /** @description Broadcast ID */
-            id: string;
-            /** @description Notification title */
-            title: string;
-            /** @description Notification body */
-            body: string;
-            /**
-             * @description Template type
-             * @enum {string}
-             */
-            templateType?: "app_update" | "maintenance" | "promotion" | "policy_update" | "safety_alert" | "new_feature";
-            /** @description Additional data for deep linking */
-            data?: Record<string, never>;
-        };
-        CreateFeaturedProfileDto: {
-            /**
-             * @description Name of the featured profile
-             * @example John Doe
-             */
-            name: string;
-            /**
-             * @description Type of profile
-             * @example artisan
-             * @enum {string}
-             */
-            type: "user" | "artisan";
-            /**
-             * @description Image URL (set automatically when uploading via multipart)
-             * @example https://storage.example.com/featured/image.jpg
-             */
-            imageUrl?: string;
-            /**
-             * @description Video link URL
-             * @example https://youtube.com/watch?v=abc123
-             */
-            videoLink?: string;
-            /**
-             * @description Whether the profile is active
-             * @default true
-             */
-            isActive: boolean;
-            /**
-             * @description Display order (lower = shown first)
-             * @default 0
-             */
-            displayOrder: number;
-        };
-        UpdateFeaturedProfileDto: {
-            /**
-             * @description Name of the featured profile
-             * @example John Doe
-             */
-            name?: string;
-            /**
-             * @description Type of profile
-             * @example artisan
-             * @enum {string}
-             */
-            type?: "user" | "artisan";
-            /**
-             * @description Image URL (set automatically when uploading via multipart)
-             * @example https://storage.example.com/featured/image.jpg
-             */
-            imageUrl?: string;
-            /**
-             * @description Video link URL
-             * @example https://youtube.com/watch?v=abc123
-             */
-            videoLink?: string;
-            /** @description Whether the profile is active */
-            isActive?: boolean;
-            /** @description Display order (lower = shown first) */
-            displayOrder?: number;
-        };
-        CreatePromotionSlideDto: {
-            /**
-             * @description Title of the promotion slide
-             * @example Summer Sale
-             */
-            title: string;
-            /**
-             * @description Description of the promotion
-             * @example Get 20% off all services
-             */
-            description?: string;
-            /** @description Image URL (set automatically when uploading via multipart) */
-            imageUrl?: string;
-            /**
-             * @description Deep link or external URL
-             * @example https://example.com/promo
-             */
-            linkUrl?: string;
-            /**
-             * @description Target audience
-             * @example all
-             * @enum {string}
-             */
-            audience: "all" | "users" | "artisans";
-            /**
-             * @description Slide status
-             * @default active
-             * @enum {string}
-             */
-            status: "active" | "inactive";
-            /**
-             * @description Display order (lower = shown first)
-             * @default 0
-             */
-            displayOrder: number;
-            /**
-             * @description Start date for scheduling
-             * @example 2026-03-01T00:00:00Z
-             */
-            startDate?: string;
-            /**
-             * @description End date for expiry
-             * @example 2026-04-01T00:00:00Z
-             */
-            endDate?: string;
-        };
-        UpdatePromotionSlideDto: {
-            /** @description Title of the promotion slide */
-            title?: string;
-            /** @description Description of the promotion */
-            description?: string;
-            /** @description Image URL (set automatically when uploading via multipart) */
-            imageUrl?: string;
-            /** @description Deep link or external URL */
-            linkUrl?: string;
-            /**
-             * @description Target audience
-             * @enum {string}
-             */
-            audience?: "all" | "users" | "artisans";
-            /**
-             * @description Slide status
-             * @enum {string}
-             */
-            status?: "active" | "inactive";
-            /** @description Display order (lower = shown first) */
-            displayOrder?: number;
-            /** @description Start date for scheduling */
-            startDate?: string;
-            /** @description End date for expiry */
-            endDate?: string;
-        };
-        UpdateArtisanLevelDto: {
-            /**
-             * @description Human-readable display name for the level
-             * @example Starter
-             */
-            displayName?: string;
-            /**
-             * @description Minimum number of completed jobs required to reach this level
-             * @example 10
-             */
-            minJobsRequired?: number;
-            /**
-             * @description Standard commission percentage for this level
-             * @example 10
-             */
-            commissionPercent?: number;
         };
         CreateSupportTicketDto: {
             /**
@@ -10564,6 +10778,3979 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_changeDefaultPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeDefaultPasswordDto"];
+            };
+        };
+        responses: {
+            /** @description Password changed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeDefaultPasswordResponseDto"];
+                };
+            };
+            /** @description Bad Request - Password validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized - Invalid current password */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unprocessable Entity - Passwords do not match */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_verifyArtisan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyArtisanDto"];
+            };
+        };
+        responses: {
+            /** @description Artisan verification status updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerifyArtisanResponseDto"];
+                };
+            };
+            /** @description Bad request - User is not an artisan */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Artisan not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getPendingArtisans: {
+        parameters: {
+            query?: {
+                /** @description Page number (default: 1) */
+                page?: number;
+                /** @description Items per page (default: 20) */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of pending artisans */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: Record<string, never>[];
+                        pagination?: {
+                            page?: number;
+                            limit?: number;
+                            total?: number;
+                            totalPages?: number;
+                        };
+                    };
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getArtisanProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Artisan user ID */
+                artisanId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Artisan profile details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Artisan not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getCommissionSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current commission settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommissionSettingResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description No active commission setting found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updateCommissionSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCommissionSettingDto"];
+            };
+        };
+        responses: {
+            /** @description Commission settings updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateCommissionSettingResponseDto"];
+                };
+            };
+            /** @description Bad Request - Invalid commission value */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getAllTermsAndConditions: {
+        parameters: {
+            query?: {
+                /** @description Page number (default: 1) */
+                page?: number;
+                /** @description Items per page (default: 20) */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of terms and conditions versions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["TermsAndConditionsResponseDto"][];
+                        pagination?: {
+                            page?: number;
+                            limit?: number;
+                            total?: number;
+                            totalPages?: number;
+                        };
+                    };
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updateTermsAndConditions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTermsAndConditionsDto"];
+            };
+        };
+        responses: {
+            /** @description Terms and conditions updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateTermsAndConditionsResponseDto"];
+                };
+            };
+            /** @description Bad Request - Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getActiveTermsAndConditions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current active terms and conditions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TermsAndConditionsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getTermsAndConditionsByVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Version string (e.g., "1.0", "2.0") */
+                version: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Terms and conditions for the specified version */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TermsAndConditionsResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Terms version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getAllPrivacyPolicies: {
+        parameters: {
+            query?: {
+                /** @description Page number (default: 1) */
+                page?: number;
+                /** @description Items per page (default: 20) */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of privacy policy versions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["PrivacyPolicyResponseDto"][];
+                        pagination?: {
+                            page?: number;
+                            limit?: number;
+                            total?: number;
+                            totalPages?: number;
+                        };
+                    };
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updatePrivacyPolicy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePrivacyPolicyDto"];
+            };
+        };
+        responses: {
+            /** @description Privacy policy updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdatePrivacyPolicyResponseDto"];
+                };
+            };
+            /** @description Bad Request - Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getActivePrivacyPolicy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current active privacy policy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PrivacyPolicyResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getPrivacyPolicyByVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Version string (e.g., "1.0", "2.0") */
+                version: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Privacy policy for the specified version */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PrivacyPolicyResponseDto"];
+                };
+            };
+            /** @description Privacy policy version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getAllCancellationPolicies: {
+        parameters: {
+            query?: {
+                /** @description Page number (default: 1) */
+                page?: number;
+                /** @description Items per page (default: 20) */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of cancellation policy versions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["CancellationPolicyResponseDto"][];
+                        pagination?: {
+                            page?: number;
+                            limit?: number;
+                            total?: number;
+                            totalPages?: number;
+                        };
+                    };
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updateCancellationPolicy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCancellationPolicyDto"];
+            };
+        };
+        responses: {
+            /** @description Cancellation policy updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateCancellationPolicyResponseDto"];
+                };
+            };
+            /** @description Bad Request - Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getActiveCancellationPolicy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current active cancellation policy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CancellationPolicyResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getCancellationPolicyByVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Version string (e.g., "1.0", "2.0") */
+                version: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cancellation policy for the specified version */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CancellationPolicyResponseDto"];
+                };
+            };
+            /** @description Cancellation policy version not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getAdminNotificationSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin notification settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminNotificationSettingResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updateAdminNotificationSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAdminNotificationSettingDto"];
+            };
+        };
+        responses: {
+            /** @description Notification settings updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateAdminNotificationSettingResponseDto"];
+                };
+            };
+            /** @description Bad Request - Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getReferralProgramSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Referral program settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReferralProgramSettingResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updateReferralProgramSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateReferralProgramSettingDto"];
+            };
+        };
+        responses: {
+            /** @description Referral program settings updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateReferralProgramSettingResponseDto"];
+                };
+            };
+            /** @description Bad Request - Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_getSupportSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current support settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SupportSettingResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_updateSupportSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSupportSettingDto"];
+            };
+        };
+        responses: {
+            /** @description Support settings updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UpdateSupportSettingResponseDto"];
+                };
+            };
+            /** @description Bad Request - Invalid URL format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_requestAdminOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestAdminOtpDto"];
+            };
+        };
+        responses: {
+            /** @description OTP sent successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOtpSentResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Too many requests - Rate limited */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_verifyAdminOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyAdminOtpDto"];
+            };
+        };
+        responses: {
+            /** @description OTP verified successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOtpVerifiedResponseDto"];
+                };
+            };
+            /** @description Bad Request - Invalid or expired OTP */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminController_resendAdminOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestAdminOtpDto"];
+            };
+        };
+        responses: {
+            /** @description OTP resent successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOtpSentResponseDto"];
+                };
+            };
+            /** @description Bad Request - Too many attempts */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Forbidden - Admin access required */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    AdminTeamController_listAdmins: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of admins */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            /** Format: uuid */
+                            userId?: string;
+                            email?: string;
+                            fullName?: string;
+                            adminRole?: string;
+                            status?: string;
+                            mfaEnabled?: boolean;
+                            /** Format: date-time */
+                            lastLoginAt?: string | null;
+                            /** Format: date-time */
+                            createdAt?: string;
+                            createdBy?: string | null;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    AdminTeamController_createAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAdminDto"];
+            };
+        };
+        responses: {
+            /** @description Admin created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        admin?: {
+                            /** Format: uuid */
+                            id?: string;
+                            email?: string;
+                            phoneNumber?: string;
+                            role?: string;
+                            isActive?: boolean;
+                            profile?: {
+                                fullName?: string;
+                            };
+                        };
+                        temporaryPassword?: string;
+                    };
+                };
+            };
+            /** @description Email or phone already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTeamController_getAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Admin profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** Format: uuid */
+                        userId?: string;
+                        email?: string;
+                        phoneNumber?: string;
+                        fullName?: string;
+                        adminRole?: string;
+                        status?: string;
+                        mfaEnabled?: boolean;
+                        /** Format: date-time */
+                        lastLoginAt?: string | null;
+                        /** Format: date-time */
+                        createdAt?: string;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                        createdBy?: string | null;
+                    };
+                };
+            };
+            /** @description Admin not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTeamController_updateAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Admin profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAdminDto"];
+            };
+        };
+        responses: {
+            /** @description Admin updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** Format: uuid */
+                        userId?: string;
+                        email?: string;
+                        fullName?: string;
+                        adminRole?: string;
+                        status?: string;
+                    };
+                };
+            };
+            /** @description Admin not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTeamController_deactivateAdmin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Admin profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Admin deactivated successfully */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Cannot deactivate yourself */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Admin not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ImpersonationController_startImpersonation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description User ID to impersonate */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartImpersonationDto"];
+            };
+        };
+        responses: {
+            /** @description Impersonation session started */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        sessionToken?: string;
+                        /** Format: date-time */
+                        expiresAt?: string;
+                    };
+                };
+            };
+            /** @description Not authorized or cannot impersonate admins */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Target user not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ImpersonationController_endImpersonation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Impersonation session ended */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Impersonation session ended */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description No active session found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ImpersonationLogsController_getImpersonationLogs: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Impersonation logs */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            /** Format: uuid */
+                            adminId?: string;
+                            adminName?: string | null;
+                            /** Format: uuid */
+                            impersonatedUserId?: string;
+                            impersonatedUserName?: string | null;
+                            reason?: string;
+                            /** Format: date-time */
+                            createdAt?: string;
+                            /** Format: date-time */
+                            endedAt?: string | null;
+                            /** Format: date-time */
+                            expiresAt?: string;
+                            ipAddress?: string | null;
+                        }[];
+                        total?: number;
+                        page?: number;
+                        limit?: number;
+                    };
+                };
+            };
+        };
+    };
+    MfaController_setupMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MFA setup data */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaSetupResponseDto"];
+                };
+            };
+            /** @description MFA already enabled */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_enableMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EnableMfaDto"];
+            };
+        };
+        responses: {
+            /** @description MFA enabled successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example MFA enabled successfully */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Invalid verification code or MFA not set up */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_disableMfa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DisableMfaDto"];
+            };
+        };
+        responses: {
+            /** @description MFA disabled successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example MFA disabled successfully */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Invalid verification code or MFA not enabled */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Super Admins cannot disable MFA */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_regenerateBackupCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegenerateBackupCodesDto"];
+            };
+        };
+        responses: {
+            /** @description New backup codes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BackupCodesResponseDto"];
+                };
+            };
+            /** @description Invalid verification code or MFA not enabled */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MfaController_getMfaStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MFA status */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaStatusResponseDto"];
+                };
+            };
+        };
+    };
+    BroadcastController_listBroadcasts: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+                /** @description Filter by status */
+                status?: "draft" | "scheduled" | "sending" | "completed" | "failed" | "cancelled";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of broadcasts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BroadcastListResponseDto"];
+                };
+            };
+        };
+    };
+    BroadcastController_createBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateBroadcastDto"];
+            };
+        };
+        responses: {
+            /** @description Broadcast created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        title?: string;
+                        body?: string;
+                        /** @example draft */
+                        status?: string;
+                        /** @example all_users */
+                        targetAudience?: string;
+                        /** @example all */
+                        platform?: string;
+                        /** Format: date-time */
+                        scheduledAt?: string | null;
+                        /** Format: date-time */
+                        createdAt?: string;
+                    };
+                };
+            };
+        };
+    };
+    BroadcastController_getTemplates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Available templates */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BroadcastTemplatesResponseDto"];
+                };
+            };
+        };
+    };
+    BroadcastController_getBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BroadcastResponseDto"];
+                };
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastController_updateBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateBroadcastDto"];
+            };
+        };
+        responses: {
+            /** @description Broadcast updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        title?: string;
+                        body?: string;
+                        /** @example draft */
+                        status?: string;
+                        /** @example all_users */
+                        targetAudience?: string;
+                        /** @example all */
+                        platform?: string;
+                        /** Format: date-time */
+                        scheduledAt?: string | null;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                    };
+                };
+            };
+            /** @description Cannot update broadcast in current status */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastController_sendBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast sending started */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** @example sending */
+                        status?: string;
+                        /** @example 0 */
+                        recipientCount?: number;
+                        /** Format: date-time */
+                        sentAt?: string | null;
+                    };
+                };
+            };
+            /** @description Cannot send broadcast in current status */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastController_cancelBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast cancelled */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** @example cancelled */
+                        status?: string;
+                    };
+                };
+            };
+            /** @description Can only cancel scheduled broadcasts */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_listServices: {
+        parameters: {
+            query?: {
+                /** @description Filter by category name */
+                category?: string;
+                /** @description Search services by name or description */
+                search?: string;
+                /** @description Filter by status */
+                status?: "active" | "inactive";
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of services */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Services retrieved successfully */
+                        message?: string;
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            name?: string;
+                            slug?: string;
+                            category?: string;
+                            description?: string;
+                            iconUrl?: string;
+                            /** @enum {string} */
+                            status?: "active" | "inactive";
+                            isDestinationRequired?: boolean;
+                            displayOrder?: number;
+                            /** Format: date-time */
+                            createdAt?: string;
+                            /** Format: date-time */
+                            updatedAt?: string;
+                        }[];
+                        pagination?: {
+                            page?: number;
+                            limit?: number;
+                            total?: number;
+                            totalPages?: number;
+                            hasNextPage?: boolean;
+                            hasPreviousPage?: boolean;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    ServiceCatalogueController_createService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["CreateServiceDto"];
+            };
+        };
+        responses: {
+            /** @description Service created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Service created successfully */
+                        message?: string;
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            name?: string;
+                            slug?: string;
+                            category?: string;
+                            description?: string;
+                            iconUrl?: string;
+                            /** @enum {string} */
+                            status?: "active" | "inactive";
+                            isDestinationRequired?: boolean;
+                            displayOrder?: number;
+                        };
+                    };
+                };
+            };
+            /** @description Service with this name or slug already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_getService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Service/Category ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Service retrieved successfully */
+                        message?: string;
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            name?: string;
+                            slug?: string;
+                            category?: string;
+                            description?: string;
+                            iconUrl?: string;
+                            /** @enum {string} */
+                            status?: "active" | "inactive";
+                            isDestinationRequired?: boolean;
+                            displayOrder?: number;
+                            /** Format: date-time */
+                            createdAt?: string;
+                            /** Format: date-time */
+                            updatedAt?: string;
+                        };
+                    };
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_updateService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Service/Category ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UpdateServiceDto"];
+            };
+        };
+        responses: {
+            /** @description Service updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Service updated successfully */
+                        message?: string;
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            name?: string;
+                            slug?: string;
+                            category?: string;
+                            description?: string;
+                            iconUrl?: string;
+                            /** @enum {string} */
+                            status?: "active" | "inactive";
+                            isDestinationRequired?: boolean;
+                            displayOrder?: number;
+                            /** Format: date-time */
+                            createdAt?: string;
+                            /** Format: date-time */
+                            updatedAt?: string;
+                        };
+                    };
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Service with this name or slug already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_deleteService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Service/Category ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service deleted successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Service deleted successfully */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ServiceCatalogueController_toggleServiceStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Service/Category ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Service status toggled */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Service enabled successfully */
+                        message?: string;
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            name?: string;
+                            /** @enum {string} */
+                            status?: "active" | "inactive";
+                        };
+                    };
+                };
+            };
+            /** @description Service not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getOverviewMetrics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dashboard overview metrics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getAppDownloads: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description App download statistics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getRegistrationStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Registration statistics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getRegistrationTrend: {
+        parameters: {
+            query?: {
+                /** @description Year for trend data (default: current year) */
+                year?: number;
+                /** @description Month (1-12), required for weekly and daily periods */
+                month?: number;
+                /** @description Grouping period (default: monthly) */
+                period?: "monthly" | "weekly" | "daily";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Registration trend data */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getRecentActivity: {
+        parameters: {
+            query?: {
+                /** @description Number of activities to return (default: 20) */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Recent platform activities */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getCancellationReasons: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Cancellation reasons breakdown */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getStateAnalytics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Per-state analytics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DashboardController_getBestBookedServices: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Best booked service analytics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MonitoringController_getInactiveUsers: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Inactive users list with pagination */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MonitoringController_getLowRatingUsers: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Low rating artisans list with pagination */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TopPerformersController_getTopArtisans: {
+        parameters: {
+            query?: {
+                /** @description Month in YYYY-MM format (defaults to current month) */
+                month?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Top 10 artisans for the month */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TopPerformersController_getTopUsers: {
+        parameters: {
+            query?: {
+                /** @description Month in YYYY-MM format (defaults to current month) */
+                month?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Top 10 users for the month */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_getSummary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Users summary statistics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_getCustomers: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                status?: "active" | "suspended";
+                /** @description Search by name, email, or phone */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated customer list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_getArtisans: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                status?: "active" | "suspended";
+                /** @description Search by name, email, or phone */
+                search?: string;
+                verification?: "verified" | "pending" | "rejected";
+                availability?: "available" | "busy" | "offline";
+                /** @description Filter by average response time: fast (< 5 min), moderate (5–30 min), slow (> 30 min) */
+                responseTime?: "fast" | "moderate" | "slow";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated artisan list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_getDeletedCustomers: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                /** @description Search by name, email, or phone */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated deleted customer list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_getDeletedArtisans: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                /** @description Search by name, email, or phone */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated deleted artisan list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_getCustomerDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Customer user ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Customer detail retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Customer not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_getArtisanDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Artisan user ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Artisan detail retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Artisan not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_getArtisanWallet: {
+        parameters: {
+            query?: {
+                /** @description Page number (default: 1) */
+                page?: number;
+                /** @description Items per page (default: 20) */
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                /** @description Artisan user ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Artisan wallet details retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Artisan not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_updateCustomerStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Customer user ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserStatusDto"];
+            };
+        };
+        responses: {
+            /** @description Customer status updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Customer not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    UsersManagementController_updateArtisanStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Artisan user ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateUserStatusDto"];
+            };
+        };
+        responses: {
+            /** @description Artisan status updated */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Artisan not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminDisputesController_getMetrics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dispute metrics retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminDisputesController_getDisputeQueue: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                status?: "open" | "under_review" | "resolved" | "closed";
+                priority?: "low" | "medium" | "high";
+                sortBy?: "createdAt" | "status" | "priority";
+                sortOrder?: "ASC" | "DESC";
+                /** @description Search by customer/artisan name or dispute ID */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dispute queue retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminDisputesController_getDisputeDetail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dispute detail retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Dispute not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminDisputesController_reviewDispute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReviewDisputeDto"];
+            };
+        };
+        responses: {
+            /** @description Dispute moved to review */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Dispute is not in open status */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Dispute not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminDisputesController_resolveDispute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResolveDisputeDto"];
+            };
+        };
+        responses: {
+            /** @description Dispute resolved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid resolution or dispute already resolved */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Dispute not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminPromoCodesController_findAll: {
+        parameters: {
+            query?: {
+                /** @description Search by code or description */
+                search?: string;
+                /** @description Filter by active status */
+                status?: string;
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promo codes retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminPromoCodesController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePromoCodeDto"];
+            };
+        };
+        responses: {
+            /** @description Promo code created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promo code already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminPromoCodesController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promo code ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promo code retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promo code not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminPromoCodesController_deactivate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promo code ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promo code deactivated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promo code not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminPromoCodesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promo code ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdatePromoCodeDto"];
+            };
+        };
+        responses: {
+            /** @description Promo code updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promo code not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MobileBroadcastController_getActiveBroadcasts: {
+        parameters: {
+            query?: {
+                /** @description Filter by platform */
+                platform?: "ios" | "android";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of active broadcasts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Active broadcasts retrieved */
+                        message?: string;
+                        data?: components["schemas"]["ActiveBroadcastResponseDto"][];
+                    };
+                };
+            };
+        };
+    };
+    MobileBroadcastController_dismissBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast dismissed */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Broadcast dismissed */
+                        message?: string;
+                    };
+                };
+            };
+            /** @description Broadcast not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MobileTermsController_getActiveTerms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Active terms and conditions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Terms and conditions retrieved */
+                        message?: string;
+                        data?: components["schemas"]["TermsAndConditionsResponseDto"];
+                    };
+                };
+            };
+        };
+    };
+    MobileTermsController_getActivePrivacyPolicy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Active privacy policy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Privacy policy retrieved */
+                        message?: string;
+                        data?: components["schemas"]["PrivacyPolicyResponseDto"];
+                    };
+                };
+            };
+        };
+    };
+    MobileTermsController_getActiveCancellationPolicy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Active cancellation policy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Cancellation policy retrieved */
+                        message?: string;
+                        data?: components["schemas"]["CancellationPolicyResponseDto"];
+                    };
+                };
+            };
+        };
+    };
+    FeaturedProfilesController_findAll: {
+        parameters: {
+            query?: {
+                /** @description Filter by profile type */
+                type?: "user" | "artisan";
+                /** @description Filter by status */
+                status?: "active" | "inactive";
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Featured profiles list retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FeaturedProfilesController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["CreateFeaturedProfileDto"];
+            };
+        };
+        responses: {
+            /** @description Featured profile created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request - Validation failed */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FeaturedProfilesController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Featured profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Featured profile details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Featured profile not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FeaturedProfilesController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Featured profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Featured profile deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Featured profile not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FeaturedProfilesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Featured profile ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UpdateFeaturedProfileDto"];
+            };
+        };
+        responses: {
+            /** @description Featured profile updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Featured profile not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MobileFeaturedProfilesController_getActiveProfiles: {
+        parameters: {
+            query?: {
+                /** @description Filter by profile type */
+                type?: "user" | "artisan";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Active featured profiles */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Featured profiles retrieved successfully */
+                        message?: string;
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            name?: string;
+                            /** @enum {string} */
+                            type?: "user" | "artisan";
+                            imageUrl?: string | null;
+                            videoLink?: string | null;
+                            displayOrder?: number;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    PromotionSlidesController_findAll: {
+        parameters: {
+            query?: {
+                /** @description Filter by audience */
+                audience?: "all" | "users" | "artisans";
+                /** @description Filter by status */
+                status?: "active" | "inactive";
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promotion slides list retrieved */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PromotionSlidesController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["CreatePromotionSlideDto"];
+            };
+        };
+        responses: {
+            /** @description Promotion slide created successfully */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request - Validation failed or missing image */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PromotionSlidesController_findOne: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promotion slide ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promotion slide details */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promotion slide not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PromotionSlidesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promotion slide ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UpdatePromotionSlideDto"];
+            };
+        };
+        responses: {
+            /** @description Promotion slide updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promotion slide not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PromotionSlidesController_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Promotion slide ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promotion slide deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Promotion slide not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MobilePromotionSlidesController_getActiveSlides: {
+        parameters: {
+            query?: {
+                /** @description Filter by audience */
+                audience?: "all" | "users" | "artisans";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Active promotion slides */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Promotion slides retrieved successfully */
+                        message?: string;
+                        data?: {
+                            /** Format: uuid */
+                            id?: string;
+                            title?: string;
+                            description?: string | null;
+                            imageUrl?: string;
+                            linkUrl?: string | null;
+                            /** @enum {string} */
+                            audience?: "all" | "users" | "artisans";
+                            displayOrder?: number;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    FinancialManagementController_getOverviewMetrics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Financial overview metrics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FinancialManagementController_getRevenueTrend: {
+        parameters: {
+            query?: {
+                /** @description Year for trend data (default: current year) */
+                year?: number;
+                /** @description Month (1-12), required for weekly and daily periods */
+                month?: number;
+                /** @description Grouping period (default: monthly) */
+                period?: "monthly" | "weekly" | "daily";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Monthly revenue trend data */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FinancialManagementController_getPaymentHistory: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                status?: "pending" | "processing" | "successful" | "failed" | "refunded";
+                /** @description Search by sender/artisan name or payment reference */
+                search?: string;
+                /** @description Filter from date (ISO string) */
+                dateFrom?: string;
+                /** @description Filter to date (ISO string) */
+                dateTo?: string;
+                sortBy?: "createdAt" | "paidAt" | "amount" | "platformFee";
+                sortOrder?: "ASC" | "DESC";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated payment history */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FinancialManagementController_getWithdrawalHistory: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                status?: "pending" | "processing" | "completed" | "failed" | "cancelled";
+                /** @description Search by artisan name or withdrawal reference */
+                search?: string;
+                /** @description Filter from date (ISO string) */
+                dateFrom?: string;
+                /** @description Filter to date (ISO string) */
+                dateTo?: string;
+                sortBy?: "requestedAt" | "processedAt" | "amount";
+                sortOrder?: "ASC" | "DESC";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated withdrawal history */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ArtisanLevelsController_findAll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Artisan levels retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ArtisanLevelsController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Artisan level definition ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateArtisanLevelDto"];
+            };
+        };
+        responses: {
+            /** @description Artisan level updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Artisan level not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ReferralManagementController_getOverviewMetrics: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Referral overview metrics */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ReferralManagementController_getReferralList: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                /** @description Filter by referral status */
+                status?: "all" | "pending" | "completed" | "expired";
+                /** @description Filter by referral type (role of the referred user) */
+                type?: "all" | "user" | "artisan";
+                /** @description Search by referrer name or email */
+                search?: string;
+                sortBy?: "createdAt" | "rewardEarned";
+                sortOrder?: "ASC" | "DESC";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated referral list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuditLogController_getAuditLogs: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                /** @description Filter by action (e.g. user_suspended, dispute_resolved) */
+                action?: string;
+                /** @description Filter by entity type (e.g. user, dispute, admin_profile) */
+                entityType?: string;
+                /** @description Filter by admin user ID */
+                adminId?: string;
+                /** @description Search by admin name or action */
+                search?: string;
+                /** @description Start date filter (ISO 8601) */
+                startDate?: string;
+                /** @description End date filter (ISO 8601) */
+                endDate?: string;
+                sortBy?: "createdAt" | "action";
+                sortOrder?: "ASC" | "DESC";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated audit log list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuditLogController_getDistinctActions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of distinct actions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSessionController_getActiveSessions: {
+        parameters: {
+            query?: {
+                /** @description Current session ID to mark as current */
+                currentSessionId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List of active sessions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSessionController_revokeSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RevokeSessionDto"];
+            };
+        };
+        responses: {
+            /** @description Session revoked successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Session not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSessionController_revokeAllOtherSessions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RevokeSessionDto"];
+            };
+        };
+        responses: {
+            /** @description All other sessions revoked successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Current session ID is required */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MobileSupportController_getWhatsappLinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description WhatsApp support links */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example success */
+                        status?: string;
+                        /** @example Support links retrieved successfully */
+                        message?: string;
+                        data?: {
+                            /** @example https://wa.me/2348001234567 */
+                            customerWhatsappLink?: string | null;
+                            /** @example https://wa.me/2348007654321 */
+                            artisanWhatsappLink?: string | null;
+                        };
+                    };
                 };
             };
         };
@@ -13169,3670 +17356,6 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
-            };
-        };
-    };
-    AdminController_changeDefaultPassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChangeDefaultPasswordDto"];
-            };
-        };
-        responses: {
-            /** @description Password changed successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ChangeDefaultPasswordResponseDto"];
-                };
-            };
-            /** @description Bad Request - Password validation failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized - Invalid current password */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unprocessable Entity - Passwords do not match */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_verifyArtisan: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VerifyArtisanDto"];
-            };
-        };
-        responses: {
-            /** @description Artisan verification status updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VerifyArtisanResponseDto"];
-                };
-            };
-            /** @description Bad request - User is not an artisan */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Artisan not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getPendingArtisans: {
-        parameters: {
-            query?: {
-                /** @description Page number (default: 1) */
-                page?: number;
-                /** @description Items per page (default: 20) */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of pending artisans */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: Record<string, never>[];
-                        pagination?: {
-                            page?: number;
-                            limit?: number;
-                            total?: number;
-                            totalPages?: number;
-                        };
-                    };
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getArtisanProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Artisan user ID */
-                artisanId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Artisan profile details */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Artisan not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getCommissionSetting: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Current commission settings */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CommissionSettingResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description No active commission setting found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_updateCommissionSetting: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateCommissionSettingDto"];
-            };
-        };
-        responses: {
-            /** @description Commission settings updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdateCommissionSettingResponseDto"];
-                };
-            };
-            /** @description Bad Request - Invalid commission value */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getAllTermsAndConditions: {
-        parameters: {
-            query?: {
-                /** @description Page number (default: 1) */
-                page?: number;
-                /** @description Items per page (default: 20) */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of terms and conditions versions */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["TermsAndConditionsResponseDto"][];
-                        pagination?: {
-                            page?: number;
-                            limit?: number;
-                            total?: number;
-                            totalPages?: number;
-                        };
-                    };
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_updateTermsAndConditions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateTermsAndConditionsDto"];
-            };
-        };
-        responses: {
-            /** @description Terms and conditions updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdateTermsAndConditionsResponseDto"];
-                };
-            };
-            /** @description Bad Request - Validation failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getActiveTermsAndConditions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Current active terms and conditions */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TermsAndConditionsResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getTermsAndConditionsByVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Version string (e.g., "1.0", "2.0") */
-                version: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Terms and conditions for the specified version */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TermsAndConditionsResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Terms version not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getAllPrivacyPolicies: {
-        parameters: {
-            query?: {
-                /** @description Page number (default: 1) */
-                page?: number;
-                /** @description Items per page (default: 20) */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of privacy policy versions */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["PrivacyPolicyResponseDto"][];
-                        pagination?: {
-                            page?: number;
-                            limit?: number;
-                            total?: number;
-                            totalPages?: number;
-                        };
-                    };
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_updatePrivacyPolicy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdatePrivacyPolicyDto"];
-            };
-        };
-        responses: {
-            /** @description Privacy policy updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdatePrivacyPolicyResponseDto"];
-                };
-            };
-            /** @description Bad Request - Validation failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getActivePrivacyPolicy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Current active privacy policy */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PrivacyPolicyResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getPrivacyPolicyByVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Version string (e.g., "1.0", "2.0") */
-                version: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Privacy policy for the specified version */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PrivacyPolicyResponseDto"];
-                };
-            };
-            /** @description Privacy policy version not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getAllCancellationPolicies: {
-        parameters: {
-            query?: {
-                /** @description Page number (default: 1) */
-                page?: number;
-                /** @description Items per page (default: 20) */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of cancellation policy versions */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["CancellationPolicyResponseDto"][];
-                        pagination?: {
-                            page?: number;
-                            limit?: number;
-                            total?: number;
-                            totalPages?: number;
-                        };
-                    };
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_updateCancellationPolicy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateCancellationPolicyDto"];
-            };
-        };
-        responses: {
-            /** @description Cancellation policy updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdateCancellationPolicyResponseDto"];
-                };
-            };
-            /** @description Bad Request - Validation failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getActiveCancellationPolicy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Current active cancellation policy */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CancellationPolicyResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getCancellationPolicyByVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Version string (e.g., "1.0", "2.0") */
-                version: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Cancellation policy for the specified version */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CancellationPolicyResponseDto"];
-                };
-            };
-            /** @description Cancellation policy version not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getAdminNotificationSetting: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Admin notification settings */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminNotificationSettingResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_updateAdminNotificationSetting: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateAdminNotificationSettingDto"];
-            };
-        };
-        responses: {
-            /** @description Notification settings updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdateAdminNotificationSettingResponseDto"];
-                };
-            };
-            /** @description Bad Request - Validation failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_getReferralProgramSetting: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Referral program settings */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ReferralProgramSettingResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_updateReferralProgramSetting: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateReferralProgramSettingDto"];
-            };
-        };
-        responses: {
-            /** @description Referral program settings updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UpdateReferralProgramSettingResponseDto"];
-                };
-            };
-            /** @description Bad Request - Validation failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_requestAdminOtp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestAdminOtpDto"];
-            };
-        };
-        responses: {
-            /** @description OTP sent successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminOtpSentResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Too many requests - Rate limited */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_verifyAdminOtp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VerifyAdminOtpDto"];
-            };
-        };
-        responses: {
-            /** @description OTP verified successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminOtpVerifiedResponseDto"];
-                };
-            };
-            /** @description Bad Request - Invalid or expired OTP */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminController_resendAdminOtp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestAdminOtpDto"];
-            };
-        };
-        responses: {
-            /** @description OTP resent successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AdminOtpSentResponseDto"];
-                };
-            };
-            /** @description Bad Request - Too many attempts */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-            /** @description Forbidden - Admin access required */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponseDto"];
-                };
-            };
-        };
-    };
-    AdminTeamController_listAdmins: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of admins */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            /** Format: uuid */
-                            userId?: string;
-                            email?: string;
-                            fullName?: string;
-                            adminRole?: string;
-                            status?: string;
-                            mfaEnabled?: boolean;
-                            /** Format: date-time */
-                            lastLoginAt?: string | null;
-                            /** Format: date-time */
-                            createdAt?: string;
-                            createdBy?: string | null;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    AdminTeamController_createAdmin: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateAdminDto"];
-            };
-        };
-        responses: {
-            /** @description Admin created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        admin?: {
-                            /** Format: uuid */
-                            id?: string;
-                            email?: string;
-                            phoneNumber?: string;
-                            role?: string;
-                            isActive?: boolean;
-                            profile?: {
-                                fullName?: string;
-                            };
-                        };
-                        temporaryPassword?: string;
-                    };
-                };
-            };
-            /** @description Email or phone already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminTeamController_getAdmin: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Admin profile ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Admin details */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id?: string;
-                        /** Format: uuid */
-                        userId?: string;
-                        email?: string;
-                        phoneNumber?: string;
-                        fullName?: string;
-                        adminRole?: string;
-                        status?: string;
-                        mfaEnabled?: boolean;
-                        /** Format: date-time */
-                        lastLoginAt?: string | null;
-                        /** Format: date-time */
-                        createdAt?: string;
-                        /** Format: date-time */
-                        updatedAt?: string;
-                        createdBy?: string | null;
-                    };
-                };
-            };
-            /** @description Admin not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminTeamController_updateAdmin: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Admin profile ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateAdminDto"];
-            };
-        };
-        responses: {
-            /** @description Admin updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id?: string;
-                        /** Format: uuid */
-                        userId?: string;
-                        email?: string;
-                        fullName?: string;
-                        adminRole?: string;
-                        status?: string;
-                    };
-                };
-            };
-            /** @description Admin not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminTeamController_deactivateAdmin: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Admin profile ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Admin deactivated successfully */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Cannot deactivate yourself */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Admin not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ImpersonationController_startImpersonation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description User ID to impersonate */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["StartImpersonationDto"];
-            };
-        };
-        responses: {
-            /** @description Impersonation session started */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        sessionToken?: string;
-                        /** Format: date-time */
-                        expiresAt?: string;
-                    };
-                };
-            };
-            /** @description Not authorized or cannot impersonate admins */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Target user not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ImpersonationController_endImpersonation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Impersonation session ended */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example Impersonation session ended */
-                        message?: string;
-                    };
-                };
-            };
-            /** @description No active session found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ImpersonationLogsController_getImpersonationLogs: {
-        parameters: {
-            query?: {
-                /** @description Page number */
-                page?: number;
-                /** @description Items per page */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Impersonation logs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            /** Format: uuid */
-                            adminId?: string;
-                            adminName?: string | null;
-                            /** Format: uuid */
-                            impersonatedUserId?: string;
-                            impersonatedUserName?: string | null;
-                            reason?: string;
-                            /** Format: date-time */
-                            createdAt?: string;
-                            /** Format: date-time */
-                            endedAt?: string | null;
-                            /** Format: date-time */
-                            expiresAt?: string;
-                            ipAddress?: string | null;
-                        }[];
-                        total?: number;
-                        page?: number;
-                        limit?: number;
-                    };
-                };
-            };
-        };
-    };
-    MfaController_setupMfa: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description MFA setup data */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MfaSetupResponseDto"];
-                };
-            };
-            /** @description MFA already enabled */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MfaController_enableMfa: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EnableMfaDto"];
-            };
-        };
-        responses: {
-            /** @description MFA enabled successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example MFA enabled successfully */
-                        message?: string;
-                    };
-                };
-            };
-            /** @description Invalid verification code or MFA not set up */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MfaController_disableMfa: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DisableMfaDto"];
-            };
-        };
-        responses: {
-            /** @description MFA disabled successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example MFA disabled successfully */
-                        message?: string;
-                    };
-                };
-            };
-            /** @description Invalid verification code or MFA not enabled */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Super Admins cannot disable MFA */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MfaController_regenerateBackupCodes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegenerateBackupCodesDto"];
-            };
-        };
-        responses: {
-            /** @description New backup codes */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BackupCodesResponseDto"];
-                };
-            };
-            /** @description Invalid verification code or MFA not enabled */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MfaController_getMfaStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description MFA status */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MfaStatusResponseDto"];
-                };
-            };
-        };
-    };
-    BroadcastController_listBroadcasts: {
-        parameters: {
-            query?: {
-                /** @description Page number */
-                page?: number;
-                /** @description Items per page */
-                limit?: number;
-                /** @description Filter by status */
-                status?: "draft" | "scheduled" | "sending" | "completed" | "failed" | "cancelled";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of broadcasts */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BroadcastListResponseDto"];
-                };
-            };
-        };
-    };
-    BroadcastController_createBroadcast: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateBroadcastDto"];
-            };
-        };
-        responses: {
-            /** @description Broadcast created */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id?: string;
-                        title?: string;
-                        body?: string;
-                        /** @example draft */
-                        status?: string;
-                        /** @example all_users */
-                        targetAudience?: string;
-                        /** @example all */
-                        platform?: string;
-                        /** Format: date-time */
-                        scheduledAt?: string | null;
-                        /** Format: date-time */
-                        createdAt?: string;
-                    };
-                };
-            };
-        };
-    };
-    BroadcastController_getTemplates: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Available templates */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BroadcastTemplatesResponseDto"];
-                };
-            };
-        };
-    };
-    BroadcastController_getBroadcast: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Broadcast ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Broadcast details */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BroadcastResponseDto"];
-                };
-            };
-            /** @description Broadcast not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    BroadcastController_updateBroadcast: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Broadcast ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateBroadcastDto"];
-            };
-        };
-        responses: {
-            /** @description Broadcast updated */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id?: string;
-                        title?: string;
-                        body?: string;
-                        /** @example draft */
-                        status?: string;
-                        /** @example all_users */
-                        targetAudience?: string;
-                        /** @example all */
-                        platform?: string;
-                        /** Format: date-time */
-                        scheduledAt?: string | null;
-                        /** Format: date-time */
-                        updatedAt?: string;
-                    };
-                };
-            };
-            /** @description Cannot update broadcast in current status */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Broadcast not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    BroadcastController_sendBroadcast: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Broadcast ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Broadcast sending started */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id?: string;
-                        /** @example sending */
-                        status?: string;
-                        /** @example 0 */
-                        recipientCount?: number;
-                        /** Format: date-time */
-                        sentAt?: string | null;
-                    };
-                };
-            };
-            /** @description Cannot send broadcast in current status */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Broadcast not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    BroadcastController_cancelBroadcast: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Broadcast ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Broadcast cancelled */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** Format: uuid */
-                        id?: string;
-                        /** @example cancelled */
-                        status?: string;
-                    };
-                };
-            };
-            /** @description Can only cancel scheduled broadcasts */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Broadcast not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ServiceCatalogueController_listServices: {
-        parameters: {
-            query?: {
-                /** @description Filter by category name */
-                category?: string;
-                /** @description Search services by name or description */
-                search?: string;
-                /** @description Filter by status */
-                status?: "active" | "inactive";
-                /** @description Page number */
-                page?: number;
-                /** @description Items per page */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of services */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Services retrieved successfully */
-                        message?: string;
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            name?: string;
-                            slug?: string;
-                            category?: string;
-                            description?: string;
-                            iconUrl?: string;
-                            /** @enum {string} */
-                            status?: "active" | "inactive";
-                            isDestinationRequired?: boolean;
-                            displayOrder?: number;
-                            /** Format: date-time */
-                            createdAt?: string;
-                            /** Format: date-time */
-                            updatedAt?: string;
-                        }[];
-                        pagination?: {
-                            page?: number;
-                            limit?: number;
-                            total?: number;
-                            totalPages?: number;
-                            hasNextPage?: boolean;
-                            hasPreviousPage?: boolean;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    ServiceCatalogueController_createService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["CreateServiceDto"];
-            };
-        };
-        responses: {
-            /** @description Service created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Service created successfully */
-                        message?: string;
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            name?: string;
-                            slug?: string;
-                            category?: string;
-                            description?: string;
-                            iconUrl?: string;
-                            /** @enum {string} */
-                            status?: "active" | "inactive";
-                            isDestinationRequired?: boolean;
-                            displayOrder?: number;
-                        };
-                    };
-                };
-            };
-            /** @description Service with this name or slug already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ServiceCatalogueController_getService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Service/Category ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Service details */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Service retrieved successfully */
-                        message?: string;
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            name?: string;
-                            slug?: string;
-                            category?: string;
-                            description?: string;
-                            iconUrl?: string;
-                            /** @enum {string} */
-                            status?: "active" | "inactive";
-                            isDestinationRequired?: boolean;
-                            displayOrder?: number;
-                            /** Format: date-time */
-                            createdAt?: string;
-                            /** Format: date-time */
-                            updatedAt?: string;
-                        };
-                    };
-                };
-            };
-            /** @description Service not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ServiceCatalogueController_updateService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Service/Category ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["UpdateServiceDto"];
-            };
-        };
-        responses: {
-            /** @description Service updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Service updated successfully */
-                        message?: string;
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            name?: string;
-                            slug?: string;
-                            category?: string;
-                            description?: string;
-                            iconUrl?: string;
-                            /** @enum {string} */
-                            status?: "active" | "inactive";
-                            isDestinationRequired?: boolean;
-                            displayOrder?: number;
-                            /** Format: date-time */
-                            createdAt?: string;
-                            /** Format: date-time */
-                            updatedAt?: string;
-                        };
-                    };
-                };
-            };
-            /** @description Service not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Service with this name or slug already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ServiceCatalogueController_deleteService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Service/Category ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Service deleted successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Service deleted successfully */
-                        message?: string;
-                    };
-                };
-            };
-            /** @description Service not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ServiceCatalogueController_toggleServiceStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Service/Category ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Service status toggled */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Service enabled successfully */
-                        message?: string;
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            name?: string;
-                            /** @enum {string} */
-                            status?: "active" | "inactive";
-                        };
-                    };
-                };
-            };
-            /** @description Service not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DashboardController_getOverviewMetrics: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Dashboard overview metrics */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DashboardController_getAppDownloads: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description App download statistics */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DashboardController_getRegistrationStats: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Registration statistics */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DashboardController_getRegistrationTrend: {
-        parameters: {
-            query?: {
-                /** @description Year for trend data (default: current year) */
-                year?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Monthly registration trend data */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DashboardController_getRecentActivity: {
-        parameters: {
-            query?: {
-                /** @description Number of activities to return (default: 20) */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Recent platform activities */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DashboardController_getCancellationReasons: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Cancellation reasons breakdown */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DashboardController_getStateAnalytics: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Per-state analytics */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DashboardController_getBestBookedServices: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Best booked service analytics */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MonitoringController_getInactiveUsers: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Inactive users list with pagination */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MonitoringController_getLowRatingUsers: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Low rating artisans list with pagination */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    TopPerformersController_getTopArtisans: {
-        parameters: {
-            query?: {
-                /** @description Month in YYYY-MM format (defaults to current month) */
-                month?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Top 10 artisans for the month */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    TopPerformersController_getTopUsers: {
-        parameters: {
-            query?: {
-                /** @description Month in YYYY-MM format (defaults to current month) */
-                month?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Top 10 users for the month */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_getSummary: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Users summary statistics */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_getCustomers: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-                status?: "active" | "suspended";
-                /** @description Search by name, email, or phone */
-                search?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Paginated customer list */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_getArtisans: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-                status?: "active" | "suspended";
-                /** @description Search by name, email, or phone */
-                search?: string;
-                verification?: "verified" | "pending" | "rejected";
-                availability?: "available" | "busy" | "offline";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Paginated artisan list */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_getDeletedCustomers: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-                /** @description Search by name, email, or phone */
-                search?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Paginated deleted customer list */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_getDeletedArtisans: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-                /** @description Search by name, email, or phone */
-                search?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Paginated deleted artisan list */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_getCustomerDetail: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Customer user ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Customer detail retrieved */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Customer not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_getArtisanDetail: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Artisan user ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Artisan detail retrieved */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Artisan not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_getArtisanWallet: {
-        parameters: {
-            query?: {
-                /** @description Page number (default: 1) */
-                page?: number;
-                /** @description Items per page (default: 20) */
-                limit?: number;
-            };
-            header?: never;
-            path: {
-                /** @description Artisan user ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Artisan wallet details retrieved */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Artisan not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_updateCustomerStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Customer user ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateUserStatusDto"];
-            };
-        };
-        responses: {
-            /** @description Customer status updated */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Customer not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersManagementController_updateArtisanStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Artisan user ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateUserStatusDto"];
-            };
-        };
-        responses: {
-            /** @description Artisan status updated */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Artisan not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminDisputesController_getMetrics: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Dispute metrics retrieved */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminDisputesController_getDisputeQueue: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-                status?: "open" | "under_review" | "resolved" | "closed";
-                priority?: "low" | "medium" | "high";
-                sortBy?: "createdAt" | "status" | "priority";
-                sortOrder?: "ASC" | "DESC";
-                /** @description Search by customer/artisan name or dispute ID */
-                search?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Dispute queue retrieved */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminDisputesController_getDisputeDetail: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Dispute detail retrieved */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Dispute not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminDisputesController_reviewDispute: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReviewDisputeDto"];
-            };
-        };
-        responses: {
-            /** @description Dispute moved to review */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Dispute is not in open status */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Dispute not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminDisputesController_resolveDispute: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ResolveDisputeDto"];
-            };
-        };
-        responses: {
-            /** @description Dispute resolved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Invalid resolution or dispute already resolved */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Dispute not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminPromoCodesController_findAll: {
-        parameters: {
-            query?: {
-                /** @description Search by code or description */
-                search?: string;
-                /** @description Filter by active status */
-                status?: string;
-                /** @description Page number */
-                page?: number;
-                /** @description Items per page */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Promo codes retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminPromoCodesController_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreatePromoCodeDto"];
-            };
-        };
-        responses: {
-            /** @description Promo code created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Promo code already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminPromoCodesController_findOne: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Promo code ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Promo code retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Promo code not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminPromoCodesController_deactivate: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Promo code ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Promo code deactivated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Promo code not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    AdminPromoCodesController_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Promo code ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdatePromoCodeDto"];
-            };
-        };
-        responses: {
-            /** @description Promo code updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Promo code not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MobileBroadcastController_getActiveBroadcasts: {
-        parameters: {
-            query?: {
-                /** @description Filter by platform */
-                platform?: "ios" | "android";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of active broadcasts */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Active broadcasts retrieved */
-                        message?: string;
-                        data?: components["schemas"]["ActiveBroadcastResponseDto"][];
-                    };
-                };
-            };
-        };
-    };
-    MobileBroadcastController_dismissBroadcast: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Broadcast ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Broadcast dismissed */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Broadcast dismissed */
-                        message?: string;
-                    };
-                };
-            };
-            /** @description Broadcast not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MobileTermsController_getActiveTerms: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Active terms and conditions */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Terms and conditions retrieved */
-                        message?: string;
-                        data?: components["schemas"]["TermsAndConditionsResponseDto"];
-                    };
-                };
-            };
-        };
-    };
-    MobileTermsController_getActivePrivacyPolicy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Active privacy policy */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Privacy policy retrieved */
-                        message?: string;
-                        data?: components["schemas"]["PrivacyPolicyResponseDto"];
-                    };
-                };
-            };
-        };
-    };
-    MobileTermsController_getActiveCancellationPolicy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Active cancellation policy */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Cancellation policy retrieved */
-                        message?: string;
-                        data?: components["schemas"]["CancellationPolicyResponseDto"];
-                    };
-                };
-            };
-        };
-    };
-    FeaturedProfilesController_findAll: {
-        parameters: {
-            query?: {
-                /** @description Filter by profile type */
-                type?: "user" | "artisan";
-                /** @description Filter by status */
-                status?: "active" | "inactive";
-                page?: number;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Featured profiles list retrieved */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FeaturedProfilesController_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["CreateFeaturedProfileDto"];
-            };
-        };
-        responses: {
-            /** @description Featured profile created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad Request - Validation failed */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FeaturedProfilesController_findOne: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Featured profile ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Featured profile details */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Featured profile not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FeaturedProfilesController_remove: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Featured profile ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Featured profile deleted */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Featured profile not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FeaturedProfilesController_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Featured profile ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["UpdateFeaturedProfileDto"];
-            };
-        };
-        responses: {
-            /** @description Featured profile updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Featured profile not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MobileFeaturedProfilesController_getActiveProfiles: {
-        parameters: {
-            query?: {
-                /** @description Filter by profile type */
-                type?: "user" | "artisan";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Active featured profiles */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Featured profiles retrieved successfully */
-                        message?: string;
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            name?: string;
-                            /** @enum {string} */
-                            type?: "user" | "artisan";
-                            imageUrl?: string | null;
-                            videoLink?: string | null;
-                            displayOrder?: number;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    PromotionSlidesController_findAll: {
-        parameters: {
-            query?: {
-                /** @description Filter by audience */
-                audience?: "all" | "users" | "artisans";
-                /** @description Filter by status */
-                status?: "active" | "inactive";
-                page?: number;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Promotion slides list retrieved */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    PromotionSlidesController_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["CreatePromotionSlideDto"];
-            };
-        };
-        responses: {
-            /** @description Promotion slide created successfully */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Bad Request - Validation failed or missing image */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    PromotionSlidesController_findOne: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Promotion slide ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Promotion slide details */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Promotion slide not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    PromotionSlidesController_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Promotion slide ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["UpdatePromotionSlideDto"];
-            };
-        };
-        responses: {
-            /** @description Promotion slide updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Promotion slide not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    PromotionSlidesController_delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Promotion slide ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Promotion slide deleted */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Promotion slide not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MobilePromotionSlidesController_getActiveSlides: {
-        parameters: {
-            query?: {
-                /** @description Filter by audience */
-                audience?: "all" | "users" | "artisans";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Active promotion slides */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        /** @example success */
-                        status?: string;
-                        /** @example Promotion slides retrieved successfully */
-                        message?: string;
-                        data?: {
-                            /** Format: uuid */
-                            id?: string;
-                            title?: string;
-                            description?: string | null;
-                            imageUrl?: string;
-                            linkUrl?: string | null;
-                            /** @enum {string} */
-                            audience?: "all" | "users" | "artisans";
-                            displayOrder?: number;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    FinancialManagementController_getOverviewMetrics: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Financial overview metrics */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FinancialManagementController_getRevenueTrend: {
-        parameters: {
-            query?: {
-                /** @description Year for trend data (default: current year) */
-                year?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Monthly revenue trend data */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FinancialManagementController_getPaymentHistory: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-                status?: "pending" | "processing" | "successful" | "failed" | "refunded";
-                /** @description Search by sender/artisan name or payment reference */
-                search?: string;
-                /** @description Filter from date (ISO string) */
-                dateFrom?: string;
-                /** @description Filter to date (ISO string) */
-                dateTo?: string;
-                sortBy?: "createdAt" | "paidAt" | "amount" | "platformFee";
-                sortOrder?: "ASC" | "DESC";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Paginated payment history */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    FinancialManagementController_getWithdrawalHistory: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-                status?: "pending" | "processing" | "completed" | "failed" | "cancelled";
-                /** @description Search by artisan name or withdrawal reference */
-                search?: string;
-                /** @description Filter from date (ISO string) */
-                dateFrom?: string;
-                /** @description Filter to date (ISO string) */
-                dateTo?: string;
-                sortBy?: "requestedAt" | "processedAt" | "amount";
-                sortOrder?: "ASC" | "DESC";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Paginated withdrawal history */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ArtisanLevelsController_findAll: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Artisan levels retrieved successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ArtisanLevelsController_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Artisan level definition ID */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateArtisanLevelDto"];
-            };
-        };
-        responses: {
-            /** @description Artisan level updated successfully */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Artisan level not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
