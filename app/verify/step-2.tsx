@@ -132,7 +132,7 @@ export default function Screen() {
 
   const form = useForm({
     defaultValues: {
-      categoryIds: [''],
+      categoryIds: [] as string[],
       // identificationType: 'NIN',
       // identificationNumber: '',
       yearsOfExperience: '',

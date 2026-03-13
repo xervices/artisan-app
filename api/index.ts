@@ -573,6 +573,7 @@ export const api = {
 
         return data;
       },
+      refetchInterval: 5000,
     }),
   getAllServiceRequest: () =>
     queryOptions({

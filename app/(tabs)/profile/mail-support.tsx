@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/select';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export const TICKET_CATEGORIES = ['feedback', 'technical', 'billing', 'general', 'other'] as const;
+export const TICKET_CATEGORIES = ['Feedback', 'Technical', 'Billing', 'General', 'Other'] as const;
 
 const formSchema = z.object({
   subject: z.string().min(1, 'Subject is required.'),
@@ -56,6 +56,7 @@ export default function Screen() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      value.category = value.category.toLowerCase();
       // @ts-ignore
       mutate(value, {
         onSuccess: () => {
@@ -114,7 +115,7 @@ export default function Screen() {
 
                 <Select>
                   <SelectTrigger className="w-full bg-white">
-                    <SelectValue id="state" placeholder="Select State" />
+                    <SelectValue id="category" placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent
                     insets={contentInsets}
@@ -132,7 +133,7 @@ export default function Screen() {
                             label={cat}
                             value={cat}
                             className="capitalize">
-                            {cat}
+                            {cat.toUpperCase}
                           </SelectItem>
                         ))}
                       </SelectGroup>

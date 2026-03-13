@@ -18,7 +18,7 @@ export function CancellationPolicyScreen() {
       onRefresh={refetch}
       stickyHeader={
         <View className="pb-4">
-          <AuthHeader title={data?.data ? data?.data?.title : 'Cancellation policies'} />
+          <AuthHeader title={'Cancellation policy'} />
         </View>
       }>
       {isLoading ? (

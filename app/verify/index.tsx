@@ -32,6 +32,7 @@ import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 import * as ImagePicker from 'expo-image-picker';
 import { useAuthStore } from '@/store/auth-store';
 import { NIGERIAN_STATES } from '@/store/data';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 const formSchema = z.object({
   avatarUrl: z.string(),
@@ -108,196 +109,206 @@ export default function Screen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-      <View className="flex-1 gap-4 bg-white">
-        <Text className="text-center font-cabinet-bold text-xs text-[#B4B4BC]">Step 1 of 2</Text>
+    <View className="flex-1">
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}>
+        <View className="flex-1 gap-4 bg-white">
+          <Text className="text-center font-cabinet-bold text-xs text-[#B4B4BC]">Step 1 of 2</Text>
 
-        <Text className="text-center text-sm text-[#737381]">
-          Connect with thousands of potential customers
-        </Text>
-
-        <form.Subscribe
-          selector={(state) => ({
-            url: state.values.avatarUrl,
-          })}
-          children={({ url }) => {
-            return (
-              <View className="flex w-full items-center justify-center">
-                <Pressable
-                  onPress={pickImage}
-                  className="relative h-20 w-20 overflow-hidden rounded-full">
-                  <Avatar className="h-full w-full" alt="User's Avatar">
-                    <AvatarImage source={{ uri: url }} />
-                    <AvatarFallback className="bg-primary">
-                      <Text className="font-cabinet-bold text-4xl leading-none">
-                        {user?.profile?.fullName?.substring(0, 2) || ''}
-                      </Text>
-                    </AvatarFallback>
-                  </Avatar>
-
-                  <View className="absolute inset-0 flex h-full w-full items-center justify-center bg-[#1B1B1E]/40">
-                    <Image
-                      source={require('@/assets/icons/camera.svg')}
-                      style={{ width: 24, height: 24 }}
-                      contentFit="contain"
-                    />
-                  </View>
-                </Pressable>
-              </View>
-            );
-          }}
-        />
-
-        <View className="flex gap-4">
-          <form.Field name="country">
-            {(field) => (
-              <View>
-                <Label nativeID="country">Country</Label>
-
-                <Select defaultValue={{ label: field.state.value, value: field.state.value }}>
-                  <SelectTrigger className="w-full bg-white">
-                    <SelectValue id="country" placeholder="Select Country" />
-                  </SelectTrigger>
-                  <SelectContent
-                    insets={contentInsets}
-                    className="mt-2 w-full bg-white"
-                    style={{ maxHeight: 300 }}>
-                    <NativeSelectScrollView className="h-full">
-                      <SelectGroup>
-                        <SelectLabel>Country</SelectLabel>
-
-                        <SelectItem
-                          onPress={() => {
-                            field.handleChange('Nigeria');
-                          }}
-                          label="Nigeria"
-                          value="Nigeria">
-                          Nigeria
-                        </SelectItem>
-                      </SelectGroup>
-                    </NativeSelectScrollView>
-                  </SelectContent>
-                </Select>
-
-                {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
-              </View>
-            )}
-          </form.Field>
-
-          <form.Field name="state">
-            {(field) => (
-              <View>
-                <Label nativeID="state">State</Label>
-
-                <Select defaultValue={{ label: field.state.value, value: field.state.value }}>
-                  <SelectTrigger className="w-full bg-white">
-                    <SelectValue id="state" placeholder="Select State" />
-                  </SelectTrigger>
-                  <SelectContent
-                    insets={contentInsets}
-                    className="mt-2 w-full bg-white"
-                    style={{ maxHeight: 300 }}>
-                    <NativeSelectScrollView className="h-full">
-                      <SelectGroup>
-                        <SelectLabel>State</SelectLabel>
-                        {NIGERIAN_STATES.map((state) => (
-                          <SelectItem
-                            onPress={() => {
-                              field.handleChange(state.state);
-                            }}
-                            key={state.state}
-                            label={state.state}
-                            value={state.state}>
-                            {state.state}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </NativeSelectScrollView>
-                  </SelectContent>
-                </Select>
-
-                {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
-              </View>
-            )}
-          </form.Field>
+          <Text className="text-center text-sm text-[#737381]">
+            Connect with thousands of potential customers
+          </Text>
 
           <form.Subscribe
             selector={(state) => ({
-              state: state.values.state,
+              url: state.values.avatarUrl,
             })}
-            children={({ state }) => {
-              const LGA_DATA = NIGERIAN_STATES.find((i) => i.state === state);
-
-              if (!LGA_DATA) {
-                return null;
-              }
-
+            children={({ url }) => {
               return (
-                <form.Field name="city">
-                  {(field) => (
-                    <View>
-                      <Label nativeID="city">City</Label>
+                <View className="flex w-full items-center justify-center">
+                  <Pressable
+                    onPress={pickImage}
+                    className="relative h-20 w-20 overflow-hidden rounded-full">
+                    <Avatar className="h-full w-full" alt="User's Avatar">
+                      <AvatarImage source={{ uri: url }} />
+                      <AvatarFallback className="bg-primary">
+                        <Text className="font-cabinet-bold text-4xl leading-none">
+                          {user?.profile?.fullName?.substring(0, 2) || ''}
+                        </Text>
+                      </AvatarFallback>
+                    </Avatar>
 
-                      <Select>
-                        <SelectTrigger className="w-full bg-white">
-                          <SelectValue id="city" placeholder="Select City" />
-                        </SelectTrigger>
-                        <SelectContent
-                          insets={contentInsets}
-                          className="mt-2 w-full bg-white"
-                          style={{ maxHeight: 300 }}>
-                          <NativeSelectScrollView className="h-full">
-                            <SelectGroup>
-                              <SelectLabel>City</SelectLabel>
-                              {LGA_DATA?.lgas?.map((lga) => (
-                                <SelectItem
-                                  onPress={() => {
-                                    field.handleChange(lga.name);
-                                    form.setFieldValue('postalCode', lga.postal_code);
-                                  }}
-                                  key={lga.name}
-                                  label={lga.name}
-                                  value={lga.name}>
-                                  {lga.name}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </NativeSelectScrollView>
-                        </SelectContent>
-                      </Select>
-
-                      {!field.state.meta.isValid ? (
-                        <InputError errors={field.state.meta.errors} />
-                      ) : null}
+                    <View className="absolute inset-0 flex h-full w-full items-center justify-center bg-[#1B1B1E]/40">
+                      <Image
+                        source={require('@/assets/icons/camera.svg')}
+                        style={{ width: 24, height: 24 }}
+                        contentFit="contain"
+                      />
                     </View>
-                  )}
-                </form.Field>
+                  </Pressable>
+                </View>
               );
             }}
           />
 
-          <form.Field name="address">
-            {(field) => (
-              <View>
-                <Label nativeID="address">Address</Label>
-                <Textarea
-                  className="bg-white"
-                  id="address"
-                  value={field.state.value}
-                  onChangeText={field.handleChange}
-                  placeholder="Enter your current address"
-                  hasError={!field.state.meta.isValid}
-                />
-                {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
-              </View>
-            )}
-          </form.Field>
+          <View className="flex gap-4">
+            <form.Field name="country">
+              {(field) => (
+                <View>
+                  <Label nativeID="country">Country</Label>
 
-          <Button onPress={form.handleSubmit} isLoading={isPending} disabled={isPending}>
-            Continue
-          </Button>
+                  <Select defaultValue={{ label: field.state.value, value: field.state.value }}>
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue id="country" placeholder="Select Country" />
+                    </SelectTrigger>
+                    <SelectContent
+                      insets={contentInsets}
+                      className="mt-2 w-full bg-white"
+                      style={{ maxHeight: 300 }}>
+                      <NativeSelectScrollView className="h-full">
+                        <SelectGroup>
+                          <SelectLabel>Country</SelectLabel>
+
+                          <SelectItem
+                            onPress={() => {
+                              field.handleChange('Nigeria');
+                            }}
+                            label="Nigeria"
+                            value="Nigeria">
+                            Nigeria
+                          </SelectItem>
+                        </SelectGroup>
+                      </NativeSelectScrollView>
+                    </SelectContent>
+                  </Select>
+
+                  {!field.state.meta.isValid ? (
+                    <InputError errors={field.state.meta.errors} />
+                  ) : null}
+                </View>
+              )}
+            </form.Field>
+
+            <form.Field name="state">
+              {(field) => (
+                <View>
+                  <Label nativeID="state">State</Label>
+
+                  <Select defaultValue={{ label: field.state.value, value: field.state.value }}>
+                    <SelectTrigger className="w-full bg-white">
+                      <SelectValue id="state" placeholder="Select State" />
+                    </SelectTrigger>
+                    <SelectContent
+                      insets={contentInsets}
+                      className="mt-2 w-full bg-white"
+                      style={{ maxHeight: 300 }}>
+                      <NativeSelectScrollView className="h-full">
+                        <SelectGroup>
+                          <SelectLabel>State</SelectLabel>
+                          {NIGERIAN_STATES.map((state) => (
+                            <SelectItem
+                              onPress={() => {
+                                field.handleChange(state.state);
+                              }}
+                              key={state.state}
+                              label={state.state}
+                              value={state.state}>
+                              {state.state}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </NativeSelectScrollView>
+                    </SelectContent>
+                  </Select>
+
+                  {!field.state.meta.isValid ? (
+                    <InputError errors={field.state.meta.errors} />
+                  ) : null}
+                </View>
+              )}
+            </form.Field>
+
+            <form.Subscribe
+              selector={(state) => ({
+                state: state.values.state,
+              })}
+              children={({ state }) => {
+                const LGA_DATA = NIGERIAN_STATES.find((i) => i.state === state);
+
+                if (!LGA_DATA) {
+                  return null;
+                }
+
+                return (
+                  <form.Field name="city">
+                    {(field) => (
+                      <View>
+                        <Label nativeID="city">City</Label>
+
+                        <Select>
+                          <SelectTrigger className="w-full bg-white">
+                            <SelectValue id="city" placeholder="Select City" />
+                          </SelectTrigger>
+                          <SelectContent
+                            insets={contentInsets}
+                            className="mt-2 w-full bg-white"
+                            style={{ maxHeight: 300 }}>
+                            <NativeSelectScrollView className="h-full">
+                              <SelectGroup>
+                                <SelectLabel>City</SelectLabel>
+                                {LGA_DATA?.lgas?.map((lga) => (
+                                  <SelectItem
+                                    onPress={() => {
+                                      field.handleChange(lga.name);
+                                      form.setFieldValue('postalCode', lga.postal_code);
+                                    }}
+                                    key={lga.name}
+                                    label={lga.name}
+                                    value={lga.name}>
+                                    {lga.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </NativeSelectScrollView>
+                          </SelectContent>
+                        </Select>
+
+                        {!field.state.meta.isValid ? (
+                          <InputError errors={field.state.meta.errors} />
+                        ) : null}
+                      </View>
+                    )}
+                  </form.Field>
+                );
+              }}
+            />
+
+            <form.Field name="address">
+              {(field) => (
+                <View>
+                  <Label nativeID="address">Address</Label>
+                  <Textarea
+                    className="bg-white"
+                    id="address"
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    placeholder="Enter your current address"
+                    hasError={!field.state.meta.isValid}
+                  />
+                  {!field.state.meta.isValid ? (
+                    <InputError errors={field.state.meta.errors} />
+                  ) : null}
+                </View>
+              )}
+            </form.Field>
+
+            <Button onPress={form.handleSubmit} isLoading={isPending} disabled={isPending}>
+              Continue
+            </Button>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }

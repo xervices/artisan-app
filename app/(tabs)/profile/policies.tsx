@@ -16,7 +16,7 @@ const data = [
     onPress: () => router.navigate('/profile/privacy'),
   },
   {
-    name: 'Terms & conditons',
+    name: 'Terms & Conditions',
     icon: require('@/assets/icons/terms.svg'),
     isLink: true,
     isDestructive: false,

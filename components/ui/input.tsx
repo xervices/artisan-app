@@ -110,10 +110,18 @@ const Input = React.forwardRef<TextInput, InputProps>(
           placeholderTextColor="#1B1B1E"
           style={{
             color: '#1B1B1E',
+            ...Platform.select({
+              ios: {
+                paddingTop: 0,
+                paddingBottom: 0,
+                lineHeight: undefined,
+              },
+              android: { textAlignVertical: 'center' },
+            }),
           }}
           className={cn(
             // Base styles
-            'flex h-[56px] w-full min-w-0 flex-row items-center rounded-[4px] border bg-white px-4 py-1 font-cabinet-medium text-base text-[#1B1B1E]',
+            'flex h-[56px] w-full min-w-0 flex-row items-center rounded-[4px] border bg-white px-4 font-cabinet-medium text-base text-[#1B1B1E]',
             // Error state border color
             hasError ? 'border-error' : isFocused ? 'border-[#FE6A00]' : 'border-[#DFDFE1]',
             // Add right padding only if we have the eye icon to prevent text overlap
@@ -138,7 +146,7 @@ const Input = React.forwardRef<TextInput, InputProps>(
                   : 'focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50',
                 'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive'
               ),
-              native: 'placeholder:text-[#1B1B1E]',
+              native: 'placeholder:text-[#B4B4BC]',
             }),
             className
           )}
