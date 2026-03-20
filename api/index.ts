@@ -41,14 +41,14 @@ export const api = {
           throw new Error(getErrorMessage(error, 'Login failed'));
         }
 
-        if (data.user.role === 'user') {
-          throw new Error(
-            getErrorMessage({
-              message:
-                'Unauthorized: This account is not associated with an artisan, install the Xervices app and login.',
-            })
-          );
-        }
+        // if (data.user.role === 'user') {
+        //   throw new Error(
+        //     getErrorMessage({
+        //       message:
+        //         'Unauthorized: This account is not associated with an artisan, install the Xervices app and login.',
+        //     })
+        //   );
+        // }
 
         if (data?.tokens) {
           await tokenStorage.setTokens(data.tokens.accessToken, data.tokens.refreshToken);
@@ -1450,6 +1450,15 @@ export const api = {
       queryKey: ['cancellation', 'policy'],
       queryFn: async () => {
         const { data } = await apiClient.GET('/api/cancellation-policy');
+
+        return data;
+      },
+    }),
+  getAbout: () =>
+    queryOptions({
+      queryKey: ['about', 'xervices'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/about-xervices');
 
         return data;
       },

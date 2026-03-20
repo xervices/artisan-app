@@ -40,7 +40,7 @@ export default function Screen() {
       useBackground
       stickyHeader={
         <View className="pb-4">
-          <AuthHeader title="Your level" />
+          <AuthHeader title="Your Level" />
         </View>
       }>
       {levels?.isLoading || myLevel?.isLoading ? (
@@ -84,7 +84,7 @@ export default function Screen() {
               <Text className="font-cabinet-bold text-sm text-[#3E1A00]">Level limit</Text>
 
               <Text className="text-xs text-[#737381]">
-                The higher your level the more visible you are to users.
+                The higher your level, the more visible you are to users.
               </Text>
             </View>
           </View>
@@ -94,7 +94,7 @@ export default function Screen() {
               key={level.id}
               className="flex flex-row items-center justify-between gap-2 rounded-[8px] bg-[#F4F4F5] p-4">
               <Text className="flex-1 text-sm text-[#737381]">
-                {level?.displayOrder}. {level?.displayName} - {level?.minJobsRequired} jobs &
+                {level?.displayOrder}. {level?.displayName} - {level?.minJobsRequired} jobs &{' '}
                 {level?.commissionPercent}% rating
               </Text>
 

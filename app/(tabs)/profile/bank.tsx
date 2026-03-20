@@ -26,7 +26,7 @@ export default function Screen() {
       onRefresh={refetch}
       stickyHeader={
         <View className="pb-4">
-          <AuthHeader title="Bank account" />
+          <AuthHeader title="Bank Account" />
         </View>
       }>
       {isLoading ? (

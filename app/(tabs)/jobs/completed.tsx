@@ -31,7 +31,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingState } from '@/components/loading-state';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatDateTime } from '@/lib/utils';
 
 export default function Screen() {
   const { id }: { id: string } = useLocalSearchParams();
@@ -141,7 +141,9 @@ export default function Screen() {
                 <Text className="font-cabinet-bold text-sm text-[#1B1B1E]">
                   You arrived at the location
                 </Text>
-                <Text className="text-xs leading-none text-[#B4B4BC]">0:9AM - 27-11-2025</Text>
+                <Text className="text-xs leading-none text-[#B4B4BC]">
+                  {formatDateTime(data?.startedAt)}
+                </Text>
               </View>
             </View>
 
@@ -175,6 +177,10 @@ export default function Screen() {
                 </Text>
 
                 <Text className="text-xs text-[#B4B4BC]">Before photo has been attached</Text>
+
+                <Text className="text-xs leading-none text-[#B4B4BC]">
+                  {formatDateTime(data?.startedAt)}
+                </Text>
 
                 <View className="mt-1 flex flex-row flex-wrap gap-2">
                   {beforeEvidence?.map((item) => (
@@ -218,10 +224,14 @@ export default function Screen() {
 
               <View className="flex-1 gap-1">
                 <Text className="font-cabinet-bold text-sm text-[#1B1B1E]">
-                  You are done and has checked out
+                  You are done and have checked out
                 </Text>
 
                 <Text className="text-xs text-[#B4B4BC]">After photo has been attached</Text>
+
+                <Text className="text-xs leading-none text-[#B4B4BC]">
+                  {formatDateTime(data?.completedAt)}
+                </Text>
 
                 <View className="mt-1 flex flex-row flex-wrap gap-2">
                   {afterEvidence?.map((item) => (
@@ -239,24 +249,30 @@ export default function Screen() {
               </View>
             </Pressable>
 
-            <View className="flex flex-row items-center justify-between">
+            {/* <View className="flex flex-row items-center justify-between">
               <Text className="text-sm leading-none text-[#737381]">Promos</Text>
               <Text className="text-sm leading-none text-[#FF6A00]">XS12334555</Text>
-            </View>
+            </View> */}
 
             <View className="mx-auto h-[1px] w-[92%] bg-[#F1F1F1]" />
 
             <View className="flex flex-row items-center justify-between">
               <Text className="text-sm leading-none text-[#737381]">Booking Date & Time</Text>
-              <Text className="text-sm leading-none text-[#737381]">2025-11-27 17:47:27</Text>
+              <Text className="text-sm leading-none text-[#737381]">
+                {formatDateTime(data?.createdAt)}
+              </Text>
             </View>
 
             <View className="mx-auto h-[1px] w-[92%] bg-[#F1F1F1]" />
 
-            <View className="flex flex-row items-center justify-between">
-              <Text className="text-sm leading-none text-[#737381]">Promo Discount</Text>
-              <Text className="text-sm leading-none text-[#FF6A00]">₦500</Text>
-            </View>
+            {data?.discountAmount && data?.discountAmount > 0 ? (
+              <View className="flex flex-row items-center justify-between">
+                <Text className="text-sm leading-none text-[#737381]">Promo Discount</Text>
+                <Text className="text-sm leading-none text-[#FF6A00]">
+                  {formatCurrency(data?.discountAmount)}
+                </Text>
+              </View>
+            ) : null}
 
             <View className="flex flex-row items-center justify-between">
               <Text className="text-sm leading-none text-[#737381]">Total Price</Text>

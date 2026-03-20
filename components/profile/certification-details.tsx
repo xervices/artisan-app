@@ -442,7 +442,7 @@ export function CertificationDetails() {
               <Label nativeID="certs">Upload certifications</Label>
 
               <Text className="text-sm text-[#737381]">
-                Upload valid documents that shows you are a professional in your field.
+                Upload valid documents that show you are a professional in your field.
               </Text>
 
               {/* Existing Certifications from Profile */}
@@ -539,6 +539,9 @@ export function CertificationDetails() {
 
                 <Text className="text-center text-sm text-[#FE6A00]">Add Documents</Text>
                 <Text className="text-center text-xs text-[#B4B4BC]">Upload certificate </Text>
+                <Text className="text-center text-xs text-[#B4B4BC]">
+                  Accepted formats: JPG, JPEG, PNG.
+                </Text>
               </Pressable>
             </View>
 
@@ -641,6 +644,9 @@ export function CertificationDetails() {
 
                 <Text className="text-center text-sm text-[#FE6A00]">Add Photos/Videos</Text>
                 <Text className="text-center text-xs text-[#B4B4BC]">Upload previous jobs </Text>
+                <Text className="text-center text-xs text-[#B4B4BC]">
+                  Accepted formats: JPG, JPEG, PNG.
+                </Text>
               </Pressable>
             </View>
 

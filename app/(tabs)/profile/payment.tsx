@@ -10,7 +10,7 @@ import { SheetManager } from 'react-native-actions-sheet';
 
 const data = [
   {
-    name: 'Bank account',
+    name: 'Bank Account',
     icon: require('@/assets/icons/wallet.svg'),
     isLink: true,
     isDestructive: false,

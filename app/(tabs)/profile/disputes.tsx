@@ -49,7 +49,11 @@ export default function Screen() {
                 style={{
                   color: value === 'progress' ? '#FFF4EA' : '#737381',
                 }}>
-                In Progress
+                {inProgressDisputes && inProgressDisputes?.length > 0
+                  ? inProgressDisputes?.length
+                  : 'No'}{' '}
+                in-progress{' '}
+                {inProgressDisputes && inProgressDisputes?.length > 1 ? 'disputes' : 'dispute'}
               </Text>
             </TabsTrigger>
             <TabsTrigger
@@ -65,7 +69,8 @@ export default function Screen() {
                 style={{
                   color: value === 'resolved' ? '#FFF4EA' : '#737381',
                 }}>
-                Resolved
+                {resolvedDisputes && resolvedDisputes?.length > 0 ? resolvedDisputes?.length : 'No'}{' '}
+                resolved {resolvedDisputes && resolvedDisputes?.length > 1 ? 'disputes' : 'dispute'}
               </Text>
             </TabsTrigger>
           </TabsList>
@@ -86,8 +91,8 @@ export default function Screen() {
                   className="flex gap-4 rounded-[8px] bg-white p-4">
                   <View className="flex flex-row items-center justify-between gap-4">
                     <View className="flex-1">
-                      <Text className="flex-1 font-cabinet-bold leading-none text-[#1B1B1E]">
-                        Plumber
+                      <Text className="flex-1 font-cabinet-bold capitalize leading-none text-[#1B1B1E]">
+                        {dispute?.disputeType}
                       </Text>
                       <Text
                         numberOfLines={1}
@@ -98,7 +103,7 @@ export default function Screen() {
                     </View>
 
                     <View className="flex h-[26px] items-center justify-center rounded-full bg-[#FFF4EA] px-3">
-                      <Text className="text-sm text-primary">In Progress</Text>
+                      <Text className="text-sm text-primary">In-progress</Text>
                     </View>
                   </View>
 
@@ -123,7 +128,7 @@ export default function Screen() {
                 </View>
               ))
             ) : (
-              <EmptyState title="No In-progress disputes" />
+              <EmptyState title="No in-progress disputes." />
             )}
           </TabsContent>
 
@@ -143,8 +148,8 @@ export default function Screen() {
                   className="flex gap-4 rounded-[8px] bg-white p-4">
                   <View className="flex flex-row items-center justify-between gap-4">
                     <View className="flex-1">
-                      <Text className="flex-1 font-cabinet-bold leading-none text-[#1B1B1E]">
-                        Plumber
+                      <Text className="flex-1 font-cabinet-bold capitalize leading-none text-[#1B1B1E]">
+                        {dispute?.disputeType}
                       </Text>
                       <Text className="flex-1 text-sm text-[#FE6A00]">
                         Dispute ID: {dispute?.id}
@@ -177,7 +182,7 @@ export default function Screen() {
                 </View>
               ))
             ) : (
-              <EmptyState title="No Resolved disputes" />
+              <EmptyState title="No resolved disputes." />
             )}
           </TabsContent>
         </Tabs>

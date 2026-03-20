@@ -12,6 +12,9 @@ export const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://server-api-b
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
 
+// Track if we've already shown unauthorized error to prevent multiple error messages
+let unauthorizedErrorShown = false;
+
 /**
  * Refresh the access token using the refresh token
  * Works in both foreground and background contexts
@@ -167,24 +170,45 @@ const authMiddleware: Middleware = {
           console.log('🔄 Retrying request with new token...');
           const retryResponse = await fetch(clonedRequest);
 
-          // If retry succeeds, return the new response
+          // Reset error flag on successful retry
           if (retryResponse.ok || retryResponse.status !== 401) {
             console.log('✅ Retry successful');
+            unauthorizedErrorShown = false;
             return retryResponse;
           }
         }
 
-        // If refresh failed or retry still got 401, logout
+        // If refresh failed or retry still got 401, logout and show error once
         console.error('❌ Token refresh failed or retry still unauthorized');
         await tokenStorage.clearTokens();
         useAuthStore.getState().setLoginState(false);
-        showErrorMessage('Session expired, please login again');
+
+        // Only show error message if we haven't shown it recently
+        if (!unauthorizedErrorShown) {
+          unauthorizedErrorShown = true;
+          showErrorMessage('Session expired, please login again');
+
+          // Reset flag after 3 seconds to allow showing error again for a new session
+          setTimeout(() => {
+            unauthorizedErrorShown = false;
+          }, 3000);
+        }
       } catch (error) {
         console.error('❌ Error handling 401:', error);
         if (error?.error === 'Unauthorized') {
           await tokenStorage.clearTokens();
           useAuthStore.getState().setLoginState(false);
-          showErrorMessage('Session expired, please login again');
+
+          // Only show error message if we haven't shown it recently
+          if (!unauthorizedErrorShown) {
+            unauthorizedErrorShown = true;
+            showErrorMessage('Session expired, please login again');
+
+            // Reset flag after 3 seconds
+            setTimeout(() => {
+              unauthorizedErrorShown = false;
+            }, 3000);
+          }
         }
       }
     }

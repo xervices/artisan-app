@@ -149,6 +149,11 @@ export default function Screen() {
       //   return;
       // }
 
+      if (previousJobs?.length < 4) {
+        showErrorMessage('Please upload a minimum of 4 previous jobs.');
+        return;
+      }
+
       const data = { ...value, certifications, previousJobs };
 
       // @ts-ignore
@@ -461,7 +466,7 @@ export default function Screen() {
                       id="license"
                       value={field.state.value}
                       onChangeText={field.handleChange}
-                      placeholder="Enter your Professional license number."
+                      placeholder="Enter your professional license number."
                       hasError={!field.state.meta.isValid}
                     />
                     {!field.state.meta.isValid ? (
@@ -534,7 +539,7 @@ export default function Screen() {
                 <Label nativeID="certs">Upload certifications</Label>
 
                 <Text className="text-sm text-[#737381]">
-                  Upload valid documents that shows you are a professional in your field.
+                  Upload valid documents that show you are a professional in your field.
                 </Text>
 
                 <View className="my-2 flex gap-2">
@@ -595,6 +600,9 @@ export default function Screen() {
 
                   <Text className="text-center text-sm text-[#FE6A00]">Add Documents</Text>
                   <Text className="text-center text-xs text-[#B4B4BC]">Upload certificate </Text>
+                  <Text className="text-center text-xs text-[#B4B4BC]">
+                    Accepted formats: JPG, JPEG, PNG.
+                  </Text>
                 </Pressable>
               </View>
 
@@ -661,6 +669,9 @@ export default function Screen() {
 
                   <Text className="text-center text-sm text-[#FE6A00]">Add Photos/Videos</Text>
                   <Text className="text-center text-xs text-[#B4B4BC]">Upload previous jobs </Text>
+                  <Text className="text-center text-xs text-[#B4B4BC]">
+                    Accepted formats: JPG, JPEG, PNG.
+                  </Text>
                 </Pressable>
               </View>
 
