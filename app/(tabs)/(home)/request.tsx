@@ -59,6 +59,10 @@ export default function Screen() {
 
   const offersMade = artisanOffers?.data?.filter((i) => i.serviceRequestId === id);
 
+  const artisanCounterOffersCount = offersMade?.filter(
+    (i) => i.offeredBy === 'artisan' && i.parentOfferId
+  )?.length;
+
   const lastOfferId = offersMade && offersMade.length > 0 ? offersMade[0]?.id : '';
   const respondToOffer = useMutation(api.respondToOffer(lastOfferId));
   const withdrawOffer = useMutation(api.withdrawOffer(lastOfferId));
@@ -126,6 +130,9 @@ export default function Screen() {
             name={service?.data?.user?.profile?.fullName}
             serviceLat={service?.data?.serviceLatitude || undefined}
             serviceLong={service?.data?.serviceLongitude || undefined}
+            dropoffAddress={service?.data?.destinationAddress || undefined}
+            dropOffLat={service?.data?.destinationLatitude || undefined}
+            dropOffLong={service?.data?.destinationLongitude || undefined}
           />
 
           <View className="flex flex-row items-center justify-between rounded-[8px] bg-[#F4F4F5] p-4">
@@ -233,6 +240,11 @@ export default function Screen() {
                       )}
                     </View>
                   ))}
+
+                  <Text className="text-center font-cabinet-medium text-xs text-primary">
+                    You have {2 - (artisanCounterOffersCount ? artisanCounterOffersCount : 0)}{' '}
+                    counter offers left.
+                  </Text>
                 </View>
               </View>
 
@@ -244,6 +256,9 @@ export default function Screen() {
                   disabled={sendCounterOffer?.isPending}
                   loadingIndicatorColor="#1B1B1E"
                   onPress={() => {
+                    if ((artisanCounterOffersCount ? artisanCounterOffersCount : 0) > 1) {
+                      return showErrorMessage("You've run out of counters for this job.");
+                    }
                     SheetManager.show('counter-offer-sheet', {
                       payload: {
                         type: 'counter',

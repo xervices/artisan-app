@@ -19,6 +19,8 @@ import { getDeviceInfo } from '@/lib/utils';
 export default function Screen() {
   const { token }: { token: string } = useLocalSearchParams();
 
+  const { user } = useAuthStore();
+
   const [otpDisabled, setOTPDisabled] = React.useState(false);
   //   const [timer, setTimer] = React.useState(0);
   //   const { minute, seconds } = useTimer({ sec: timer });
@@ -35,8 +37,12 @@ export default function Screen() {
           subtitle:
             'Your device has been verified successfully. You will be redirected to the home page shortly.',
           onRedirect: () => {
-            useAuthStore.getState().setLoginState(true);
-            router.replace('/(tabs)/(home)');
+            if (user?.isArtisan) {
+              useAuthStore.getState().setLoginState(true);
+              router.replace('/(tabs)/(home)');
+            } else {
+              router.replace('/become-artisan');
+            }
           },
         },
       });

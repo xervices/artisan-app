@@ -3112,6 +3112,26 @@ export interface paths {
         patch: operations["UsersController_updateSettings"];
         trace?: never;
     };
+    "/api/users/me/become-artisan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Become an artisan
+         * @description Upgrade a regular user account to also have artisan capabilities (dual-role). The user keeps their primary role but gains access to artisan features. After this, complete the artisan onboarding via POST /artisans/onboard.
+         */
+        post: operations["UsersController_becomeArtisan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/categories": {
         parameters: {
             query?: never;
@@ -4326,6 +4346,11 @@ export interface components {
             /** @description Whether account is active */
             isActive: boolean;
             /**
+             * @description Whether user has artisan capabilities (dual-role support)
+             * @example false
+             */
+            isArtisan: boolean;
+            /**
              * Format: date-time
              * @description Last login timestamp
              */
@@ -4364,6 +4389,14 @@ export interface components {
             user: components["schemas"]["UserResponseDto"];
             /** @description Authentication tokens */
             tokens: components["schemas"]["TokensResponseDto"];
+            /**
+             * @description List of roles available to this user for context switching. Always includes "user". Includes "artisan" if isArtisan is true. Includes "admin" if user is an admin.
+             * @example [
+             *       "user",
+             *       "artisan"
+             *     ]
+             */
+            availableRoles?: string[];
             /**
              * @description Indicates if the user needs to verify their account. If true, a verification code has been sent to email and phone.
              * @example true
@@ -7163,6 +7196,28 @@ export interface components {
              * @example true
              */
             pushNotification?: boolean;
+        };
+        BecomeArtisanDto: {
+            /**
+             * @description Array of category/service IDs the user wants to offer as an artisan
+             * @example [
+             *       "550e8400-e29b-41d4-a716-446655440001",
+             *       "550e8400-e29b-41d4-a716-446655440002"
+             *     ]
+             */
+            categoryIds: string[];
+        };
+        BecomeArtisanResponseDto: {
+            /**
+             * @description Success message
+             * @example Successfully registered as artisan. Complete your artisan profile to start receiving jobs.
+             */
+            message: string;
+            /**
+             * @description Whether user now has artisan capabilities
+             * @example true
+             */
+            isArtisan: boolean;
         };
         DeleteAccountDto: {
             /** @description Reason for deleting the account */
@@ -15214,6 +15269,57 @@ export interface operations {
             };
             /** @description Unauthorized */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_becomeArtisan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BecomeArtisanDto"];
+            };
+        };
+        responses: {
+            /** @description Successfully registered as artisan */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BecomeArtisanResponseDto"];
+                };
+            };
+            /** @description Admin users cannot become artisans or invalid category IDs */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description User already has artisan capabilities */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -194,6 +194,10 @@ export const api = {
           throw new Error(getErrorMessage(error, 'Refresh access request failed'));
         }
 
+        if (data?.accessToken && data?.refreshToken) {
+          await tokenStorage.setTokens(data.accessToken, data.refreshToken);
+        }
+
         return data;
       },
     };
@@ -310,6 +314,21 @@ export const api = {
 
         if (error) {
           throw new Error(getErrorMessage(error, 'Delete account failed'));
+        }
+
+        return data;
+      },
+    };
+  },
+  becomeArtisan: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/users/me/become-artisan', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/users/me/become-artisan', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Request failed'));
         }
 
         return data;

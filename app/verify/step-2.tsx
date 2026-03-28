@@ -93,9 +93,11 @@ const formSchema = z.object({
 // ];
 
 export default function Screen() {
-  const { user } = useAuthStore();
+  const user = useQuery(api.getCurrentUser());
 
   const categories = useQuery(api.getAllCategories());
+
+  const { data: profile, isLoading, refetch } = useQuery(api.getCurrentArtisanProfile());
 
   const queryClient = useQueryClient();
 
@@ -132,7 +134,7 @@ export default function Screen() {
 
   const form = useForm({
     defaultValues: {
-      categoryIds: [] as string[],
+      categoryIds: profile?.categories?.map((cat) => cat.id) ?? [],
       // identificationType: 'NIN',
       // identificationNumber: '',
       yearsOfExperience: '',
@@ -229,6 +231,12 @@ export default function Screen() {
     }
   };
 
+  React.useEffect(() => {
+    if (profile) {
+      form.setFieldValue('categoryIds', profile.categories?.map((cat) => cat.id) ?? []);
+    }
+  }, [profile]);
+
   // const verifyNameMatch = () => {
   //   const ninFirstName = verifyNIN.data?.data?.firstName;
   //   const ninLastName = verifyNIN.data?.data?.lastName;
@@ -247,7 +255,7 @@ export default function Screen() {
 
   return (
     <View className="flex-1">
-      {categories.isLoading ? (
+      {categories.isLoading || isLoading ? (
         <LoadingState />
       ) : (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -282,7 +290,7 @@ export default function Screen() {
                                 <SelectItem
                                   onPress={() => {
                                     if (!field.state.value.includes(cat.id)) {
-                                      field.handleChange((prev) => [...prev, cat.id]);
+                                      field.handleChange((prev) => [cat.id]);
                                     }
                                   }}
                                   key={cat.id}
@@ -479,7 +487,7 @@ export default function Screen() {
               <form.Field name="licenseIssueState">
                 {(field) => (
                   <View>
-                    <Label nativeID="state">Issue state</Label>
+                    <Label nativeID="state">Issuing state</Label>
 
                     <Select>
                       <SelectTrigger className="w-full bg-white">

@@ -13,7 +13,9 @@ export function Stats() {
         <Text className="text-center font-cabinet-bold text-lg text-[#737381]">
           {data?.totalJobsCompleted ? data?.totalJobsCompleted : 0}
         </Text>
-        <Text className="text-center text-xs text-[#737381]">Jobs</Text>
+        <Text className="text-center text-xs text-[#737381]">
+          Job{data?.totalJobsCompleted && data?.totalJobsCompleted === 1 ? '' : 's'}
+        </Text>
       </View>
 
       <View className="flex flex-1 items-center justify-center rounded-[4px] bg-[#F4F4F5] py-2">

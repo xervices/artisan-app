@@ -284,7 +284,7 @@ export function CertificationDetails() {
                               <SelectItem
                                 onPress={() => {
                                   if (!field.state.value.includes(cat.id)) {
-                                    field.handleChange((prev) => [...prev, cat.id]);
+                                    field.handleChange((prev) => [cat.id]);
                                   } else {
                                     field.handleChange((prev) =>
                                       prev.filter((id) => id !== cat.id)
@@ -374,7 +374,7 @@ export function CertificationDetails() {
             <form.Field name="licenseIssueState">
               {(field) => (
                 <View>
-                  <Label nativeID="state">Issue state</Label>
+                  <Label nativeID="state">Issuing state</Label>
 
                   <Select
                     defaultValue={{

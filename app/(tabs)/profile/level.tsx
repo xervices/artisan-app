@@ -95,7 +95,7 @@ export default function Screen() {
               className="flex flex-row items-center justify-between gap-2 rounded-[8px] bg-[#F4F4F5] p-4">
               <Text className="flex-1 text-sm text-[#737381]">
                 {level?.displayOrder}. {level?.displayName} - {level?.minJobsRequired} jobs &{' '}
-                {level?.commissionPercent}% rating
+                {level?.minRatingRequired}% rating
               </Text>
 
               {BADGEICONS[level?.level] ? (

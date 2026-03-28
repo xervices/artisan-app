@@ -83,6 +83,8 @@ export default function Screen() {
                 token: res?.deviceVerificationToken,
               },
             });
+          } else if (!res?.user?.isArtisan) {
+            router.navigate
           } else {
             useAuthStore.getState().setLoginState(true);
           }

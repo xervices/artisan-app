@@ -18,6 +18,8 @@ import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 export default function Screen() {
   const { email, phone }: { email: string; phone: string } = useLocalSearchParams();
 
+  const { user } = useAuthStore();
+
   const [otpDisabled, setOTPDisabled] = React.useState(false);
   const [timer, setTimer] = React.useState(60);
   const { minute, seconds } = useTimer({ sec: timer });
@@ -34,8 +36,12 @@ export default function Screen() {
           subtitle:
             'You have successfully signed up to Xervices. You will be redirected to the home page shortly.',
           onRedirect: () => {
-            useAuthStore.getState().setLoginState(true);
-            router.replace('/verify');
+            if (user?.isArtisan) {
+              useAuthStore.getState().setLoginState(true);
+              router.replace('/verify');
+            } else {
+              router.replace('/become-artisan');
+            }
           },
         },
       });

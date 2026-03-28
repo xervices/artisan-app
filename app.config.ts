@@ -28,10 +28,17 @@ const appIconBadgeConfig: AppIconBadgeConfig = {
 };
 
 export default ({ config }: ConfigContext): ExpoConfig => {
-  const { name, bundleIdentifier, packageName, scheme, googleServicesFile, googleMapsApiKey } =
-    getDynamicAppConfig(
-      (process.env.APP_ENV as 'development' | 'preview' | 'production') || 'development'
-    );
+  const {
+    name,
+    bundleIdentifier,
+    packageName,
+    scheme,
+    googleServicesFile,
+    googleMapsApiKey,
+    iosGoogleMapsApiKey,
+  } = getDynamicAppConfig(
+    (process.env.APP_ENV as 'development' | 'preview' | 'production') || 'development'
+  );
 
   return {
     ...config,
@@ -63,6 +70,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
         UIBackgroundModes: ['location'],
+      },
+      config: {
+        googleMapsApiKey: iosGoogleMapsApiKey,
       },
     },
     experiments: {
@@ -177,6 +187,7 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
       scheme: SCHEME,
       googleServicesFile: './prod-google-services.json',
       googleMapsApiKey: 'process.env.GOOGLE_MAPS_API_KEY',
+      iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
     };
   }
 
@@ -188,6 +199,7 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
       scheme: `${SCHEME}-prev`,
       googleServicesFile: './preview-google-services.json',
       googleMapsApiKey: 'process.env.GOOGLE_MAPS_API_KEY',
+      iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
     };
   }
 
@@ -198,5 +210,6 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
     scheme: `${SCHEME}-dev`,
     googleServicesFile: './dev-google-services.json',
     googleMapsApiKey: 'AIzaSyBNpr9SSwSRuUxg9rzYAFhD7CFKqQhN9os',
+    iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
   };
 };

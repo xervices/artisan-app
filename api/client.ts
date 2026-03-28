@@ -118,6 +118,9 @@ function isTokenExpired(token: string, bufferSeconds = 300): boolean {
 const authMiddleware: Middleware = {
   async onRequest({ request }) {
     try {
+      // Add the role header to every request
+      request.headers.set('X-Active-Role', 'artisan');
+
       let token = await tokenStorage.getAccessToken();
 
       if (!token) {
@@ -217,7 +220,16 @@ const authMiddleware: Middleware = {
   },
 };
 
+const roleMiddleware: Middleware = {
+  async onRequest({ request }) {
+    request.headers.set('X-Active-Role', 'artisan');
+
+    return request;
+  },
+};
+
 export const apiClient = createClient<paths>({ baseUrl: BASE_URL });
 apiClient.use(authMiddleware);
 
 export const publicApiClient = createClient<paths>({ baseUrl: BASE_URL });
+publicApiClient.use(roleMiddleware);

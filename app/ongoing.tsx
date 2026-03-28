@@ -375,7 +375,7 @@ export default function Screen() {
           <View className="relative flex flex-1 items-center justify-center">
             <MapView
               ref={mapRef}
-              provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+              provider={PROVIDER_GOOGLE}
               style={{ width: '100%', height: '100%' }}
               initialRegion={{
                 latitude: data?.serviceRequest?.serviceLatitude || 4.7425431,

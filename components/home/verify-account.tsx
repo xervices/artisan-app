@@ -24,7 +24,7 @@ export function VerifyAccount() {
         {data?.verificationStatus === 'in_progress' ? null : (
           <Pressable
             onPress={() => {
-              if (data === undefined) {
+              if (data === undefined || !data?.previousJobUrls) {
                 router.navigate('/verify/step-2');
               } else {
                 router.navigate('/verification');
