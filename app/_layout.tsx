@@ -1,6 +1,8 @@
 import '../location-task';
 import '@/global.css';
 
+import * as SplashScreenAPI from 'expo-splash-screen';
+
 import { useAuthStore } from '@/store/auth-store';
 import { PortalHost } from '@rn-primitives/portal';
 import { Stack } from 'expo-router';
@@ -15,6 +17,8 @@ import { LocationProvider } from 'solomo';
 import { QueryProvider } from '@/providers/query-provider';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NotificationProvider } from '@/providers/notification-provider';
+import { useEffect, useState } from 'react';
+import { SplashScreen } from '@/components/splash-screen';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -24,6 +28,17 @@ export {
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
   const { isLoggedIn, hasCompletedOnboarding } = useAuthStore();
+  const [showingSplash, setShowingSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      await SplashScreenAPI.hideAsync(); // hide native splash first
+      setShowingSplash(false); // then show your custom one
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showingSplash) return <SplashScreen />;
 
   return (
     // <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>

@@ -84,7 +84,7 @@ export default function Screen() {
               },
             });
           } else if (!res?.user?.isArtisan) {
-            router.navigate
+            router.navigate;
           } else {
             useAuthStore.getState().setLoginState(true);
           }
@@ -172,11 +172,12 @@ export default function Screen() {
         </View>
 
         <View className="flex flex-row items-center justify-center gap-1.5">
-          <Text className="text-[#737381]">Don’t have an account?</Text>
-
-          <Pressable onPress={() => router.navigate('/register')}>
-            <Text className="text-primary">Sign Up</Text>
-          </Pressable>
+          <Text className="text-center text-[#737381]">
+            Don’t have an account?{' '}
+            <Text onPress={() => router.navigate('/register')} className="text-primary">
+              Sign Up
+            </Text>
+          </Text>
         </View>
       </View>
     </Layout>

@@ -42,7 +42,7 @@ export default function RequestUserCard({
     onSuccess: (duration: string, distance: string) => void
   ) => {
     try {
-      const apiKey = 'AIzaSyDkT-0SiaW_dZq_ydeOTZAsKT6IvSgLp5Q';
+      const apiKey = 'AIzaSyDlZwHBiKYN7A9CJHuvZqbroZCPnKlCHWc';
 
       if (!apiKey) {
         console.warn('Google Maps API Key not found');
