@@ -18,8 +18,16 @@ export default function TabsLayout() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      // Auto-start tracking for artisans
-      startTracking();
+      // Only auto-start tracking if permissions are already granted,
+      // to avoid triggering system prompt before prominent disclosure.
+      (async () => {
+        const Location = await import('expo-location');
+        const fg = await Location.getForegroundPermissionsAsync();
+        const bg = await Location.getBackgroundPermissionsAsync();
+        if (fg.granted && bg.granted) {
+          startTracking();
+        }
+      })();
     }
 
     return () => {

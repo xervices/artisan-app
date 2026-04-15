@@ -6,9 +6,11 @@ import { Button } from './ui/button';
 import { useLocation } from 'solomo';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/api';
+import { useBackgroundLocation } from '@/hooks/use-background-location';
 
 export default function EnableLocationDialog() {
   const { hasPermission, requestPermission, location } = useLocation();
+  const { startTracking } = useBackgroundLocation();
 
   const { mutate } = useMutation(api.updateLocation());
 
@@ -49,8 +51,8 @@ export default function EnableLocationDialog() {
           }}>
           {/* Header with Close Button */}
           <View className="flex-row items-start justify-between">
-            <Text className="flex-1 font-cabinet-bold text-[#1B1B1E]">
-              Please turn on your location
+            <Text className="flex-1 font-cabinet-bold text-[#1B1B1E] text-base">
+              Location Data Consent
             </Text>
 
             <Pressable
@@ -62,16 +64,18 @@ export default function EnableLocationDialog() {
           </View>
 
           {/* Description */}
-          <Text className="text-sm text-[#737381]">
-            Your precise location is used to show your position on the map.
+          <Text className="text-sm text-[#737381] mt-2 mb-4">
+            Xervices Pro collects location data to enable Active Job navigation, Live Map Tracking, and accurate ETA calculations even when the app is closed or not in use.
           </Text>
 
           {/* Action Button */}
           <Button
-            onPress={() => {
-              requestPermission().finally(() => setVisible(false));
+            onPress={async () => {
+              await requestPermission();
+              await startTracking();
+              setVisible(false);
             }}>
-            Turn on location
+            Agree & Continue
           </Button>
         </View>
       </View>
