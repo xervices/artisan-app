@@ -51,7 +51,7 @@ export default function EnableLocationDialog() {
           }}>
           {/* Header with Close Button */}
           <View className="flex-row items-start justify-between">
-            <Text className="flex-1 font-cabinet-bold text-[#1B1B1E] text-base">
+            <Text className="flex-1 font-cabinet-bold text-base text-[#1B1B1E]">
               Location Data Consent
             </Text>
 
@@ -64,8 +64,9 @@ export default function EnableLocationDialog() {
           </View>
 
           {/* Description */}
-          <Text className="text-sm text-[#737381] mt-2 mb-4">
-            Xervices Pro collects location data to enable Active Job navigation, Live Map Tracking, and accurate ETA calculations even when the app is closed or not in use.
+          <Text className="mb-4 mt-2 text-sm text-[#737381]">
+            Xervices Pro collects location data to enable Active Job navigation, Live Map Tracking,
+            and accurate ETA calculations even when the app is closed or not in use.
           </Text>
 
           {/* Action Button */}
@@ -75,7 +76,7 @@ export default function EnableLocationDialog() {
               await startTracking();
               setVisible(false);
             }}>
-            Agree & Continue
+            Continue
           </Button>
         </View>
       </View>

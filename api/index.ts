@@ -855,6 +855,53 @@ export const api = {
     };
   },
 
+  // reviews endpoint
+  getCustomerStats: (customerId: string) =>
+    queryOptions({
+      queryKey: ['reviews', 'stats', 'customer', customerId],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/reviews/customer/{customerId}/stats', {
+          params: {
+            path: {
+              customerId,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+  createReview: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/reviews/customer', 'post'>) => {
+        const { data, error } = await apiClient.POST('/api/reviews/customer', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to submit review'));
+        }
+
+        return data;
+      },
+    };
+  },
+  canReview: (jobId: string) =>
+    queryOptions({
+      queryKey: ['job', 'review', 'can', jobId],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/reviews/can-review/{jobId}', {
+          params: {
+            path: {
+              jobId,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
+
   // chat  endpoints
   getChatRoom: (jobId: string) =>
     queryOptions({

@@ -81,7 +81,7 @@ export default function TransactionCard({
 
         {(type === 'payment_received' || type === 'earning') && (
           <Text className="text-sm text-[#737381]">
-            Charges
+            Charges{' '}
             <Text className="font-cabinet-bold text-sm text-[#737381]">
               {formatCurrency(charge)}
             </Text>

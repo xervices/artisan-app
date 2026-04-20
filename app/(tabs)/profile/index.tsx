@@ -15,6 +15,7 @@ import { useMutation } from '@tanstack/react-query';
 import { api } from '@/api';
 import Storage from 'expo-sqlite/kv-store';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
+import { SheetManager } from 'react-native-actions-sheet';
 
 export default function Screen() {
   const { expoPushToken } = useNotification();
@@ -114,6 +115,13 @@ export default function Screen() {
         await tokenStorage.clearTokens();
         useAuthStore.getState().setLoginState(false);
       },
+    },
+    {
+      name: 'Delete account',
+      icon: require('@/assets/icons/delete.svg'),
+      isLink: true,
+      isDestructive: true,
+      onPress: () => SheetManager.show('delete-account-sheet'),
     },
   ];
 

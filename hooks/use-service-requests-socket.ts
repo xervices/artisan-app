@@ -7,7 +7,7 @@ import type {
 } from './types';
 
 // Assuming base URL from environment or constant
-const SOCKET_URL = 'https://server-api-bibv.onrender.com'; // Make sure this matches your server
+const SOCKET_URL = 'https://staging-api.getxervices.com'; // Make sure this matches your server
 type ServiceRequestSocket = Socket<
   ServiceRequestsServerToClientEvents,
   ServiceRequestsClientToServerEvents
@@ -25,7 +25,7 @@ export const useServiceRequestsSocket = ({
   const [requests, setRequests] = useState<ServiceRequestData[]>([]);
   useEffect(() => {
     if (!autoConnect) return;
-    
+
     // Helper function to register artisan
     const registerArtisan = (socket: ServiceRequestSocket) => {
       if (artisanId) {
@@ -38,7 +38,7 @@ export const useServiceRequestsSocket = ({
         });
       }
     };
-    
+
     // Connect to the specific namespace
     const socket: ServiceRequestSocket = io(`${SOCKET_URL}/service-requests`, {
       transports: ['websocket'],
@@ -49,33 +49,33 @@ export const useServiceRequestsSocket = ({
       reconnectionDelayMax: 5000,
     });
     socketRef.current = socket;
-    
+
     socket.on('connect', () => {
       console.log('Connected to /service-requests');
       setIsConnected(true);
       // Auto-register on connect (and reconnect)
       registerArtisan(socket);
     });
-    
+
     socket.on('disconnect', (reason) => {
       console.log('Disconnected from /service-requests:', reason);
       setIsConnected(false);
     });
-    
+
     socket.on('connect_error', (error) => {
       console.error('Connection error on /service-requests:', error.message);
     });
-    
+
     socket.on('service_request:new', (event) => {
       console.log('New Service Request:', event);
       setRequests((prev) => [...prev, event.data]);
     });
-    
+
     socket.on('service_request:cancelled', (event) => {
       console.log('Service Request Cancelled:', event);
       setRequests((prev) => prev.filter((req) => req.id !== event.data.serviceRequestId));
     });
-    
+
     return () => {
       socket.disconnect();
       socketRef.current = null;

@@ -17,6 +17,7 @@ interface RequestUserCardProp {
   serviceLong?: number;
   dropOffLat?: number;
   dropOffLong?: number;
+  customerRating?: number;
 }
 
 export default function RequestUserCard({
@@ -29,6 +30,7 @@ export default function RequestUserCard({
   dropoffAddress,
   dropOffLat,
   dropOffLong,
+  customerRating,
 }: RequestUserCardProp) {
   const { location } = useLocation();
   const [eta, setEta] = React.useState<string | null>(null);
@@ -113,7 +115,9 @@ export default function RequestUserCard({
             </AvatarFallback>
           </Avatar>
 
-          <Text className="font-cabinet-bold text-sm text-[#FFB884]">{name}</Text>
+          <Text className="font-cabinet-bold text-sm text-[#FFB884]">
+            {name} ({customerRating || 0}★){' '}
+          </Text>
         </View>
 
         <View>

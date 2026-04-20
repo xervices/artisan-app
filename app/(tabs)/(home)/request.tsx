@@ -10,7 +10,7 @@ import { Text } from '@/components/ui/text';
 import { useOffersSocket } from '@/hooks/use-offers-socket';
 import { formatCurrency } from '@/lib/utils';
 import { useMarketplaceContext } from '@/providers/use-marketplace-context';
-import { useMutation, useQueries } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { CircleAlert, Play } from 'lucide-react-native';
@@ -24,6 +24,8 @@ export default function Screen() {
   const [service, artisanOffers] = useQueries({
     queries: [api.getServiceRequest(id), api.getArtisanOffers()],
   });
+
+  const userRating = useQuery(api.getCustomerStats(service?.data?.user?.id));
 
   const sendOffer = useMutation(api.createNewOffer());
   const sendCounterOffer = useMutation(api.createCounterOffer());
@@ -133,6 +135,7 @@ export default function Screen() {
             dropoffAddress={service?.data?.destinationAddress || undefined}
             dropOffLat={service?.data?.destinationLatitude || undefined}
             dropOffLong={service?.data?.destinationLongitude || undefined}
+            customerRating={userRating?.data?.averageRating}
           />
 
           <View className="flex flex-row items-center justify-between rounded-[8px] bg-[#F4F4F5] p-4">

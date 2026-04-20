@@ -38,6 +38,8 @@ export default function Screen() {
 
   const { isLoading, data, refetch, isRefetching } = useQuery(api.getJobDetail(id));
 
+  const canReview = useQuery(api.canReview(id));
+
   const beforeEvidence = data?.evidence?.filter((i) => i.evidenceType === 'before');
   const afterEvidence = data?.evidence?.filter((i) => i.evidenceType === 'after');
 
@@ -103,6 +105,21 @@ export default function Screen() {
                   sideOffset={2}
                   className="w-56 bg-white"
                   align="start">
+                  {canReview?.data?.canReview && (
+                    <DropdownMenuItem
+                      onPress={() =>
+                        router.navigate({
+                          pathname: '/rate',
+                          params: {
+                            id,
+                            customerId: data?.serviceRequest?.userId,
+                          },
+                        })
+                      }>
+                      <Text className="font-cabinet-bold">Rate User</Text>
+                    </DropdownMenuItem>
+                  )}
+
                   <DropdownMenuItem
                     onPress={() =>
                       router.navigate({

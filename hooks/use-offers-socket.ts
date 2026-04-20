@@ -9,7 +9,7 @@ import type {
   CounterOfferEvent,
 } from './types';
 
-const SOCKET_URL = 'https://server-api-bibv.onrender.com';
+const SOCKET_URL = 'https://staging-api.getxervices.com';
 type OffersSocket = Socket<OffersServerToClientEvents, OffersClientToServerEvents>;
 interface UseOffersOptions {
   serviceRequestId?: string;

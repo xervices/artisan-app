@@ -57,6 +57,7 @@ export default function RootLayout() {
                       <Stack.Screen name="chat" options={{ headerShown: false }} />
                       <Stack.Screen name="ongoing" options={{ headerShown: false }} />
                       <Stack.Screen name="dispute" options={{ headerShown: false }} />
+                      <Stack.Screen name="rate" options={{ headerShown: false }} />
                       <Stack.Screen name="verify" options={{ headerShown: false }} />
                       <Stack.Screen name="verification" options={{ headerShown: false }} />
                     </Stack.Protected>
