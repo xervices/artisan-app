@@ -84,7 +84,7 @@ export default function Screen() {
               },
             });
           } else if (!res?.user?.isArtisan) {
-            router.navigate;
+            router.navigate('/become-artisan');
           } else {
             useAuthStore.getState().setLoginState(true);
           }

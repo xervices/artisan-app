@@ -19,6 +19,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NotificationProvider } from '@/providers/notification-provider';
 import { useEffect, useState } from 'react';
 import { SplashScreen } from '@/components/splash-screen';
+import { LocationConsentDialog } from '@/components/location-consent-dialog';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -89,6 +90,7 @@ export default function RootLayout() {
                     }}
                   />
                   <PortalHost />
+                  <LocationConsentDialog />
                 </SheetProvider>
               </View>
             </NotificationProvider>

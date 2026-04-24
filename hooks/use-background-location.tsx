@@ -31,15 +31,18 @@ export const useBackgroundLocation = (): UseBackgroundLocationReturn => {
 
   const startTracking = useCallback(async () => {
     try {
-      // Request permissions
-      const { status: foregroundStatus } = await Location.requestForegroundPermissionsAsync();
+      // Permissions must be requested via ensureLocationPermissions() (which
+      // shows the prominent disclosure first). Here we only verify the
+      // already-granted state — never call request* directly without a
+      // preceding disclosure.
+      const { status: foregroundStatus } = await Location.getForegroundPermissionsAsync();
 
       if (foregroundStatus !== 'granted') {
         setError('Foreground location permission not granted');
         return;
       }
 
-      const { status: backgroundStatus } = await Location.requestBackgroundPermissionsAsync();
+      const { status: backgroundStatus } = await Location.getBackgroundPermissionsAsync();
 
       if (backgroundStatus !== 'granted') {
         setError('Background location permission not granted');

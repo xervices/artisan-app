@@ -159,7 +159,7 @@ export default function Screen() {
 
             {item.isLink && <ChevronRight size={20} color={'#B4B4BC'} />}
 
-            {isPending && item.isDestructive ? <LoadingIndicator size={14} /> : null}
+            {isPending && item.name === 'Logout' && item.isDestructive ? <LoadingIndicator size={14} /> : null}
           </Pressable>
         ))}
       </View>

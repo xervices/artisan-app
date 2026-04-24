@@ -21,6 +21,7 @@ import { useCameraPermissions } from 'expo-camera';
 import { makePhoneCall } from '@/lib/utils';
 import { LoadingState } from '@/components/loading-state';
 import * as Location from 'expo-location';
+import { ensureLocationPermissions } from '@/lib/ensure-location-permissions';
 
 const routeCoordinates = [
   { latitude: 37.78825, longitude: -122.4324 }, // Start point
@@ -212,16 +213,14 @@ export default function Screen() {
         return;
       }
 
-      // 1. Check and request permissions upfront
-      const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
-      if (fgStatus !== 'granted') {
+      // 1. Show in-app prominent disclosure before any OS permission prompt,
+      //    then request foreground + background permissions.
+      const { foreground, background } = await ensureLocationPermissions();
+      if (!foreground) {
         console.warn('Foreground location permission denied');
         return;
       }
-
-      // 2. Request background permission on iOS for reliable tracking
-      const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
-      if (bgStatus !== 'granted') {
+      if (!background) {
         console.warn('Background location permission denied — tracking may stop when backgrounded');
       }
 
