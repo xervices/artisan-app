@@ -871,6 +871,21 @@ export const api = {
         return data;
       },
     }),
+  getCustomerReviews: (customerId: string) =>
+    queryOptions({
+      queryKey: ['reviews', 'customer', customerId],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/reviews/customer/{customerId}', {
+          params: {
+            path: {
+              customerId,
+            },
+          },
+        });
+
+        return data;
+      },
+    }),
   createReview: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/reviews/customer', 'post'>) => {

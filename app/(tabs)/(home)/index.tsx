@@ -6,6 +6,7 @@ import { AvailabilityStatus } from '@/components/home/availability-status';
 import { OverviewCard } from '@/components/home/overview-card';
 import { Stats } from '@/components/home/stats';
 import { VerifyAccount } from '@/components/home/verify-account';
+import { RateClientPrompt } from '@/components/home/rate-client-prompt';
 import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { useAuthStore } from '@/store/auth-store';
@@ -27,7 +28,7 @@ export default function Screen() {
   const { startTracking } = useBackgroundLocation();
   const { mutate: updateLocation } = useMutation(api.updateLocation());
 
-  const [serviceRequests, artisanProfile, earnings, offers, userOfWeek, newsPromotions] =
+  const [serviceRequests, artisanProfile, earnings, offers, userOfWeek, newsPromotions, userJobs] =
     useQueries({
       queries: [
         api.getAllServiceRequest(),
@@ -36,6 +37,7 @@ export default function Screen() {
         api.getArtisanOffers(),
         api.getActiveFeaturedProfiles(),
         api.getNewsAndPromotions(),
+        api.getUserJobs(),
       ],
     });
 
@@ -52,6 +54,7 @@ export default function Screen() {
         offers?.refetch(),
         userOfWeek?.refetch(),
         newsPromotions?.refetch(),
+        userJobs?.refetch(),
       ]);
     } catch (error) {
     } finally {
@@ -105,6 +108,7 @@ export default function Screen() {
         offers?.refetch();
         userOfWeek?.refetch();
         newsPromotions?.refetch();
+        userJobs?.refetch();
       }
     });
 
@@ -145,6 +149,10 @@ export default function Screen() {
 
         <View className="px-6">
           <Offers />
+        </View>
+
+        <View className="px-6">
+          <RateClientPrompt />
         </View>
 
         <Promotions />

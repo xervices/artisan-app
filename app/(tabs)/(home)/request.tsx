@@ -4,11 +4,11 @@ import { AuthHeader } from '@/components/auth-header';
 import RequestUserCard from '@/components/home/request-user-card';
 import { Layout } from '@/components/layout';
 import { LoadingState } from '@/components/loading-state';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { LoadingIndicator } from '@/components/ui/loading-indicator';
 import { Text } from '@/components/ui/text';
-import { useOffersSocket } from '@/hooks/use-offers-socket';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatRelativeTime } from '@/lib/utils';
 import { useMarketplaceContext } from '@/providers/use-marketplace-context';
 import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
@@ -26,6 +26,7 @@ export default function Screen() {
   });
 
   const userRating = useQuery(api.getCustomerStats(service?.data?.user?.id));
+  const userReviews = useQuery(api.getCustomerReviews(service?.data?.user?.id));
 
   const sendOffer = useMutation(api.createNewOffer());
   const sendCounterOffer = useMutation(api.createCounterOffer());
@@ -143,6 +144,52 @@ export default function Screen() {
             <Text className="font-cabinet-bold text-sm text-[#737381]">
               {service?.data?.category?.name}
             </Text>
+          </View>
+
+          <View className="flex gap-2">
+            <Text className="font-cabinet-medium text-xs uppercase text-[#1B1B1E]">
+              Customer recent reviews
+            </Text>
+
+            <View className="flex gap-4 rounded-[8px] bg-[#F4F4F5] p-4">
+              {userReviews?.data?.reviews && userReviews.data.reviews.length > 0 ? (
+                userReviews.data.reviews.slice(0, 5).map((review) => (
+                  <View key={review?.id} className="flex gap-1">
+                    <View className="flex flex-row items-center gap-2">
+                      <Avatar
+                        alt="User's Avatar"
+                        className="h-8 w-8 rounded-sm border border-[#FFE6D6]">
+                        <AvatarImage source={{ uri: review?.reviewer?.avatarUrl ?? undefined }} />
+                        <AvatarFallback className="bg-primary">
+                          <Text className="font-cabinet-bold text-xs uppercase leading-none">
+                            {review?.reviewer?.fullName?.substring(0, 2)}
+                          </Text>
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <View>
+                        <Text className="font-cabinet-bold text-sm leading-none text-[#737381]">
+                          {review?.reviewer?.fullName}
+                        </Text>
+
+                        <Text className="text-xs text-[#FE6A00]">
+                          {new Array(Math.floor(review.rating)).fill(0).map((_, index) => (
+                            <Text key={index}>★</Text>
+                          ))}{' '}
+                          <Text className="text-xs text-[#B4B4BC]">
+                            {formatRelativeTime(review?.createdAt)}
+                          </Text>
+                        </Text>
+                      </View>
+                    </View>
+
+                    <Text className="text-sm text-[#737381]">{review?.comment}</Text>
+                  </View>
+                ))
+              ) : (
+                <Text className="text-sm text-[#B4B4BC]">No reviews yet</Text>
+              )}
+            </View>
           </View>
 
           <View className="flex gap-2">

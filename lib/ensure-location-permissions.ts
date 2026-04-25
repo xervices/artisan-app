@@ -25,9 +25,13 @@ export async function ensureLocationPermissions(
     return { foreground, background, consented: true };
   }
 
-  const consented = await useLocationConsentStore.getState().show();
+  const store = useLocationConsentStore.getState();
+  let consented = store.hasConsented;
   if (!consented) {
-    return { foreground, background, consented: false };
+    consented = await store.show();
+    if (!consented) {
+      return { foreground, background, consented: false };
+    }
   }
 
   if (needsForeground) {
