@@ -361,7 +361,7 @@ export function CertificationDetails() {
                     id="license"
                     value={field.state.value}
                     onChangeText={field.handleChange}
-                    placeholder="Enter your Professional license number."
+                    placeholder="Enter your professional license number."
                     hasError={!field.state.meta.isValid}
                   />
                   {!field.state.meta.isValid ? (

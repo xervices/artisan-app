@@ -73,6 +73,8 @@ export default function Screen() {
     setEndDatePickerVisibility(false);
   };
 
+  console.log(data?.data[0]);
+
   return (
     <Layout
       isRefreshing={isRefetching}
@@ -127,6 +129,8 @@ export default function Screen() {
               customer={transaction?.jobDetails?.customerName}
               category={transaction?.jobDetails?.categoryName}
               jobId={transaction?.jobDetails?.jobId}
+              referenceType={transaction?.referenceType}
+              description={transaction?.description}
             />
           ))}
         </View>

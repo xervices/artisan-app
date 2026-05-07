@@ -132,6 +132,8 @@ export default function Screen() {
                       customer={transaction?.jobDetails?.customerName}
                       category={transaction?.jobDetails?.categoryName}
                       jobId={transaction?.jobDetails?.jobId}
+                      referenceType={transaction?.referenceType}
+                      description={transaction?.description}
                     />
                   ))}
                 </>

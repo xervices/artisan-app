@@ -18,11 +18,11 @@ export function TermsScreen() {
       onRefresh={refetch}
       stickyHeader={
         <View className="pb-4">
-          <AuthHeader title={'Terms & Conditions'} />
+          <AuthHeader title={'Terms of Service'} />
         </View>
       }>
       {isLoading ? (
-        <LoadingState title="Loading Terms & Conditions..." />
+        <LoadingState title="Loading Terms of Service..." />
       ) : (
         <View className="flex-1 gap-6">
           <Text className="text-[#737381]">{data?.data?.content}</Text>

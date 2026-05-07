@@ -196,6 +196,8 @@ export default function Screen() {
               const password = field.state.value;
               const hasUppercase = /[A-Z]/.test(password);
               const hasLowercase = /[a-z]/.test(password);
+              const hasNumber = /[0-9]/.test(password);
+              const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
               const hasMinLength = password.length >= 6;
 
               return (
@@ -237,6 +239,30 @@ export default function Screen() {
                           hasLowercase ? 'text-sm text-green-600' : 'text-sm text-gray-400'
                         }>
                         Lowercase letter
+                      </Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-2">
+                      <Text
+                        className={hasNumber ? 'text-sm text-green-600' : 'text-sm text-gray-400'}>
+                        {hasNumber ? '✓' : '○'}
+                      </Text>
+                      <Text
+                        className={hasNumber ? 'text-sm text-green-600' : 'text-sm text-gray-400'}>
+                        Number
+                      </Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-2">
+                      <Text
+                        className={
+                          hasSpecialChar ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        {hasSpecialChar ? '✓' : '○'}
+                      </Text>
+                      <Text
+                        className={
+                          hasSpecialChar ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        Special character (e.g. !@#$%)
                       </Text>
                     </View>
                     <View className="flex flex-row items-center gap-2">
