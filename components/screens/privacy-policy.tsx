@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-import { Text } from '@/components/ui/text';
 import { Layout } from '@/components/layout';
 import { AuthHeader } from '@/components/auth-header';
+import { HtmlContent } from '@/components/html-content';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingState } from '../loading-state';
@@ -18,14 +18,14 @@ export function PrivacyScreen() {
       onRefresh={refetch}
       stickyHeader={
         <View className="pb-4">
-          <AuthHeader title={data?.data ? data?.data?.title : 'Privacy Policy'} />
+          <AuthHeader title={'Privacy Policy'} />
         </View>
       }>
       {isLoading ? (
         <LoadingState title="Loading Privacy policy..." />
       ) : (
-        <View className="flex-1 gap-6">
-          <Text className="text-[#737381]">{data?.data?.content}</Text>
+        <View className="flex-1">
+          <HtmlContent html={data?.data?.content} />
         </View>
       )}
     </Layout>
