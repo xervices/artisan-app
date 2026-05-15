@@ -32,6 +32,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingState } from '@/components/loading-state';
 import { formatCurrency, formatDateTime } from '@/lib/utils';
+import { isVideoUri, VideoThumb } from '@/components/video-thumb';
 
 export default function Screen() {
   const { id }: { id: string } = useLocalSearchParams();
@@ -203,12 +204,16 @@ export default function Screen() {
                   {beforeEvidence?.map((item) => (
                     <View
                       key={item?.id}
-                      className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
-                      <Image
-                        source={item?.mediaUrl}
-                        style={{ width: '100%', height: '100%' }}
-                        contentFit="cover"
-                      />
+                      className="relative aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+                      {isVideoUri(item?.mediaUrl) ? (
+                        <VideoThumb uri={item?.mediaUrl} iconSize={12} badgeSize={24} />
+                      ) : (
+                        <Image
+                          source={item?.mediaUrl}
+                          style={{ width: '100%', height: '100%' }}
+                          contentFit="cover"
+                        />
+                      )}
                     </View>
                   ))}
                 </View>
@@ -254,12 +259,16 @@ export default function Screen() {
                   {afterEvidence?.map((item) => (
                     <View
                       key={item?.id}
-                      className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
-                      <Image
-                        source={item?.mediaUrl}
-                        style={{ width: '100%', height: '100%' }}
-                        contentFit="cover"
-                      />
+                      className="relative aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+                      {isVideoUri(item?.mediaUrl) ? (
+                        <VideoThumb uri={item?.mediaUrl} iconSize={12} badgeSize={24} />
+                      ) : (
+                        <Image
+                          source={item?.mediaUrl}
+                          style={{ width: '100%', height: '100%' }}
+                          contentFit="cover"
+                        />
+                      )}
                     </View>
                   ))}
                 </View>

@@ -22,6 +22,7 @@ import { makePhoneCall } from '@/lib/utils';
 import { LoadingState } from '@/components/loading-state';
 import * as Location from 'expo-location';
 import { ensureLocationPermissions } from '@/lib/ensure-location-permissions';
+import { isVideoUri, VideoThumb } from '@/components/video-thumb';
 
 const routeCoordinates = [
   { latitude: 37.78825, longitude: -122.4324 }, // Start point
@@ -612,37 +613,47 @@ export default function Screen() {
                         </Pressable>
 
                         <View className="mt-1 flex flex-row flex-wrap gap-2">
-                          {beforePhotos?.map((photo, index) => (
-                            <View
-                              key={index}
-                              className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
-                              <Image
-                                source={photo?.url}
-                                style={{ width: '100%', height: '100%' }}
-                                contentFit="cover"
-                              />
+                          {beforePhotos?.map((photo, index) => {
+                            const isVideo =
+                              photo?.isVideo ||
+                              photo?.mimeType?.startsWith('video') ||
+                              isVideoUri(photo?.url);
+                            return (
+                              <View
+                                key={index}
+                                className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
+                                {isVideo ? (
+                                  <VideoThumb uri={photo?.url} iconSize={14} badgeSize={28} />
+                                ) : (
+                                  <Image
+                                    source={photo?.url}
+                                    style={{ width: '100%', height: '100%' }}
+                                    contentFit="cover"
+                                  />
+                                )}
 
-                              <Pressable
-                                onPress={() =>
-                                  SheetManager.show('delete-image-sheet', {
-                                    payload: {
-                                      onDelete() {
-                                        setBeforePhotos((prev) =>
-                                          prev.filter((media) => media.url !== photo.url)
-                                        );
+                                <Pressable
+                                  onPress={() =>
+                                    SheetManager.show('delete-image-sheet', {
+                                      payload: {
+                                        onDelete() {
+                                          setBeforePhotos((prev) =>
+                                            prev.filter((media) => media.url !== photo.url)
+                                          );
+                                        },
                                       },
-                                    },
-                                  })
-                                }
-                                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
-                                <Image
-                                  source={require('@/assets/icons/trash.svg')}
-                                  style={{ width: 12, height: 12 }}
-                                  contentFit="contain"
-                                />
-                              </Pressable>
-                            </View>
-                          ))}
+                                    })
+                                  }
+                                  className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
+                                  <Image
+                                    source={require('@/assets/icons/trash.svg')}
+                                    style={{ width: 12, height: 12 }}
+                                    contentFit="contain"
+                                  />
+                                </Pressable>
+                              </View>
+                            );
+                          })}
                         </View>
                       </View>
                     ) : null}
@@ -658,12 +669,16 @@ export default function Screen() {
                             ? beforeEvidence?.map((i) => (
                                 <View
                                   key={i?.id}
-                                  className="aspect-square w-20 overflow-hidden rounded-[4px]">
-                                  <Image
-                                    source={i?.mediaUrl}
-                                    style={{ width: '100%', height: '100%' }}
-                                    contentFit="cover"
-                                  />
+                                  className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
+                                  {isVideoUri(i?.mediaUrl) ? (
+                                    <VideoThumb uri={i?.mediaUrl} iconSize={14} badgeSize={28} />
+                                  ) : (
+                                    <Image
+                                      source={i?.mediaUrl}
+                                      style={{ width: '100%', height: '100%' }}
+                                      contentFit="cover"
+                                    />
+                                  )}
                                 </View>
                               ))
                             : null}
@@ -698,37 +713,47 @@ export default function Screen() {
                         </Pressable>
 
                         <View className="mt-1 flex flex-row flex-wrap gap-2">
-                          {afterPhotos.map((photo, index) => (
-                            <View
-                              key={index}
-                              className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
-                              <Image
-                                source={photo?.url}
-                                style={{ width: '100%', height: '100%' }}
-                                contentFit="cover"
-                              />
+                          {afterPhotos.map((photo, index) => {
+                            const isVideo =
+                              photo?.isVideo ||
+                              photo?.mimeType?.startsWith('video') ||
+                              isVideoUri(photo?.url);
+                            return (
+                              <View
+                                key={index}
+                                className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
+                                {isVideo ? (
+                                  <VideoThumb uri={photo?.url} iconSize={14} badgeSize={28} />
+                                ) : (
+                                  <Image
+                                    source={photo?.url}
+                                    style={{ width: '100%', height: '100%' }}
+                                    contentFit="cover"
+                                  />
+                                )}
 
-                              <Pressable
-                                onPress={() =>
-                                  SheetManager.show('delete-image-sheet', {
-                                    payload: {
-                                      onDelete() {
-                                        setAfterPhotos((prev) =>
-                                          prev.filter((media) => media.url !== photo.url)
-                                        );
+                                <Pressable
+                                  onPress={() =>
+                                    SheetManager.show('delete-image-sheet', {
+                                      payload: {
+                                        onDelete() {
+                                          setAfterPhotos((prev) =>
+                                            prev.filter((media) => media.url !== photo.url)
+                                          );
+                                        },
                                       },
-                                    },
-                                  })
-                                }
-                                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
-                                <Image
-                                  source={require('@/assets/icons/trash.svg')}
-                                  style={{ width: 12, height: 12 }}
-                                  contentFit="contain"
-                                />
-                              </Pressable>
-                            </View>
-                          ))}
+                                    })
+                                  }
+                                  className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#FFF4EA]">
+                                  <Image
+                                    source={require('@/assets/icons/trash.svg')}
+                                    style={{ width: 12, height: 12 }}
+                                    contentFit="contain"
+                                  />
+                                </Pressable>
+                              </View>
+                            );
+                          })}
                         </View>
                       </View>
                     ) : null}
@@ -744,12 +769,16 @@ export default function Screen() {
                             ? afterEvidence?.map((i) => (
                                 <View
                                   key={i?.id}
-                                  className="aspect-square w-20 overflow-hidden rounded-[4px]">
-                                  <Image
-                                    source={i?.mediaUrl}
-                                    style={{ width: '100%', height: '100%' }}
-                                    contentFit="cover"
-                                  />
+                                  className="relative aspect-square w-20 overflow-hidden rounded-[4px]">
+                                  {isVideoUri(i?.mediaUrl) ? (
+                                    <VideoThumb uri={i?.mediaUrl} iconSize={14} badgeSize={28} />
+                                  ) : (
+                                    <Image
+                                      source={i?.mediaUrl}
+                                      style={{ width: '100%', height: '100%' }}
+                                      contentFit="cover"
+                                    />
+                                  )}
                                 </View>
                               ))
                             : null}

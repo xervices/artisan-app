@@ -17,6 +17,23 @@ import { CircleAlert, Play } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
+import { isVideoUri, VideoThumb } from '@/components/video-thumb';
+
+function MediaThumbnail({ media }: { media: string }) {
+  const isVideo = isVideoUri(media);
+
+  return (
+    <Pressable
+      onPress={() => SheetManager.show('image-preview-sheet', { payload: { imgSource: media } })}
+      className="relative aspect-square w-[47%] overflow-hidden rounded-[8px]">
+      {isVideo ? (
+        <VideoThumb uri={media} />
+      ) : (
+        <Image source={media} style={{ width: '100%', height: '100%' }} contentFit="cover" />
+      )}
+    </Pressable>
+  );
+}
 
 export default function Screen() {
   const { id }: { id: string } = useLocalSearchParams();
@@ -207,21 +224,7 @@ export default function Screen() {
 
             <View className="flex flex-row flex-wrap justify-between gap-4">
               {service?.data?.mediaUrls?.map((media) => (
-                <Pressable
-                  key={media}
-                  onPress={() =>
-                    SheetManager.show('image-preview-sheet', { payload: { imgSource: media } })
-                  }
-                  className="relative aspect-square w-[47%] overflow-hidden rounded-[8px]">
-                  <Image
-                    source={media}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                    }}
-                    contentFit="cover"
-                  />
-                </Pressable>
+                <MediaThumbnail key={media} media={media} />
               ))}
             </View>
           </View>

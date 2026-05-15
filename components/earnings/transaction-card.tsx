@@ -94,7 +94,9 @@ export default function TransactionCard({
           </Text>
         )}
 
-        {(type === 'payment_received' || type === 'earning') && referenceType !== 'dispute' && (
+        {referenceType === 'dispute' && <Text className="text-sm text-[#B3031E]">Dispute</Text>}
+
+        {(type === 'payment_received' || type === 'earning') && (
           <Text className="text-sm text-[#737381]">
             Charges{' '}
             <Text className="font-cabinet-bold text-sm text-[#737381]">
@@ -102,8 +104,6 @@ export default function TransactionCard({
             </Text>
           </Text>
         )}
-
-        {referenceType === 'dispute' && <Text className="text-sm text-[#B3031E]">Dispute</Text>}
 
         <Text className="text-xs text-[#737381]">{formatDateTime(date)}</Text>
       </View>

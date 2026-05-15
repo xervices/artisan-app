@@ -81,6 +81,10 @@ export default function Screen() {
               pathname: '/verify-device',
               params: {
                 token: res?.deviceVerificationToken,
+                emailOrPhone: value?.emailOrPhone,
+                password: value?.password,
+                deviceId: value?.deviceId,
+                deviceName: value?.deviceName,
               },
             });
           } else if (!res?.user?.isArtisan) {
