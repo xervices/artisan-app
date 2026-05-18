@@ -56,7 +56,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       image: './assets/images/splash-icon.png',
       resizeMode: 'contain',
       backgroundColor: '#0A0A0B',
-      imageWidth: 600,
     },
     updates: {
       url: `https://u.expo.dev/${EAS_PROJECT_ID}`,

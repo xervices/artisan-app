@@ -15,7 +15,7 @@ import { InputError } from '@/components/ui/input-error';
 
 import { api } from '@/api';
 import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
-import { emojiRegex } from '@/lib/utils';
+import { emojiRegex, formatPhoneNumber } from '@/lib/utils';
 
 const formSchema = z
   .object({
@@ -73,6 +73,10 @@ export default function Screen() {
     },
     onSubmit: async ({ value }) => {
       const { confirmPassword, referralCode, ...registerData } = value;
+
+      if (registerData.phoneNumber.trim()) {
+        registerData.phoneNumber = formatPhoneNumber(registerData.phoneNumber);
+      }
 
       mutate(registerData, {
         onSuccess: () => {
@@ -197,7 +201,7 @@ export default function Screen() {
               const hasUppercase = /[A-Z]/.test(password);
               const hasLowercase = /[a-z]/.test(password);
               const hasNumber = /[0-9]/.test(password);
-              const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+              const hasSpecialChar = /[^A-Za-z0-9.,]/.test(password);
               const hasMinLength = password.length >= 6;
 
               return (

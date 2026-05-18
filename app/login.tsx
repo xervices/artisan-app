@@ -18,7 +18,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { api } from '@/api';
 import { showErrorMessage } from '@/api/helpers';
 import { useAuthStore } from '@/store/auth-store';
-import { getDeviceInfo } from '@/lib/utils';
+import { formatPhoneNumber, getDeviceInfo } from '@/lib/utils';
 
 const formSchema = z.object({
   emailOrPhone: z
@@ -66,6 +66,10 @@ export default function Screen() {
 
       value.deviceId = deviceInfo?.deviceId || '';
       value.deviceName = deviceInfo?.deviceName || '';
+
+      if (!value.emailOrPhone.includes('@')) {
+        value.emailOrPhone = formatPhoneNumber(value.emailOrPhone);
+      }
 
       mutate(value, {
         onSuccess: (res) => {

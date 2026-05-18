@@ -2,7 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import * as z from 'zod';
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { Platform, Pressable, ScrollView, View } from 'react-native';
+import { Keyboard, Platform, Pressable, ScrollView, View } from 'react-native';
 import { Layout } from '@/components/layout';
 import { AuthHeader } from '@/components/auth-header';
 import { Camera, X } from 'lucide-react-native';
@@ -50,6 +50,19 @@ export function formatSizeToMB(bytes: number | undefined | null): string {
 
   const megabytes = bytes / (1024 * 1024);
   return `${megabytes.toFixed(1)} MB`;
+}
+
+function isUnsupportedPickedAsset(asset: ImagePicker.ImagePickerAsset): boolean {
+  const uri = asset.uri.toLowerCase();
+
+  return (
+    asset.mimeType?.includes('heic') ||
+    asset.mimeType?.includes('heif') ||
+    asset.mimeType?.includes('avif') ||
+    uri.endsWith('.heic') ||
+    uri.endsWith('.heif') ||
+    uri.endsWith('.avif')
+  );
 }
 
 const formSchema = z.object({
@@ -122,6 +135,10 @@ export default function Screen() {
       size: number;
     }[]
   >([]);
+  const [activePicker, setActivePicker] = React.useState<'certification' | 'previousJob' | null>(
+    null
+  );
+  const activePickerRef = React.useRef(false);
 
   const ref = React.useRef<TriggerRef>(null);
   const insets = useSafeAreaInsets();
@@ -174,60 +191,116 @@ export default function Screen() {
   });
 
   const pickDocument = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (!permissionResult.granted) {
+    if (activePickerRef.current) {
       return;
     }
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: false,
-      quality: 1,
-    });
+    try {
+      activePickerRef.current = true;
+      setActivePicker('certification');
+      Keyboard.dismiss();
 
-    if (!result.canceled) {
-      const asset = result.assets[0];
-      if (asset.type === 'image') {
-        setCertifications((prev) => [
-          ...prev,
-          {
-            mimeType: asset.mimeType || '',
-            name: asset.fileName || '',
-            uri: asset.uri,
-            size: asset.fileSize || 0,
-          },
-        ]);
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permissionResult.granted) {
+        showErrorMessage('Photo library permission is required to choose an image.');
+        return;
       }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: false,
+        quality: 0.8,
+      });
+
+      if (result.canceled) {
+        return;
+      }
+
+      const asset = result.assets?.[0];
+
+      if (!asset || asset.type !== 'image') {
+        showErrorMessage('Please select a valid image.');
+        return;
+      }
+
+      if (isUnsupportedPickedAsset(asset)) {
+        showErrorMessage('The selected file format is not supported.');
+        return;
+      }
+
+      setCertifications((prev) => [
+        ...prev,
+        {
+          mimeType: asset.mimeType || 'image/jpeg',
+          name: asset.fileName || 'Certification image',
+          uri: asset.uri,
+          size: asset.fileSize || 0,
+        },
+      ]);
+    } catch {
+      showErrorMessage('Unable to open your photo library. Please try again.');
+    } finally {
+      activePickerRef.current = false;
+      setActivePicker(null);
     }
   };
 
   const pickImagesVideos = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (!permissionResult.granted) {
+    if (activePickerRef.current) {
       return;
     }
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'],
-      allowsEditing: false,
-      quality: 1,
-    });
+    try {
+      activePickerRef.current = true;
+      setActivePicker('previousJob');
+      Keyboard.dismiss();
 
-    if (!result.canceled) {
-      const asset = result.assets[0];
-      if (asset.type === 'image' || asset.type === 'video') {
-        setPreviousJobs((prev) => [
-          ...prev,
-          {
-            mimeType: asset.mimeType || '',
-            name: asset.fileName || '',
-            uri: asset.uri,
-            size: asset.fileSize || 0,
-          },
-        ]);
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permissionResult.granted) {
+        showErrorMessage('Photo library permission is required to choose media.');
+        return;
       }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images', 'videos'],
+        allowsEditing: false,
+        quality: 0.8,
+      });
+
+      if (result.canceled) {
+        return;
+      }
+
+      const asset = result.assets?.[0];
+
+      if (!asset || (asset.type !== 'image' && asset.type !== 'video')) {
+        showErrorMessage('Please select a valid image or video.');
+        return;
+      }
+
+      if (isUnsupportedPickedAsset(asset)) {
+        showErrorMessage('The selected file format is not supported.');
+        return;
+      }
+
+      setPreviousJobs((prev) => [
+        ...prev,
+        {
+          mimeType: asset.mimeType || (asset.type === 'video' ? 'video/mp4' : 'image/jpeg'),
+          name:
+            asset.fileName ||
+            (asset.type === 'video' ? 'Previous job video' : 'Previous job image'),
+          uri: asset.uri,
+          size: asset.fileSize || 0,
+        },
+      ]);
+    } catch {
+      showErrorMessage('Unable to open your photo library. Please try again.');
+    } finally {
+      activePickerRef.current = false;
+      setActivePicker(null);
     }
   };
 
@@ -599,6 +672,7 @@ export default function Screen() {
 
                 <Pressable
                   onPress={pickDocument}
+                  disabled={activePicker !== null}
                   className="mt-1 flex aspect-[327/100] w-full items-center justify-center rounded-[8px] border-2 border-[#E9E9EB]">
                   <Image
                     source={require('@/assets/icons/document.svg')}
@@ -668,6 +742,7 @@ export default function Screen() {
 
                 <Pressable
                   onPress={pickImagesVideos}
+                  disabled={activePicker !== null}
                   className="mt-1 flex aspect-[327/100] w-full items-center justify-center rounded-[8px] border-2 border-[#E9E9EB]">
                   <Image
                     source={require('@/assets/icons/camera-primary.svg')}

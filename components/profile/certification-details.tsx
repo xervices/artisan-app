@@ -33,6 +33,8 @@ import { DateInput } from '../ui/date-input';
 import { formatSizeToMB } from '@/app/verify/step-2';
 import { emojiRegex } from '@/lib/utils';
 
+const MIN_PREVIOUS_JOBS = 4;
+
 const formSchema = z.object({
   // Required: Category IDs for skills/services
   categoryIds: z.array(z.string()).min(1, 'Select at least 1 category'),
@@ -63,7 +65,16 @@ type FormValues = z.infer<typeof formSchema>;
 export function CertificationDetails() {
   const { data: profile, isLoading, refetch } = useQuery(api.getCurrentArtisanProfile());
   const categories = useQuery(api.getAllCategories());
-  const { mutate, isPending } = useMutation(api.updateArtisan());
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (payload: Partial<FormValues> & {
+      certifications?: typeof certifications;
+      previousJobs?: typeof previousJobs;
+    }) => {
+      const mutation = profile ? api.updateArtisan() : api.onboardArtisan();
+
+      return mutation.mutationFn(payload as never);
+    },
+  });
 
   const [certifications, setCertifications] = React.useState<
     {
@@ -104,11 +115,19 @@ export function CertificationDetails() {
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      // transform form values to update dto
+      const previousJobsCount = (profile?.previousJobUrls?.length ?? 0) + previousJobs.length;
+
+      if (previousJobsCount < MIN_PREVIOUS_JOBS) {
+        showErrorMessage(`Please upload a minimum of ${MIN_PREVIOUS_JOBS} previous jobs.`);
+        return;
+      }
+
+      // transform form values to the right dto. If no artisan profile exists yet,
+      // submit the full onboarding payload instead of patching an existing profile.
       const payload: Partial<FormValues> & {
         certifications?: typeof certifications;
         previousJobs?: typeof previousJobs;
-      } = {};
+      } = profile ? {} : { ...value };
 
       if (value.categoryIds !== profile?.categories?.map((cat) => cat.id)) {
         payload.categoryIds = value.categoryIds;
@@ -138,7 +157,9 @@ export function CertificationDetails() {
       mutate(payload, {
         onSuccess: () => {
           refetch();
-          showSuccessMessage('Profile updated successfully.');
+          showSuccessMessage(
+            profile ? 'Profile updated successfully.' : 'Profile submitted successfully.'
+          );
           router.back();
         },
         onError: (err) => {
@@ -548,7 +569,7 @@ export function CertificationDetails() {
             <View>
               <Label nativeID="prev">Upload previous jobs</Label>
 
-              <Text className="text-sm text-[#737381]">A minimum of 4</Text>
+              <Text className="text-sm text-[#737381]">A minimum of {MIN_PREVIOUS_JOBS}</Text>
 
               {/* Existing Previous Jobs from Profile */}
               {profile?.previousJobUrls && profile.previousJobUrls.length > 0 && (

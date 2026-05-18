@@ -2,7 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import * as z from 'zod';
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { Platform, Pressable, ScrollView, View } from 'react-native';
+import { Keyboard, Platform, Pressable, ScrollView, View } from 'react-native';
 import { Layout } from '@/components/layout';
 import { AuthHeader } from '@/components/auth-header';
 import { Camera } from 'lucide-react-native';
@@ -49,6 +49,8 @@ export default function Screen() {
 
   const { mutate, isPending } = useMutation(api.updateProfile());
   const { refetch } = useQuery(api.getCurrentUser());
+  const [isPickingImage, setIsPickingImage] = React.useState(false);
+  const isPickingImageRef = React.useRef(false);
 
   const insets = useSafeAreaInsets();
   const contentInsets = {
@@ -87,24 +89,59 @@ export default function Screen() {
   });
 
   const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (!permissionResult.granted) {
+    if (isPickingImageRef.current) {
       return;
     }
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: false,
-      quality: 1,
-    });
+    try {
+      isPickingImageRef.current = true;
+      setIsPickingImage(true);
+      Keyboard.dismiss();
 
-    if (!result.canceled) {
-      const asset = result.assets[0];
-      if (asset.type === 'image') {
-        form.setFieldValue('avatarUrl', asset.uri);
-        form.setFieldValue('avatarMimeType', asset.mimeType || '');
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permissionResult.granted) {
+        showErrorMessage('Photo library permission is required to choose an image.');
+        return;
       }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: false,
+        quality: 0.8,
+      });
+
+      if (result.canceled) {
+        return;
+      }
+
+      const asset = result.assets?.[0];
+
+      if (!asset || asset.type !== 'image') {
+        showErrorMessage('Please select a valid image.');
+        return;
+      }
+
+      const isUnsupported =
+        asset.mimeType?.includes('heic') ||
+        asset.mimeType?.includes('heif') ||
+        asset.mimeType?.includes('avif') ||
+        asset.uri.toLowerCase().endsWith('.heic') ||
+        asset.uri.toLowerCase().endsWith('.heif') ||
+        asset.uri.toLowerCase().endsWith('.avif');
+
+      if (isUnsupported) {
+        showErrorMessage('The selected file format is not supported.');
+        return;
+      }
+
+      form.setFieldValue('avatarUrl', asset.uri);
+      form.setFieldValue('avatarMimeType', asset.mimeType || 'image/jpeg');
+    } catch {
+      showErrorMessage('Unable to open your photo library. Please try again.');
+    } finally {
+      isPickingImageRef.current = false;
+      setIsPickingImage(false);
     }
   };
 
@@ -129,6 +166,7 @@ export default function Screen() {
                 <View className="flex w-full items-center justify-center">
                   <Pressable
                     onPress={pickImage}
+                    disabled={isPickingImage}
                     className="relative h-20 w-20 overflow-hidden rounded-full">
                     <Avatar className="h-full w-full" alt="User's Avatar">
                       <AvatarImage source={{ uri: url }} />
