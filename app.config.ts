@@ -52,11 +52,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     icon: './assets/images/icon.png',
     userInterfaceStyle: 'automatic',
     newArchEnabled: true,
-    splash: {
-      image: './assets/images/splash-icon.png',
-      resizeMode: 'contain',
-      backgroundColor: '#0A0A0B',
-    },
     updates: {
       url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
     },
@@ -106,6 +101,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       favicon: './assets/images/favicon.png',
     },
     plugins: [
+      [
+        'expo-splash-screen',
+        {
+          image: './assets/images/splash-icon.png',
+          imageWidth: 200,
+          resizeMode: 'contain',
+          backgroundColor: '#0A0A0B',
+        },
+      ],
       [
         'expo-font',
         {
