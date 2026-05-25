@@ -4,7 +4,7 @@ import { Text } from './ui/text';
 
 export function SplashScreen() {
   return (
-    <View className="relative flex-1 items-center justify-center bg-[#1B1B1E]">
+    <View className="relative flex-1 items-center justify-center bg-[#0A0A0B]">
       {/* <View className="absolute inset-0 h-full w-full flex-1">
         <Image
           source={require('@/assets/images/splash-background.png')}

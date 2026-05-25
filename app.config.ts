@@ -104,10 +104,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         'expo-splash-screen',
         {
-          image: './assets/images/splash-icon.png',
+          backgroundColor: '#0A0A0B',
+          image: './assets/images/splash-transparent.png',
           imageWidth: 200,
           resizeMode: 'contain',
-          backgroundColor: '#0A0A0B',
         },
       ],
       [

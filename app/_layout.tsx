@@ -3,6 +3,7 @@ import '@/global.css';
 
 import { useAuthStore } from '@/store/auth-store';
 import { PortalHost } from '@rn-primitives/portal';
+import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'nativewind';
@@ -16,15 +17,30 @@ import { QueryProvider } from '@/providers/query-provider';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { NotificationProvider } from '@/providers/notification-provider';
 import { LocationConsentDialog } from '@/components/location-consent-dialog';
+import { SplashScreen } from '@/components/splash-screen';
+import * as ExpoSplashScreen from 'expo-splash-screen';
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
+// Keep the native splash visible until the JS bundle is ready,
+// so it can hand off straight to the custom <SplashScreen /> with no flash.
+ExpoSplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
   const { isLoggedIn, hasCompletedOnboarding } = useAuthStore();
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    // The custom <SplashScreen /> is already painted on this first frame,
+    // so hide the native splash immediately to reveal it.
+    ExpoSplashScreen.hideAsync();
+    const timer = setTimeout(() => setShowSplash(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     // <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
@@ -76,6 +92,11 @@ export default function RootLayout() {
                   />
                   <PortalHost />
                   <LocationConsentDialog />
+                  {showSplash && (
+                    <View className="absolute inset-0 z-50">
+                      <SplashScreen />
+                    </View>
+                  )}
                 </SheetProvider>
               </View>
             </NotificationProvider>

@@ -4,7 +4,8 @@
       "Bash(pnpm add *)",
       "Bash(file assets/images/splash-icon.png assets/images/splash.png assets/images/splash-background.png)",
       "Bash(python -c \"from PIL import Image; [print\\(f, Image.open\\('assets/images/'+f\\).size\\) for f in ['splash-icon.png','splash.png','splash-background.png']]\")",
-      "Bash(node -e \"const fs=require\\('fs'\\);['splash-icon.png','splash.png','splash-background.png'].forEach\\(f=>{const b=fs.readFileSync\\('assets/images/'+f\\);if\\(b.toString\\('ascii',12,16\\)==='IHDR'\\){console.log\\(f,b.readUInt32BE\\(16\\)+'x'+b.readUInt32BE\\(20\\)\\);}}\\);\")"
+      "Bash(node -e \"const fs=require\\('fs'\\);['splash-icon.png','splash.png','splash-background.png'].forEach\\(f=>{const b=fs.readFileSync\\('assets/images/'+f\\);if\\(b.toString\\('ascii',12,16\\)==='IHDR'\\){console.log\\(f,b.readUInt32BE\\(16\\)+'x'+b.readUInt32BE\\(20\\)\\);}}\\);\")",
+      "Bash(git -C \"C:\\\\Users\\\\MOSES\\\\Documents\\\\Xervices\\\\artisan-app\" diff app.config.ts)"
     ]
   }
 }
