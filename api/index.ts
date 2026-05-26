@@ -1521,7 +1521,13 @@ export const api = {
     queryOptions({
       queryKey: ['terms'],
       queryFn: async () => {
-        const { data } = await apiClient.GET('/api/terms-and-conditions');
+        const { data } = await apiClient.GET('/api/terms-and-conditions', {
+          params: {
+            query: {
+              app: 'pro'
+            }
+          }
+        });
 
         return data;
       },
