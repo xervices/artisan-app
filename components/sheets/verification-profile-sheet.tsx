@@ -8,8 +8,6 @@ import { ActivityIndicator } from 'react-native';
 
 const screenHeight = Dimensions.get('window').height;
 
-// const widgetId = '697360505dae32fe5044be3b'
-
 export interface VerificationUserData {
   firstName?: string;
   middleName?: string;
@@ -41,7 +39,10 @@ const buildVerificationUrl = (
   userData?: VerificationUserData,
   metadata?: VerificationMetadata
 ): string => {
-  const widgetId = '697360505dae32fe5044be3b';
+  // Test mode widget id
+  // const widgetId = '697360505dae32fe5044be3b';
+  // Live widget id
+  const widgetId = '6a168d63ac14ee1bf2efaa80';
   const baseUrl = 'https://identity.dojah.io';
 
   const params = new URLSearchParams();
