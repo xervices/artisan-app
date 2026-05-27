@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api';
 import { LoadingIndicator } from '../ui/loading-indicator';
 import * as Application from 'expo-application';
+import { useLocationConsentStore } from '@/store/location-consent-store';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CARD_WIDTH = SCREEN_WIDTH;
@@ -23,6 +24,7 @@ const BROADCAST_ICONS = {
 
 export function BroadcastDialog() {
   const { isLoading, data } = useQuery(api.getActiveBroadcasts());
+  const consentVisible = useLocationConsentStore((s) => s.visible);
 
   const [visible, setVisible] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -35,10 +37,14 @@ export function BroadcastDialog() {
   };
 
   useEffect(() => {
+    // Never mount this native Modal while another native Modal (the location
+    // consent dialog) is already presented — on iOS two concurrent <Modal>s
+    // leave one orphaned in the responder chain and freeze touches.
+    if (consentVisible) return;
     if (data && data?.data && data?.data?.length > 0) {
       setVisible(true);
     }
-  }, [data]);
+  }, [data, consentVisible]);
 
   if (isLoading || !data?.data || data?.data?.length === 0) return null;
 

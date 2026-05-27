@@ -42,9 +42,9 @@ export default function Screen() {
         <LoadingState title="Loading Dispute..." />
       ) : (
         <View className="flex-1 gap-4">
-          <View className="flex w-full flex-row gap-4">
-            <View className="flex w-1/2 flex-row items-center gap-2">
-              <Avatar alt="User's Avatar" className="h-14 w-14">
+          <View className="flex w-full flex-row items-start gap-3">
+            <View className="flex flex-1 flex-row items-center gap-2" style={{ minWidth: 0 }}>
+              <Avatar alt="User's Avatar" className="h-14 w-14 shrink-0">
                 <AvatarImage source={{ uri: job?.data?.user?.profile?.avatarUrl }} />
                 <AvatarFallback className="bg-primary">
                   <Text className="font-cabinet-bold text-xs uppercase leading-none">
@@ -53,21 +53,31 @@ export default function Screen() {
                 </AvatarFallback>
               </Avatar>
 
-              <View>
-                <View className="flex flex-row items-center">
-                  <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">
+              <View className="flex-1" style={{ minWidth: 0 }}>
+                <View className="flex flex-row items-center" style={{ minWidth: 0 }}>
+                  <Text
+                    // numberOfLines={1}
+                    // ellipsizeMode="tail"
+                    className="flex-1 font-cabinet-bold text-[18px] text-[#1B1B1E]">
                     {job?.data?.user?.profile?.fullName}
                   </Text>
                 </View>
               </View>
             </View>
 
-            <View className="flex w-1/2 flex-1 justify-between">
-              <Text numberOfLines={1} className="text-right text-xs text-[#FF6A00]">
+            <View className="flex max-w-[45%] shrink-0 items-end justify-between">
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                className="text-right text-xs text-[#FF6A00]">
                 JOB ID ● {data?.jobId}
               </Text>
 
-              <Text className="text-right font-cabinet-bold text-[18px] text-[#FF6A00]">
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+                className="text-right font-cabinet-bold text-[18px] text-[#FF6A00]">
                 {formatCurrency(job?.data?.finalAmount)}
               </Text>
             </View>

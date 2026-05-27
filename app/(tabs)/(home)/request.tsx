@@ -220,7 +220,9 @@ export default function Screen() {
           </View>
 
           <View className="flex gap-2">
-            <Text className="font-cabinet-medium text-xs uppercase text-[#1B1B1E]">Images</Text>
+            <Text className="font-cabinet-medium text-xs uppercase text-[#1B1B1E]">
+              Images & Videos
+            </Text>
 
             <View className="flex flex-row flex-wrap justify-between gap-4">
               {service?.data?.mediaUrls?.map((media) => (

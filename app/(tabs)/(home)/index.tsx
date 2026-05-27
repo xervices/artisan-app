@@ -1,6 +1,6 @@
 import { Layout } from '@/components/layout';
 import { Header } from '@/components/home/header';
-import { AppState, Platform, View } from 'react-native';
+import { AppState, InteractionManager, Platform, View } from 'react-native';
 import { Offers } from '@/components/home/offers';
 import { AvailabilityStatus } from '@/components/home/availability-status';
 import { OverviewCard } from '@/components/home/overview-card';
@@ -19,6 +19,12 @@ import { UserOfWeek } from '@/components/home/user-of-week';
 import { ensureLocationPermissions } from '@/lib/ensure-location-permissions';
 import { useBackgroundLocation } from '@/hooks/use-background-location';
 import * as Location from 'expo-location';
+
+// Module-level guard so the permission/location chain only runs once per app
+// session. Without this, every isLoggedIn flip (e.g. coming back from a tab
+// remount or auth refresh) would re-fire the consent dialog + OS prompts and
+// could collide with other modals mid-transition.
+let didRunLocationBootstrap = false;
 
 export default function Screen() {
   const { isLoggedIn } = useAuthStore();
@@ -75,28 +81,40 @@ export default function Screen() {
 
   useEffect(() => {
     if (!isLoggedIn) return;
+    if (didRunLocationBootstrap) return;
+    didRunLocationBootstrap = true;
 
-    (async () => {
-      const { foreground, background } = await ensureLocationPermissions();
+    // Wait until the home screen has finished its mount/transition animations
+    // before prompting for permissions. Showing the native consent <Modal>
+    // and OS permission alerts mid-transition is the root cause of the
+    // intermittent iOS freeze on home.
+    const handle = InteractionManager.runAfterInteractions(() => {
+      (async () => {
+        const { foreground, background } = await ensureLocationPermissions();
 
-      if (foreground) {
-        try {
-          const loc = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Balanced,
-          });
-          updateLocation({
-            latitude: loc.coords.latitude,
-            longitude: loc.coords.longitude,
-          });
-        } catch (e) {
-          console.log('Failed to fetch current location:', e);
+        if (foreground) {
+          try {
+            const loc = await Location.getCurrentPositionAsync({
+              accuracy: Location.Accuracy.Balanced,
+            });
+            updateLocation({
+              latitude: loc.coords.latitude,
+              longitude: loc.coords.longitude,
+            });
+          } catch (e) {
+            console.log('Failed to fetch current location:', e);
+          }
         }
-      }
 
-      if (foreground && background) {
-        await startTracking();
-      }
-    })();
+        if (foreground && background) {
+          await startTracking();
+        }
+      })();
+    });
+
+    return () => {
+      handle.cancel?.();
+    };
   }, [isLoggedIn]);
 
   useEffect(() => {

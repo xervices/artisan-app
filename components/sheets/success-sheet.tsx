@@ -12,12 +12,25 @@ export function SuccessSheet(props: SheetProps<'success-sheet'>) {
     : require('@/assets/images/success.svg');
 
   useEffect(() => {
-    const redirectTimeout = setTimeout(() => {
-      props.payload?.onRedirect?.();
-      SheetManager.hide('success-sheet');
+    let cancelled = false;
+
+    const redirectTimeout = setTimeout(async () => {
+      // Close the sheet first so its native iOS Modal is fully torn down
+      // before any navigation / auth-state change runs. Calling hide() after
+      // navigation leaves the modal's backdrop orphaned on top of the new
+      // screen and blocks all touches.
+      await SheetManager.hide('success-sheet');
+      if (cancelled) return;
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        props.payload?.onRedirect?.();
+      });
     }, 5000);
 
-    return () => clearTimeout(redirectTimeout);
+    return () => {
+      cancelled = true;
+      clearTimeout(redirectTimeout);
+    };
   }, []);
 
   return (

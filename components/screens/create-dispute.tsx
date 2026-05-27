@@ -138,9 +138,9 @@ export function CreateDisputeScreen() {
         <LoadingState title="Loading Job details..." />
       ) : (
         <View className="flex-1 gap-4">
-          <View className="flex w-full flex-row gap-4">
-            <View className="flex flex-1 flex-row items-center gap-2">
-              <Avatar alt="User's Avatar" className="h-14 w-14">
+          <View className="flex w-full flex-row items-start gap-3">
+            <View className="flex flex-1 flex-row items-center gap-2" style={{ minWidth: 0 }}>
+              <Avatar alt="User's Avatar" className="h-14 w-14 shrink-0">
                 <AvatarImage source={{ uri: data?.user?.profile?.avatarUrl }} />
                 <AvatarFallback className="bg-primary">
                   <Text className="font-cabinet-bold text-xs uppercase leading-none">
@@ -149,16 +149,19 @@ export function CreateDisputeScreen() {
                 </AvatarFallback>
               </Avatar>
 
-              <View>
-                <View className="flex flex-row items-center">
-                  <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">
+              <View className="flex-1" style={{ minWidth: 0 }}>
+                <View className="flex flex-row items-center" style={{ minWidth: 0 }}>
+                  <Text
+                    // numberOfLines={1}
+                    // ellipsizeMode="tail"
+                    className="flex-1 font-cabinet-bold text-[18px] text-[#1B1B1E]">
                     {data?.user?.profile?.fullName}
                   </Text>
                 </View>
               </View>
             </View>
 
-            <View className="flex flex-1 justify-between">
+            <View className="flex max-w-[45%] shrink-0 items-end justify-between">
               <Text
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -166,7 +169,11 @@ export function CreateDisputeScreen() {
                 JOB ID ● {id}
               </Text>
 
-              <Text className="text-right font-cabinet-bold text-[18px] text-[#FF6A00]">
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+                className="text-right font-cabinet-bold text-[18px] text-[#FF6A00]">
                 {formatCurrency(data?.finalAmount)}
               </Text>
             </View>

@@ -6,7 +6,6 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { Image } from 'expo-image';
 import { Tabs } from 'expo-router';
 import { Key, useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NotificationSocketProvider } from '@/providers/notification-socket-provider';
@@ -36,42 +35,40 @@ export default function TabsLayout() {
   }, [isLoggedIn]);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <NotificationSocketProvider>
-          <MarketplaceProvider artisanId={user?.id}>
-            <Tabs
-              screenOptions={{ headerShown: false }}
-              tabBar={(props) => <MyTabBar {...props} />}>
-              <Tabs.Screen
-                name="(home)"
-                options={{
-                  title: 'Home',
-                }}
-              />
-              <Tabs.Screen
-                name="jobs"
-                options={{
-                  title: 'My Jobs',
-                }}
-              />
-              <Tabs.Screen
-                name="earnings"
-                options={{
-                  title: 'Earnings',
-                }}
-              />
-              <Tabs.Screen
-                name="profile"
-                options={{
-                  title: 'Profile',
-                }}
-              />
-            </Tabs>
-          </MarketplaceProvider>
-        </NotificationSocketProvider>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+    <BottomSheetModalProvider>
+      <NotificationSocketProvider>
+        <MarketplaceProvider artisanId={user?.id}>
+          <Tabs
+            screenOptions={{ headerShown: false }}
+            tabBar={(props) => <MyTabBar {...props} />}>
+            <Tabs.Screen
+              name="(home)"
+              options={{
+                title: 'Home',
+              }}
+            />
+            <Tabs.Screen
+              name="jobs"
+              options={{
+                title: 'My Jobs',
+              }}
+            />
+            <Tabs.Screen
+              name="earnings"
+              options={{
+                title: 'Earnings',
+              }}
+            />
+            <Tabs.Screen
+              name="profile"
+              options={{
+                title: 'Profile',
+              }}
+            />
+          </Tabs>
+        </MarketplaceProvider>
+      </NotificationSocketProvider>
+    </BottomSheetModalProvider>
   );
 }
 
