@@ -5,8 +5,19 @@ import { getErrorMessage, RequestBody } from './helpers';
 import { useAuthStore } from '@/store/auth-store';
 import { Platform } from 'react-native';
 import { getFileExtension } from '@/lib/utils';
+import { Video as VideoCompressor } from 'react-native-compressor';
 
 const normalizePath = (uri: string) => (Platform.OS === 'ios' ? uri.replace('file://', '') : uri);
+
+const maybeCompressVideo = async (uri: string, mimeType?: string): Promise<string> => {
+  if (!mimeType?.startsWith('video/')) return uri;
+  try {
+    return await VideoCompressor.compress(uri, { compressionMethod: 'auto' });
+  } catch (err) {
+    console.warn('Video compression failed, uploading original:', err);
+    return uri;
+  }
+};
 
 export const api = {
   // Server Health endpoints
@@ -762,17 +773,20 @@ export const api = {
         // @ts-ignore
         if (credentials.beforePhotos && credentials.beforePhotos.length > 0) {
           // @ts-ignore
-          credentials.beforePhotos.forEach((photo, index) => {
-            const extension = getFileExtension(photo.url, photo.mimeType);
+          for (let index = 0; index < credentials.beforePhotos.length; index++) {
+            // @ts-ignore
+            const photo = credentials.beforePhotos[index];
+            const compressedUri = await maybeCompressVideo(photo.url, photo.mimeType);
+            const extension = getFileExtension(compressedUri, photo.mimeType);
 
             const file = {
-              uri: normalizePath(photo.url),
+              uri: normalizePath(compressedUri),
               type: photo.mimeType || 'application/pdf',
               name: photo.name || `photo_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('beforePhotos', file);
-          });
+          }
         }
 
         const { data, error } = await apiClient.POST('/api/jobs/{id}/start', {
@@ -802,17 +816,20 @@ export const api = {
         // @ts-ignore
         if (credentials.afterPhotos && credentials.afterPhotos.length > 0) {
           // @ts-ignore
-          credentials.afterPhotos.forEach((photo, index) => {
-            const extension = getFileExtension(photo.url, photo.mimeType);
+          for (let index = 0; index < credentials.afterPhotos.length; index++) {
+            // @ts-ignore
+            const photo = credentials.afterPhotos[index];
+            const compressedUri = await maybeCompressVideo(photo.url, photo.mimeType);
+            const extension = getFileExtension(compressedUri, photo.mimeType);
 
             const file = {
-              uri: normalizePath(photo.url),
+              uri: normalizePath(compressedUri),
               type: photo.mimeType || 'application/pdf',
               name: photo.name || `photo_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('afterPhotos', file);
-          });
+          }
         }
 
         const { data, error } = await apiClient.POST('/api/jobs/{id}/complete', {
@@ -827,6 +844,7 @@ export const api = {
         });
 
         if (error) {
+          console.log(error);
           throw new Error(getErrorMessage(error, 'failed to mark as complete job.'));
         }
 
@@ -1524,9 +1542,9 @@ export const api = {
         const { data } = await apiClient.GET('/api/terms-and-conditions', {
           params: {
             query: {
-              app: 'pro'
-            }
-          }
+              app: 'pro',
+            },
+          },
         });
 
         return data;
