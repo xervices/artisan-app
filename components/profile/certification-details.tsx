@@ -251,7 +251,8 @@ export function CertificationDetails() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images', 'videos'],
       allowsEditing: false,
-      quality: 1,
+      quality: 0.7,
+      videoMaxDuration: 60,
     });
 
     if (!result.canceled) {

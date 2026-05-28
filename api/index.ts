@@ -384,33 +384,39 @@ export const api = {
         // @ts-ignore
         if (credentials.certifications && credentials.certifications.length > 0) {
           // @ts-ignore
-          credentials.certifications.forEach((cert, index) => {
-            const extension = getFileExtension(cert.uri, cert.mimeType);
+          for (let index = 0; index < credentials.certifications.length; index++) {
+            // @ts-ignore
+            const cert = credentials.certifications[index];
+            const compressedUri = await maybeCompressVideo(cert.uri, cert.mimeType);
+            const extension = getFileExtension(compressedUri, cert.mimeType);
 
             const file = {
-              uri: normalizePath(cert.uri),
+              uri: normalizePath(compressedUri),
               type: cert.mimeType || 'application/pdf',
               name: cert.name || `certification_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('certifications', file);
-          });
+          }
         }
 
         // @ts-ignore
         if (credentials.previousJobs && credentials.previousJobs.length > 0) {
           // @ts-ignore
-          credentials.previousJobs.forEach((cert, index) => {
-            const extension = getFileExtension(cert.uri, cert.mimeType);
+          for (let index = 0; index < credentials.previousJobs.length; index++) {
+            // @ts-ignore
+            const cert = credentials.previousJobs[index];
+            const compressedUri = await maybeCompressVideo(cert.uri, cert.mimeType);
+            const extension = getFileExtension(compressedUri, cert.mimeType);
 
             const file = {
-              uri: normalizePath(cert.uri),
+              uri: normalizePath(compressedUri),
               type: cert.mimeType || 'application/pdf',
               name: cert.name || `certification_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('previousJobs', file);
-          });
+          }
         }
 
         const { data, error } = await apiClient.POST('/api/artisans/onboard', {
@@ -461,33 +467,39 @@ export const api = {
         // @ts-ignore
         if (credentials.certifications && credentials.certifications.length > 0) {
           // @ts-ignore
-          credentials.certifications.forEach((cert, index) => {
-            const extension = getFileExtension(cert.uri, cert.mimeType);
+          for (let index = 0; index < credentials.certifications.length; index++) {
+            // @ts-ignore
+            const cert = credentials.certifications[index];
+            const compressedUri = await maybeCompressVideo(cert.uri, cert.mimeType);
+            const extension = getFileExtension(compressedUri, cert.mimeType);
 
             const file = {
-              uri: normalizePath(cert.uri),
+              uri: normalizePath(compressedUri),
               type: cert.mimeType || 'application/pdf',
               name: cert.name || `certification_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('certifications', file);
-          });
+          }
         }
 
         // @ts-ignore
         if (credentials.previousJobs && credentials.previousJobs.length > 0) {
           // @ts-ignore
-          credentials.previousJobs.forEach((cert, index) => {
-            const extension = getFileExtension(cert.uri, cert.mimeType);
+          for (let index = 0; index < credentials.previousJobs.length; index++) {
+            // @ts-ignore
+            const cert = credentials.previousJobs[index];
+            const compressedUri = await maybeCompressVideo(cert.uri, cert.mimeType);
+            const extension = getFileExtension(compressedUri, cert.mimeType);
 
             const file = {
-              uri: normalizePath(cert.uri),
+              uri: normalizePath(compressedUri),
               type: cert.mimeType || 'application/pdf',
               name: cert.name || `certification_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('previousJobs', file);
-          });
+          }
         }
 
         const { data, error } = await apiClient.PATCH('/api/artisans/me', {
@@ -1405,17 +1417,20 @@ export const api = {
         // @ts-ignore
         if (credentials.media && credentials.media.length > 0) {
           // @ts-ignore
-          credentials.media.forEach((media, index) => {
-            const extension = getFileExtension(media.url, media.mimeType);
+          for (let index = 0; index < credentials.media.length; index++) {
+            // @ts-ignore
+            const media = credentials.media[index];
+            const compressedUri = await maybeCompressVideo(media.url, media.mimeType);
+            const extension = getFileExtension(compressedUri, media.mimeType);
 
             const file = {
-              uri: normalizePath(media.url),
+              uri: normalizePath(compressedUri),
               type: media.mimeType || 'image/jpg',
               name: media.name || `media_${index}_${Date.now()}.${extension}`,
             };
             // @ts-ignore - FormData typing issue in React Native
             formData.append('media', file);
-          });
+          }
         }
 
         const { data, error } = await apiClient.POST('/api/disputes', {

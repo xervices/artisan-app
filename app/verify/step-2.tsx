@@ -267,6 +267,7 @@ export default function Screen() {
         mediaTypes: ['images', 'videos'],
         allowsEditing: false,
         quality: 0.8,
+        videoMaxDuration: 60,
       });
 
       if (result.canceled) {
