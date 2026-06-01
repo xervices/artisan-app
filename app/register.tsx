@@ -15,7 +15,7 @@ import { InputError } from '@/components/ui/input-error';
 
 import { api } from '@/api';
 import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
-import { emojiRegex, formatPhoneNumber } from '@/lib/utils';
+import { emojiRegex, formatPhoneNumber, getDeviceInfo } from '@/lib/utils';
 
 const formSchema = z
   .object({
@@ -41,6 +41,8 @@ const formSchema = z
       .refine((val) => !emojiRegex.test(val), 'Password cannot contain emojis.'),
     confirmPassword: z.string().min(1, 'Password confirmation is required.'),
     role: z.union([z.literal('artisan')]),
+    deviceId: z.string(),
+    deviceName: z.string(),
     referralCode: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -67,11 +69,18 @@ export default function Screen() {
       confirmPassword: '',
       role: 'artisan' as const,
       referralCode: '',
+      deviceId: '',
+      deviceName: '',
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      const deviceInfo = await getDeviceInfo();
+
+      value.deviceId = deviceInfo?.deviceId || '';
+      value.deviceName = deviceInfo?.deviceName || '';
+
       const { confirmPassword, referralCode, ...registerData } = value;
 
       if (registerData.phoneNumber.trim()) {
