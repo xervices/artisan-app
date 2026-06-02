@@ -17,6 +17,7 @@ import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 import { router } from 'expo-router';
 import { InputError } from '@/components/ui/input-error';
 import { LoadingState } from '@/components/loading-state';
+import { maybeRequestStoreReview } from '@/lib/store-review';
 
 const formSchema = z.object({
   rating: z.number().min(1, 'Rating is required.'),
@@ -50,9 +51,10 @@ export default function Screen() {
           },
         },
         {
-          onSuccess: () => {
+          onSuccess: async () => {
             showSuccessMessage('Rating submitted successfully!');
             refetch();
+            await maybeRequestStoreReview();
             router.back();
           },
           onError: (err) => {

@@ -19,6 +19,7 @@ import { NotificationProvider } from '@/providers/notification-provider';
 import { LocationConsentDialog } from '@/components/location-consent-dialog';
 import { SplashScreen } from '@/components/splash-screen';
 import * as ExpoSplashScreen from 'expo-splash-screen';
+import { useTrackAppInstall } from '@/hooks/use-track-app-install';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -52,6 +53,7 @@ export default function RootLayout() {
               <View className="flex-1 bg-white">
                 <SheetProvider>
                   <Sheets />
+                  <AppInstallTracker />
                   <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
                   <Stack>
                     <Stack.Protected guard={isLoggedIn}>
@@ -106,4 +108,9 @@ export default function RootLayout() {
     </GestureHandlerRootView>
     // </ThemeProvider>
   );
+}
+
+function AppInstallTracker() {
+  useTrackAppInstall();
+  return null;
 }
