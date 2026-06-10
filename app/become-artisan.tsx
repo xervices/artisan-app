@@ -132,9 +132,11 @@ export default function Screen() {
                           {data?.map((cat) => (
                             <SelectItem
                               onPress={() => {
-                                if (!field.state.value.includes(cat.id)) {
-                                  field.handleChange((prev) => [cat.id]);
-                                }
+                                field.handleChange((prev) =>
+                                  prev.includes(cat.id)
+                                    ? prev.filter((id) => id !== cat.id)
+                                    : [...prev, cat.id]
+                                );
                               }}
                               key={cat.id}
                               label={cat.name}

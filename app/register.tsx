@@ -17,6 +17,7 @@ import { api } from '@/api';
 import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 import { emojiRegex, formatPhoneNumber, getDeviceInfo } from '@/lib/utils';
 import { getStableDeviceId } from '@/lib/app-install';
+import { DEFAULT_COUNTRY, hasValidNationalNumber } from '@/lib/countries';
 
 const formSchema = z
   .object({
@@ -24,7 +25,10 @@ const formSchema = z
       .string()
       .min(1, 'Your fullname is required.')
       .refine((val) => !emojiRegex.test(val), 'Name cannot contain emojis.'),
-    phoneNumber: z.string().min(1, 'Phone number is required.'),
+    phoneNumber: z
+      .string()
+      .min(1, 'Phone number is required.')
+      .refine(hasValidNationalNumber, 'Enter a valid phone number.'),
     email: z
       .email('Invalid email address')
       .min(1, 'Email is required.')
@@ -64,7 +68,7 @@ export default function Screen() {
   const form = useForm({
     defaultValues: {
       fullName: '',
-      phoneNumber: '',
+      phoneNumber: DEFAULT_COUNTRY.dialCode,
       email: '',
       password: '',
       confirmPassword: '',

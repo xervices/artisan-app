@@ -10,6 +10,8 @@ export function VerifyAccount() {
 
   if (data?.verificationStatus === 'verified' || isLoading) return null;
 
+  // verificstion rejected, retry the verification
+
   return (
     <View className="flex gap-1 rounded-[8px] border border-[#DFDFE1] bg-[#F4F4F5] p-4">
       <Text className="font-cabinet-bold text-[#1B1B1E]">Hi There! 👋</Text>
@@ -18,7 +20,9 @@ export function VerifyAccount() {
         <Text className="flex-1 text-sm text-[#737381]">
           {data?.verificationStatus === 'in_progress'
             ? "Your account verification is in progress. We'll notify you once it's complete."
-            : 'You need to verify your account to get started.'}
+            : data?.verificationStatus === 'rejected'
+              ? 'Your verification has been rejected. Please retry verification or contact support.'
+              : 'You need to verify your account to get started.'}
         </Text>
 
         {data?.verificationStatus === 'in_progress' ? null : (

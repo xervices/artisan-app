@@ -32,6 +32,7 @@ import { NIGERIAN_STATES } from '@/store/data';
 import { DateInput } from '../ui/date-input';
 import { formatSizeToMB } from '@/app/verify/step-2';
 import { emojiRegex } from '@/lib/utils';
+import { useAuthStore } from '@/store/auth-store';
 
 const MIN_PREVIOUS_JOBS = 4;
 
@@ -63,6 +64,9 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function CertificationDetails() {
+  const { user } = useAuthStore();
+  const isNigeria = user?.profile?.country === 'Nigeria';
+
   const { data: profile, isLoading, refetch } = useQuery(api.getCurrentArtisanProfile());
   const categories = useQuery(api.getAllCategories());
   const { mutate, isPending } = useMutation({
@@ -305,13 +309,11 @@ export function CertificationDetails() {
                             {categories.data?.map((cat) => (
                               <SelectItem
                                 onPress={() => {
-                                  if (!field.state.value.includes(cat.id)) {
-                                    field.handleChange((prev) => [cat.id]);
-                                  } else {
-                                    field.handleChange((prev) =>
-                                      prev.filter((id) => id !== cat.id)
-                                    );
-                                  }
+                                  field.handleChange((prev) =>
+                                    prev.includes(cat.id)
+                                      ? prev.filter((id) => id !== cat.id)
+                                      : [...prev, cat.id]
+                                  );
                                 }}
                                 key={cat.id}
                                 label={cat.name}
@@ -398,36 +400,47 @@ export function CertificationDetails() {
                 <View>
                   <Label nativeID="state">Issuing state</Label>
 
-                  <Select
-                    defaultValue={{
-                      label: field.state.value || '',
-                      value: field.state.value || '',
-                    }}>
-                    <SelectTrigger className="w-full bg-white">
-                      <SelectValue id="state" placeholder={field.state.value || 'Select State'} />
-                    </SelectTrigger>
-                    <SelectContent
-                      insets={contentInsets}
-                      className="mt-2 w-full bg-white"
-                      style={{ maxHeight: 300 }}>
-                      <NativeSelectScrollView className="h-full">
-                        <SelectGroup>
-                          <SelectLabel>State</SelectLabel>
-                          {NIGERIAN_STATES.map((state) => (
-                            <SelectItem
-                              onPress={() => {
-                                field.handleChange(state.state);
-                              }}
-                              key={state.state}
-                              label={state.state}
-                              value={state.state}>
-                              {state.state}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </NativeSelectScrollView>
-                    </SelectContent>
-                  </Select>
+                  {isNigeria ? (
+                    <Select
+                      defaultValue={{
+                        label: field.state.value || '',
+                        value: field.state.value || '',
+                      }}>
+                      <SelectTrigger className="w-full bg-white">
+                        <SelectValue id="state" placeholder={field.state.value || 'Select State'} />
+                      </SelectTrigger>
+                      <SelectContent
+                        insets={contentInsets}
+                        className="mt-2 w-full bg-white"
+                        style={{ maxHeight: 300 }}>
+                        <NativeSelectScrollView className="h-full">
+                          <SelectGroup>
+                            <SelectLabel>State</SelectLabel>
+                            {NIGERIAN_STATES.map((state) => (
+                              <SelectItem
+                                onPress={() => {
+                                  field.handleChange(state.state);
+                                }}
+                                key={state.state}
+                                label={state.state}
+                                value={state.state}>
+                                {state.state}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </NativeSelectScrollView>
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      className="bg-white"
+                      id="state"
+                      value={field.state.value || ''}
+                      onChangeText={field.handleChange}
+                      placeholder="Enter issuing state / region"
+                      hasError={!field.state.meta.isValid}
+                    />
+                  )}
 
                   {!field.state.meta.isValid ? (
                     <InputError errors={field.state.meta.errors} />
