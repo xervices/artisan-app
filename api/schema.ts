@@ -815,10 +815,29 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get my withdrawal history */
+        /**
+         * Get withdrawal history
+         * @description Returns the 50 most recent withdrawal requests for the authenticated artisan, newest first.
+         */
         get: operations["WithdrawalsController_getWithdrawals"];
         put?: never;
-        /** Request a withdrawal */
+        /**
+         * Request a withdrawal
+         * @description Initiates a withdrawal from the artisan's available balance to a saved bank account.
+         *
+         *     **Limits**
+         *     - Minimum: ₦100
+         *     - Per withdrawal: ₦200,000
+         *     - Daily total: ₦500,000
+         *     - Daily count: 5 withdrawals
+         *
+         *     **Status values**
+         *     - `PROCESSING` — transfer submitted to Paystack, funds arriving shortly
+         *     - `COMPLETED` — settled immediately (rare on Paystack)
+         *     - `FAILED` — transfer rejected; balance is automatically refunded
+         *
+         *     Final status is delivered via push notification when the Paystack webhook fires.
+         */
         post: operations["WithdrawalsController_createWithdrawal"];
         delete?: never;
         options?: never;
@@ -1820,7 +1839,8 @@ export interface paths {
          */
         put: operations["BroadcastController_updateBroadcast"];
         post?: never;
-        delete?: never;
+        /** Delete a broadcast */
+        delete: operations["BroadcastController_deleteBroadcast"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1860,6 +1880,23 @@ export interface paths {
          * @description Cancel a scheduled broadcast.
          */
         post: operations["BroadcastController_cancelBroadcast"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/broadcasts/{id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Retry a failed broadcast */
+        post: operations["BroadcastController_retryBroadcast"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2753,7 +2790,7 @@ export interface paths {
         };
         /**
          * Financial overview metrics
-         * @description Fetch high-level financial metrics including total payments, escrow, platform revenue, withdrawals, and balances.
+         * @description High-level financial metrics: total payments, escrow, platform revenue, net revenue, refunds, artisan earnings, withdrawals, and balances.
          */
         get: operations["FinancialManagementController_getOverviewMetrics"];
         put?: never;
@@ -2773,7 +2810,7 @@ export interface paths {
         };
         /**
          * Revenue trend
-         * @description Return revenue data for chart display. Supports monthly (default), weekly, and daily grouping based on payment completion date.
+         * @description Revenue data for chart display grouped by monthly, weekly, or daily. Includes total payments, platform fees, artisan payouts, and refunds per period.
          */
         get: operations["FinancialManagementController_getRevenueTrend"];
         put?: never;
@@ -2793,7 +2830,7 @@ export interface paths {
         };
         /**
          * Payment history
-         * @description Paginated list of all payments with sender/artisan names, service, amounts, and status. Supports filtering, search, and sorting.
+         * @description Paginated list of all payments with sender/artisan names, service, amounts, discount, refund info, and status.
          */
         get: operations["FinancialManagementController_getPaymentHistory"];
         put?: never;
@@ -2816,6 +2853,66 @@ export interface paths {
          * @description Paginated list of all withdrawal requests with artisan details, bank info (masked account numbers), status, and balance after withdrawal.
          */
         get: operations["FinancialManagementController_getWithdrawalHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/financial/promo-performance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Promo code performance
+         * @description Usage count, total discount given, and transaction value per promo code. Useful for measuring the financial impact of promotions.
+         */
+        get: operations["FinancialManagementController_getPromoPerformance"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/financial/dispute-summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Dispute financial summary
+         * @description Breakdown of dispute resolution outcomes: how much was refunded to customers vs credited to artisans, grouped by resolution type.
+         */
+        get: operations["FinancialManagementController_getDisputeFinancialSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/financial/top-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Top revenue categories
+         * @description Top service categories by platform fee revenue, including transaction count, total revenue, and artisan earnings per category.
+         */
+        get: operations["FinancialManagementController_getTopCategories"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4015,6 +4112,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/bank-accounts/banks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get list of Nigerian banks
+         * @description Returns all active Nigerian banks from Paystack. Call this first to populate the bank picker. Use the returned `code` value as `bankCode` in the verify and add-account requests. Results are cached for 24 hours.
+         */
+        get: operations["BankAccountsController_getBanks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/bank-accounts/verify": {
         parameters: {
             query?: never;
@@ -4025,8 +4142,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Verify bank account
-         * @description Verify a bank account number with Paystack and get the account name. Use this before adding a bank account.
+         * Verify bank account number
+         * @description Resolves an account number against a bank code via Paystack and returns the registered account name. Call this before `POST /bank-accounts` so the user can confirm their name before saving.
          */
         post: operations["BankAccountsController_verifyAccount"];
         delete?: never;
@@ -4044,13 +4161,13 @@ export interface paths {
         };
         /**
          * Get my bank accounts
-         * @description Get all bank accounts for the current user
+         * @description Returns all saved bank accounts for the authenticated artisan, default account listed first.
          */
         get: operations["BankAccountsController_findAll"];
         put?: never;
         /**
          * Add bank account
-         * @description Add a verified bank account for withdrawals. The account will be verified with Paystack before being saved.
+         * @description Saves a verified bank account for withdrawals. The account is re-verified with Paystack and a transfer recipient is created before saving. The first account added is automatically set as default.
          */
         post: operations["BankAccountsController_addAccount"];
         delete?: never;
@@ -4075,7 +4192,7 @@ export interface paths {
         post?: never;
         /**
          * Remove bank account
-         * @description Remove a bank account
+         * @description Soft-deletes a bank account and removes the transfer recipient from Paystack. If the deleted account was the default, the next most recent account is promoted to default automatically.
          */
         delete: operations["BankAccountsController_remove"];
         options?: never;
@@ -4093,8 +4210,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Set as default
-         * @description Set a bank account as the default for withdrawals
+         * Set account as default
+         * @description Sets a saved bank account as the default for withdrawals. Only one account can be default at a time.
          */
         post: operations["BankAccountsController_setAsDefault"];
         delete?: never;
@@ -4657,7 +4774,7 @@ export interface components {
              */
             phoneNumber?: string;
             /**
-             * @description Password (min 8 chars, must contain uppercase, lowercase, number, and special character)
+             * @description Password (min 8 chars, must contain uppercase and lowercase letters)
              * @example Password123!
              */
             password: string;
@@ -5558,8 +5675,8 @@ export interface components {
              */
             otp: string;
             /**
-             * @description New PIN (4-6 digits)
-             * @example 1234
+             * @description New PIN (6 digits)
+             * @example 123456
              */
             pin: string;
         };
@@ -5578,7 +5695,7 @@ export interface components {
         VerifyPinDto: {
             /**
              * @description PIN to verify
-             * @example 1234
+             * @example 123456
              */
             pin: string;
         };
@@ -5619,9 +5736,60 @@ export interface components {
             amount: number;
             /**
              * @description Withdrawal PIN for verification
-             * @example 1234
+             * @example 123456
              */
             pin: string;
+        };
+        WithdrawalBankAccountDto: {
+            /** @example Guaranty Trust Bank */
+            bankName: string;
+            /**
+             * @description Masked account number
+             * @example ******6789
+             */
+            accountNumber: string;
+        };
+        WithdrawalResponseDto: {
+            /** @example true */
+            success: boolean;
+            /** @example a1b2c3d4-e5f6-7890-abcd-ef1234567890 */
+            withdrawalId: string;
+            /** @example WD-1718000000000-a1b2c3d4 */
+            reference: string;
+            /** @example Withdrawal is being processed. Funds will arrive shortly. */
+            message: string;
+            /** @example 5000 */
+            amount: number;
+            /**
+             * @example PROCESSING
+             * @enum {string}
+             */
+            status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+            bankAccount: components["schemas"]["WithdrawalBankAccountDto"];
+        };
+        WithdrawalHistoryItemDto: {
+            /** @example a1b2c3d4-e5f6-7890-abcd-ef1234567890 */
+            id: string;
+            /** @example 5000 */
+            amount: number;
+            /**
+             * @example COMPLETED
+             * @enum {string}
+             */
+            status: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+            /** @example WD-1718000000000-a1b2c3d4 */
+            reference: string;
+            /** @example uuid-of-bank-account */
+            bankAccountId: string;
+            /**
+             * Format: date-time
+             * @example 2026-06-15T10:00:00.000Z
+             */
+            createdAt: string;
+            /** @example 2026-06-15T10:05:00.000Z */
+            processedAt: Record<string, never> | null;
+            /** @example null */
+            failureReason: Record<string, never> | null;
         };
         InitializePaymentDto: {
             /**
@@ -5821,6 +5989,7 @@ export interface components {
             totalReviews: number;
             totalJobsCompleted: number;
             isAvailable: boolean;
+            dojahReferenceId?: string;
             isVerified: boolean;
             /** Format: date-time */
             createdAt: string;
@@ -8014,6 +8183,11 @@ export interface components {
              */
             yearsOfExperience?: Record<string, never> | null;
             /**
+             * @description Average response time in seconds (null if no offer responses yet)
+             * @example 300
+             */
+            averageResponseTimeSeconds?: Record<string, never> | null;
+            /**
              * @description Whether artisan is verified
              * @example true
              */
@@ -8622,6 +8796,18 @@ export interface components {
              * @example 5
              */
             count: number;
+        };
+        BankListItemDto: {
+            /**
+             * @description Bank name
+             * @example Guaranty Trust Bank
+             */
+            name: string;
+            /**
+             * @description Paystack bank code — use this as bankCode in other requests
+             * @example 058
+             */
+            code: string;
         };
         VerifyBankAccountDto: {
             /**
@@ -10752,7 +10938,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WithdrawalHistoryItemDto"][];
+                };
             };
             /** @description Unauthorized */
             401: {
@@ -10763,7 +10951,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
-            /** @description Forbidden - Artisan access required */
+            /** @description Artisan access required */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -10787,14 +10975,16 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Withdrawal request created and transfer initiated */
+            /** @description Withdrawal initiated successfully */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["WithdrawalResponseDto"];
+                };
             };
-            /** @description Insufficient balance or invalid PIN */
+            /** @description Insufficient balance, invalid PIN, or limit exceeded */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -10812,7 +11002,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
-            /** @description Forbidden - Artisan access required */
+            /** @description Artisan access required */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -13546,6 +13736,34 @@ export interface operations {
             };
         };
     };
+    BroadcastController_deleteBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Cannot delete broadcast in current status */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     BroadcastController_sendBroadcast: {
         parameters: {
             query?: never;
@@ -13627,6 +13845,34 @@ export interface operations {
             };
             /** @description Broadcast not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BroadcastController_retryBroadcast: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Broadcast ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Broadcast retry started */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Can only retry failed broadcasts */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -15275,7 +15521,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Monthly revenue trend data */
+            /** @description Revenue trend data */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -15336,6 +15582,77 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description Paginated withdrawal history */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FinancialManagementController_getPromoPerformance: {
+        parameters: {
+            query?: {
+                /** @description Filter from date (ISO string) */
+                dateFrom?: string;
+                /** @description Filter to date (ISO string) */
+                dateTo?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Promo code performance data */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FinancialManagementController_getDisputeFinancialSummary: {
+        parameters: {
+            query?: {
+                /** @description Filter from date (ISO string) */
+                dateFrom?: string;
+                /** @description Filter to date (ISO string) */
+                dateTo?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Dispute financial summary */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    FinancialManagementController_getTopCategories: {
+        parameters: {
+            query?: {
+                /** @description Filter from date (ISO string) */
+                dateFrom?: string;
+                /** @description Filter to date (ISO string) */
+                dateTo?: string;
+                /** @description Number of top categories to return */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Top revenue categories */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -17907,6 +18224,35 @@ export interface operations {
             };
         };
     };
+    BankAccountsController_getBanks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bank list retrieved successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BankListItemDto"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
     BankAccountsController_verifyAccount: {
         parameters: {
             query?: never;
@@ -17929,8 +18275,17 @@ export interface operations {
                     "application/json": components["schemas"]["VerifyBankAccountResponseDto"];
                 };
             };
-            /** @description Invalid account number or bank code */
+            /** @description Invalid bank code or account number */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -17958,6 +18313,15 @@ export interface operations {
                     "application/json": components["schemas"]["BankAccountResponseDto"][];
                 };
             };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
         };
     };
     BankAccountsController_addAccount: {
@@ -17982,8 +18346,17 @@ export interface operations {
                     "application/json": components["schemas"]["BankAccountResponseDto"];
                 };
             };
-            /** @description Invalid account details or account already exists */
+            /** @description Invalid bank code, invalid account number, or account already exists */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -18030,7 +18403,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Bank account ID */
+                /** @description Bank account ID (UUID) */
                 id: string;
             };
             cookie?: never;
@@ -18044,6 +18417,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
             /** @description Bank account not found */
@@ -18062,7 +18444,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Bank account ID */
+                /** @description Bank account ID (UUID) */
                 id: string;
             };
             cookie?: never;
@@ -18076,6 +18458,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BankAccountResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
                 };
             };
             /** @description Bank account not found */

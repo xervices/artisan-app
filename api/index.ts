@@ -1300,6 +1300,15 @@ export const api = {
   },
 
   // bank endpoints
+  getNigerianBanks: () =>
+    queryOptions({
+      queryKey: ['banks', 'nigerian'],
+      queryFn: async () => {
+        const { data } = await apiClient.GET('/api/bank-accounts/banks');
+
+        return data;
+      },
+    }),
   getBankAccounts: () =>
     queryOptions({
       queryKey: ['bank-accounts'],
