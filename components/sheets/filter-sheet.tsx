@@ -13,11 +13,11 @@ import { OtpInput } from 'react-native-otp-entry';
 
 const data = [
   {
-    value: 'prev-month',
+    value: 'previous_month',
     label: 'Previous month',
   },
   {
-    value: 'year',
+    value: 'this_year',
     label: 'This year',
   },
   {
@@ -25,11 +25,11 @@ const data = [
     label: 'Today',
   },
   {
-    value: 'month',
+    value: 'this_month',
     label: 'This month',
   },
   {
-    value: 'week',
+    value: 'this_week',
     label: 'This week',
   },
 ];

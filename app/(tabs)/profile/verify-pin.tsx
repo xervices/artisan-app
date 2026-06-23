@@ -5,13 +5,25 @@ import { Layout } from '@/components/layout';
 import { AuthHeader } from '@/components/auth-header';
 import { Image } from 'expo-image';
 import { ChevronRight } from 'lucide-react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { SheetManager } from 'react-native-actions-sheet';
 import { useTimer } from '@/hooks/use-timer';
 import { OtpInput } from 'react-native-otp-entry';
 import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/store/auth-store';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/api';
+import { LoadingIndicator } from '@/components/ui/loading-indicator';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 
 export default function Screen() {
+  const { pin }: { pin: string } = useLocalSearchParams();
+
+  const { user } = useAuthStore();
+
+  const requestOtp = useMutation(api.requestOtpForPin());
+  const updatePin = useMutation(api.updatePin());
+
   const [timer, setTimer] = React.useState(60);
   const { minute, seconds } = useTimer({ sec: timer });
 
@@ -19,6 +31,18 @@ export default function Screen() {
     if (Number(seconds) > 0) return;
 
     setTimer((prev) => prev + 30);
+
+    requestOtp?.mutate(
+      {},
+      {
+        onSuccess: (res) => {
+          showSuccessMessage(res?.message || 'OTP successfully sent.');
+        },
+        onError: (err) => {
+          showErrorMessage(err?.message);
+        },
+      }
+    );
   };
 
   return (
@@ -32,17 +56,19 @@ export default function Screen() {
       <View className="flex-1 gap-6">
         <Text className="text-center text-sm text-[#737381]">
           A verification code has been sent to{' '}
-          <Text className="text-sm text-[#FE6A00]">sarahrodri@gmail.com</Text> and{' '}
-          <Text className="text-sm text-[#FE6A00]">+234813456789</Text>. Please check your email to
-          retrieve the code and enter it here.
+          <Text className="text-sm text-[#FE6A00]">{user?.email}</Text> and{' '}
+          {user?.phoneVerified ? (
+            <Text className="text-sm text-[#FE6A00]">{user?.phoneNumber}</Text>
+          ) : null}
+          . Please check your email to retrieve the code and enter it here.
         </Text>
 
         <View className="mt-16">
           <OtpInput
-            numberOfDigits={4}
+            numberOfDigits={6}
             theme={{
               pinCodeContainerStyle: {
-                width: 60,
+                width: 45,
                 aspectRatio: 1 / 1,
                 borderRadius: 8,
                 borderWidth: 1,
@@ -60,11 +86,37 @@ export default function Screen() {
                 fontFamily: 'CabinetGrotesk-Bold',
               },
             }}
+            disabled={updatePin.isPending}
+            onFilled={(value) => {
+              updatePin.mutate(
+                { otp: value, pin },
+                {
+                  onSuccess: (res) => {
+                    SheetManager.show('success-sheet', {
+                      payload: {
+                        title: 'Successful',
+                        subtitle: 'Your PIN have been successfully updated.',
+                        hideBackButton: true,
+                        useCheckImage: true,
+                        onRedirect: () => {
+                          router.replace('/profile');
+                        },
+                      },
+                    });
+                  },
+                  onError: (err) => {
+                    showErrorMessage(err?.message);
+                  },
+                }
+              );
+            }}
           />
         </View>
 
         <View className="flex flex-row items-center justify-center gap-1.5">
-          {Number(seconds) > 0 ? (
+          {updatePin.isPending || requestOtp.isPending ? (
+            <LoadingIndicator size={24} />
+          ) : Number(seconds) > 0 ? (
             <Text className="text-center text-[#737381]">
               Wait to request code in:{' '}
               <Text className="text-primary">
@@ -73,13 +125,10 @@ export default function Screen() {
             </Text>
           ) : (
             <Text className="text-center text-[#737381]">
-              <Pressable>
-                <Text className="mx-1 leading-normal text-[#737381]">Haven’t gotten any code?</Text>
-              </Pressable>
-
-              <Pressable onPress={handleOnResendOTP}>
-                <Text className="leading-normal text-primary">Resend</Text>
-              </Pressable>
+              Haven’t gotten any code?{' '}
+              <Text onPress={handleOnResendOTP} className="text-primary">
+                Resend
+              </Text>
             </Text>
           )}
         </View>

@@ -10,6 +10,17 @@ import { CameraSheet } from './camera-sheet';
 import { WithdrawSheet } from './withdraw-sheet';
 import { PinSheet } from './pin-sheet';
 import { FilterSheet } from './filter-sheet';
+import {
+  VerificationProfileSheet,
+  VerificationProfileSheetPayload,
+} from './verification-profile-sheet';
+import { TransactionsPeriodTypes } from '@/api';
+
+interface CameraSheetPayload {
+  url: string;
+  mimeType: string;
+  isVideo?: boolean;
+}
 
 declare module 'react-native-actions-sheet' {
   interface Sheets {
@@ -25,7 +36,7 @@ declare module 'react-native-actions-sheet' {
     }>;
     'camera-sheet': SheetDefinition<{
       payload: {
-        onSelect?: (url: string, isVideo?: boolean) => void;
+        onSelect?: (media: CameraSheetPayload) => void;
       };
     }>;
     'delete-account-sheet': SheetDefinition;
@@ -34,18 +45,40 @@ declare module 'react-native-actions-sheet' {
         onDelete?: () => void;
       };
     }>;
-    'ongoing-job-sheet': SheetDefinition;
-    'counter-offer-sheet': SheetDefinition;
+    'ongoing-job-sheet': SheetDefinition<{
+      payload: {
+        id: string;
+      };
+    }>;
+    'counter-offer-sheet': SheetDefinition<{
+      payload: {
+        onConfirm?: (amount: number) => void;
+        type: 'offer' | 'counter';
+        name?: string;
+        profileImage?: string;
+        amount?: number;
+        counterAmount?: number;
+      };
+    }>;
     'withdraw-sheet': SheetDefinition;
     'pin-sheet': SheetDefinition;
-    'filter-sheet': SheetDefinition;
+    'filter-sheet': SheetDefinition<{
+      payload: {
+        onConfirm?: ({ period }: { period: TransactionsPeriodTypes }) => void;
+        selectedPeriod: 'offer' | 'counter';
+      };
+    }>;
     'success-sheet': SheetDefinition<{
       payload: {
         title: string;
         subtitle: string;
         hideBackButton?: boolean;
         useCheckImage?: boolean;
+        onRedirect?: () => void;
       };
+    }>;
+    'verification-profile-sheet': SheetDefinition<{
+      payload: VerificationProfileSheetPayload;
     }>;
   }
 }
@@ -65,6 +98,7 @@ export const Sheets = () => {
         'withdraw-sheet': WithdrawSheet,
         'pin-sheet': PinSheet,
         'filter-sheet': FilterSheet,
+        'verification-profile-sheet': VerificationProfileSheet,
       }}
     />
   );

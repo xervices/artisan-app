@@ -28,10 +28,17 @@ const appIconBadgeConfig: AppIconBadgeConfig = {
 };
 
 export default ({ config }: ConfigContext): ExpoConfig => {
-  const { name, bundleIdentifier, packageName, scheme, googleServicesFile, googleMapsApiKey } =
-    getDynamicAppConfig(
-      (process.env.APP_ENV as 'development' | 'preview' | 'production') || 'development'
-    );
+  const {
+    name,
+    bundleIdentifier,
+    packageName,
+    scheme,
+    googleServicesFile,
+    googleMapsApiKey,
+    iosGoogleMapsApiKey,
+  } = getDynamicAppConfig(
+    (process.env.APP_ENV as 'development' | 'preview' | 'production') || 'development'
+  );
 
   return {
     ...config,
@@ -45,11 +52,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     icon: './assets/images/icon.png',
     userInterfaceStyle: 'automatic',
     newArchEnabled: true,
-    splash: {
-      image: './assets/images/splash.png',
-      resizeMode: 'contain',
-      backgroundColor: '#0A0A0B',
-    },
     updates: {
       url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
     },
@@ -62,6 +64,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       bundleIdentifier: bundleIdentifier,
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
+        UIBackgroundModes: ['location'],
+      },
+      config: {
+        googleMapsApiKey: iosGoogleMapsApiKey,
       },
     },
     experiments: {
@@ -80,6 +86,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           apiKey: googleMapsApiKey,
         },
       },
+      permissions: [
+        'ACCESS_COARSE_LOCATION',
+        'ACCESS_FINE_LOCATION',
+        'ACCESS_BACKGROUND_LOCATION',
+        'FOREGROUND_SERVICE',
+        'FOREGROUND_SERVICE_LOCATION',
+      ],
+      softwareKeyboardLayoutMode: 'pan',
     },
     web: {
       bundler: 'metro',
@@ -87,6 +101,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       favicon: './assets/images/favicon.png',
     },
     plugins: [
+      [
+        'expo-splash-screen',
+        {
+          backgroundColor: '#0A0A0B',
+          image: './assets/images/splash-transparent.png',
+          imageWidth: 200,
+          resizeMode: 'contain',
+        },
+      ],
       [
         'expo-font',
         {
@@ -100,6 +123,16 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             './assets/fonts/CabinetGrotesk-Extrabold.otf',
             './assets/fonts/CabinetGrotesk-Black.otf',
           ],
+        },
+      ],
+      [
+        'expo-location',
+        {
+          locationAlwaysAndWhenInUsePermission: `Allow ${name} to use your location to show nearby jobs and update your position.`,
+          locationAlwaysPermission: `Allow ${name} to use your location even when the app is in the background to keep your location updated.`,
+          locationWhenInUsePermission: `Allow ${name} to use your location to show nearby jobs.`,
+          isIosBackgroundLocationEnabled: true,
+          isAndroidBackgroundLocationEnabled: true,
         },
       ],
       'expo-router',
@@ -157,7 +190,8 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
       packageName: PACKAGE_NAME,
       scheme: SCHEME,
       googleServicesFile: './prod-google-services.json',
-      googleMapsApiKey: 'process.env.GOOGLE_MAPS_API_KEY',
+      googleMapsApiKey: 'AIzaSyBNpr9SSwSRuUxg9rzYAFhD7CFKqQhN9os',
+      iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
     };
   }
 
@@ -169,6 +203,7 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
       scheme: `${SCHEME}-prev`,
       googleServicesFile: './preview-google-services.json',
       googleMapsApiKey: 'process.env.GOOGLE_MAPS_API_KEY',
+      iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
     };
   }
 
@@ -179,5 +214,6 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
     scheme: `${SCHEME}-dev`,
     googleServicesFile: './dev-google-services.json',
     googleMapsApiKey: 'AIzaSyBNpr9SSwSRuUxg9rzYAFhD7CFKqQhN9os',
+    iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
   };
 };

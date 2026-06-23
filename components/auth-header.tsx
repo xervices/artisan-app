@@ -17,15 +17,15 @@ export function AuthHeader({
 }: AuthHeaderProps) {
   return (
     <View className="relative flex w-full flex-row items-center justify-center">
+      <Text className="flex-1 text-center font-cabinet-bold text-xl">{title}</Text>
+
+      {rightComponent && <View className="absolute right-0">{rightComponent}</View>}
+
       {router.canGoBack() && showBackButton && (
         <Pressable onPress={() => router.back()} className="absolute left-0">
           <Icon as={ArrowLeft} size={28} color={'#B4B4BC'} />
         </Pressable>
       )}
-
-      <Text className="font-cabinet-bold text-xl">{title}</Text>
-
-      {rightComponent && <View className="absolute right-0">{rightComponent}</View>}
     </View>
   );
 }

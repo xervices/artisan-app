@@ -8,12 +8,21 @@ import { ChevronRight } from 'lucide-react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { LegendList } from '@legendapp/list';
 import { SheetManager } from 'react-native-actions-sheet';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
 
 export default function Screen() {
-  const { type } = useLocalSearchParams();
+  const { type, id }: { type: string; id: string } = useLocalSearchParams();
+
+  const { isLoading, data, refetch, isRefetching } = useQuery(api.getJobDetail(id));
+
+  const beforeEvidence = data?.evidence?.filter((i) => i.evidenceType === 'before');
+  const afterEvidence = data?.evidence?.filter((i) => i.evidenceType === 'after');
 
   return (
     <Layout
+      isRefreshing={isRefetching}
+      onRefresh={refetch}
       useBackground
       stickyHeader={
         <View className="pb-4">
@@ -22,20 +31,26 @@ export default function Screen() {
       }>
       <View className="flex-1 gap-6">
         <LegendList
-          data={new Array(12).fill(0)}
+          data={
+            type === 'Before' && beforeEvidence
+              ? beforeEvidence
+              : type === 'After' && afterEvidence
+                ? afterEvidence
+                : []
+          }
           numColumns={3}
           renderItem={({ item }) => (
             <Pressable
               onPress={() => {
                 SheetManager.show('image-preview-sheet', {
                   payload: {
-                    imgSource: require('@/assets/images/sample.png'),
+                    imgSource: item?.mediaUrl,
                   },
                 });
               }}
               className="flex aspect-square w-full items-center justify-center gap-[2px] overflow-hidden rounded-[8px]">
               <Image
-                source={require('@/assets/images/sample.png')}
+                source={item?.mediaUrl}
                 style={{ width: '100%', height: '100%' }}
                 contentFit="cover"
               />

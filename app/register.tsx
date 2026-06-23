@@ -1,107 +1,126 @@
 import * as React from 'react';
-import { Platform, Pressable, View } from 'react-native';
-import { useAuthStore } from '@/store/auth-store';
-import { Text } from '@/components/ui/text';
-import { Layout } from '@/components/layout';
-import { Icon } from '@/components/ui/icon';
+import { Pressable, View } from 'react-native';
 import { router } from 'expo-router';
-import { AuthHeader } from '@/components/auth-header';
 import { useForm } from '@tanstack/react-form';
 import * as z from 'zod';
+import { useMutation } from '@tanstack/react-query';
+
+import { Text } from '@/components/ui/text';
+import { Layout } from '@/components/layout';
+import { AuthHeader } from '@/components/auth-header';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { InputError } from '@/components/ui/input-error';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Image } from 'expo-image';
-import {
-  NativeSelectScrollView,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const formSchema = z.object({
-  fullname: z.string().min(1, 'Fullname is required.'),
-  phone: z.string().min(1, 'Phone number is required.'),
-  email: z.email('Invalid email address').min(1, 'Email is required.'),
-  skill: z.string().min(1, 'Skill is required.'),
-  password: z.string().min(1, 'Password is required.'),
-});
+import { api } from '@/api';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
+import { emojiRegex, formatPhoneNumber, getDeviceInfo } from '@/lib/utils';
+import { getStableDeviceId } from '@/lib/app-install';
+import { DEFAULT_COUNTRY, hasValidNationalNumber } from '@/lib/countries';
 
-const data = [
-  {
-    id: '1',
-    label: 'Plumber',
-  },
-  {
-    id: '2',
-    label: 'Electrician',
-  },
-  {
-    id: '3',
-    label: 'Carpenter',
-  },
-  {
-    id: '4',
-    label: 'Driver',
-  },
-];
+const formSchema = z
+  .object({
+    fullName: z
+      .string()
+      .min(1, 'Your fullname is required.')
+      .refine((val) => !emojiRegex.test(val), 'Name cannot contain emojis.'),
+    phoneNumber: z
+      .string()
+      .min(1, 'Phone number is required.')
+      .refine(hasValidNationalNumber, 'Enter a valid phone number.'),
+    email: z
+      .email('Invalid email address')
+      .min(1, 'Email is required.')
+      .refine(
+        (val) => {
+          const isEmail = val.includes('@');
+          return isEmail ? val === val.toLowerCase() : true;
+        },
+        { message: 'Email must be lowercase.' }
+      ),
+    password: z
+      .string()
+      .min(1, 'Password is required.')
+      .refine((val) => !/\s/.test(val), 'Password cannot contain spaces.')
+      .refine((val) => !emojiRegex.test(val), 'Password cannot contain emojis.'),
+    confirmPassword: z.string().min(1, 'Password confirmation is required.'),
+    role: z.union([z.literal('artisan')]),
+    deviceId: z.string(),
+    deviceName: z.string(),
+    referralCode: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
 export default function Screen() {
-  const { login } = useAuthStore();
+  const { mutate, isPending } = useMutation({
+    ...api.register(),
+    onError: (err) => {
+      showErrorMessage(err.message);
+    },
+  });
 
-  const [checked, setChecked] = React.useState(false);
-
-  function onCheckedChange(checked: boolean) {
-    // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setChecked(checked);
-  }
-
-  const insets = useSafeAreaInsets();
-  const contentInsets = {
-    top: insets.top,
-    bottom: Platform.select({ ios: insets.bottom, android: insets.bottom + 24 }),
-    left: 24,
-    right: 24,
-  };
+  const applyReferralCode = useMutation(api.applyReferralCode());
 
   const form = useForm({
     defaultValues: {
-      fullname: '',
-      phone: '',
+      fullName: '',
+      phoneNumber: DEFAULT_COUNTRY.dialCode,
       email: '',
       password: '',
-      skill: '',
+      confirmPassword: '',
+      role: 'artisan' as const,
+      referralCode: '',
+      deviceId: '',
+      deviceName: '',
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      router.navigate({
-        pathname: '/verify-email',
-        params: {
-          email: value.email,
-          phone: value.phone,
+      const deviceInfo = await getDeviceInfo();
+
+      value.deviceId = await getStableDeviceId();
+      value.deviceName = deviceInfo?.deviceName || '';
+
+      const { confirmPassword, referralCode, ...registerData } = value;
+
+      if (registerData.phoneNumber.trim()) {
+        registerData.phoneNumber = formatPhoneNumber(registerData.phoneNumber);
+      }
+
+      mutate(registerData, {
+        onSuccess: () => {
+          showSuccessMessage('Account created successfully');
+
+          if (referralCode) {
+            applyReferralCode?.mutate({ referralCode });
+          }
+
+          router.navigate({
+            pathname: '/verify-email',
+            params: {
+              email: value.email,
+              phone: value.phoneNumber,
+            },
+          });
         },
       });
     },
   });
 
   return (
-    <Layout useBackground>
+    <Layout>
       <View className="flex-1 gap-6">
         <View className="flex gap-2">
           <AuthHeader title="Get Started" />
         </View>
 
         <View className="flex gap-4">
-          <form.Field name="fullname">
+          <form.Field name="fullName">
             {(field) => (
               <View>
                 <Label nativeID="fullname">
@@ -120,7 +139,7 @@ export default function Screen() {
             )}
           </form.Field>
 
-          <form.Field name="phone">
+          <form.Field name="phoneNumber">
             {(field) => (
               <View>
                 <Label nativeID="phone">Phone Number</Label>
@@ -154,7 +173,7 @@ export default function Screen() {
             )}
           </form.Field>
 
-          <form.Field name="skill">
+          {/* <form.Field name="skill">
             {(field) => (
               <View>
                 <Label nativeID="skill">Select skill</Label>
@@ -188,17 +207,115 @@ export default function Screen() {
                 {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
               </View>
             )}
-          </form.Field>
+          </form.Field> */}
 
           <form.Field name="password">
+            {(field) => {
+              const password = field.state.value;
+              const hasUppercase = /[A-Z]/.test(password);
+              const hasLowercase = /[a-z]/.test(password);
+              const hasNumber = /[0-9]/.test(password);
+              const hasSpecialChar = /[^A-Za-z0-9.,]/.test(password);
+              const hasMinLength = password.length >= 6;
+
+              return (
+                <View>
+                  <Label nativeID="password">Password</Label>
+                  <Input
+                    id="password"
+                    value={field.state.value}
+                    onChangeText={field.handleChange}
+                    placeholder="Enter your password"
+                    secureTextEntry
+                    hasError={!field.state.meta.isValid}
+                  />
+
+                  <View className="mt-2 gap-1">
+                    <View className="flex flex-row items-center gap-2">
+                      <Text
+                        className={
+                          hasUppercase ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        {hasUppercase ? '✓' : '○'}
+                      </Text>
+                      <Text
+                        className={
+                          hasUppercase ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        Uppercase letter
+                      </Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-2">
+                      <Text
+                        className={
+                          hasLowercase ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        {hasLowercase ? '✓' : '○'}
+                      </Text>
+                      <Text
+                        className={
+                          hasLowercase ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        Lowercase letter
+                      </Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-2">
+                      <Text
+                        className={hasNumber ? 'text-sm text-green-600' : 'text-sm text-gray-400'}>
+                        {hasNumber ? '✓' : '○'}
+                      </Text>
+                      <Text
+                        className={hasNumber ? 'text-sm text-green-600' : 'text-sm text-gray-400'}>
+                        Number
+                      </Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-2">
+                      <Text
+                        className={
+                          hasSpecialChar ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        {hasSpecialChar ? '✓' : '○'}
+                      </Text>
+                      <Text
+                        className={
+                          hasSpecialChar ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        Special character (e.g. !@#$%)
+                      </Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-2">
+                      <Text
+                        className={
+                          hasMinLength ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        {hasMinLength ? '✓' : '○'}
+                      </Text>
+                      <Text
+                        className={
+                          hasMinLength ? 'text-sm text-green-600' : 'text-sm text-gray-400'
+                        }>
+                        Minimum 6 characters
+                      </Text>
+                    </View>
+                  </View>
+
+                  {!field.state.meta.isValid ? (
+                    <InputError errors={field.state.meta.errors} />
+                  ) : null}
+                </View>
+              );
+            }}
+          </form.Field>
+
+          <form.Field name="confirmPassword">
             {(field) => (
               <View>
-                <Label nativeID="password">Password</Label>
+                <Label nativeID="confirmPassword">Confirm Password</Label>
                 <Input
-                  id="password"
+                  id="confirmPassword"
                   value={field.state.value}
                   onChangeText={field.handleChange}
-                  placeholder="Enter your password"
+                  placeholder="Confirm your password"
                   secureTextEntry
                   hasError={!field.state.meta.isValid}
                 />
@@ -207,34 +324,48 @@ export default function Screen() {
             )}
           </form.Field>
 
-          <Button onPress={form.handleSubmit}>Continue</Button>
-        </View>
+          <form.Field name="referralCode">
+            {(field) => (
+              <View>
+                <Label nativeID="referral">Referral Code (Optional)</Label>
+                <Input
+                  id="referral"
+                  value={field.state.value}
+                  onChangeText={field.handleChange}
+                  placeholder="Enter your referral code"
+                  hasError={!field.state.meta.isValid}
+                />
+                {!field.state.meta.isValid ? <InputError errors={field.state.meta.errors} /> : null}
+              </View>
+            )}
+          </form.Field>
 
-        <View className="flex flex-row items-center justify-center gap-1.5">
-          <Text className="text-[#737381]">Already have an account?</Text>
-
-          <Pressable onPress={() => router.navigate('/login')}>
-            <Text className="text-primary">Log in</Text>
-          </Pressable>
+          <Button onPress={form.handleSubmit} isLoading={isPending} disabled={isPending}>
+            Continue
+          </Button>
         </View>
 
         <View className="flex flex-row items-center justify-center gap-1.5">
           <Text className="text-center text-[#737381]">
-            <Pressable>
-              <Text className="mx-1 leading-normal text-[#737381]">
-                By creating an account, you agree to our
-              </Text>
-            </Pressable>
+            Already have an account?{' '}
+            <Text onPress={() => router.navigate('/login')} className="text-primary">
+              Log in
+            </Text>
+          </Text>
+        </View>
 
-            <Pressable>
-              <Text className="leading-normal text-primary">Terms of Service</Text>
-            </Pressable>
-            <Pressable>
-              <Text className="mx-1 leading-normal text-[#737381]">and</Text>
-            </Pressable>
-            <Pressable>
-              <Text className="leading-normal text-primary">Privacy Policy</Text>
-            </Pressable>
+        <View className="flex w-full flex-row flex-wrap items-center justify-center gap-1">
+          <Text className="text-center leading-normal text-[#737381]">
+            By creating an account, you agree to our applicable{' '}
+            <Text onPress={() => router.navigate('/terms')} className="leading-normal text-primary">
+              Terms of Service
+            </Text>{' '}
+            and{' '}
+            <Text
+              onPress={() => router.navigate('/privacy')}
+              className="leading-normal text-primary">
+              Privacy Policy
+            </Text>
           </Text>
         </View>
       </View>

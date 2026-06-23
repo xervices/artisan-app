@@ -1,60 +1,111 @@
 import { View } from 'react-native';
 import { Text } from '../ui/text';
+import { formatCurrency, formatDateTime } from '@/lib/utils';
 
 interface TransactionCardProps {
-  type?: 'income' | 'withdrawal' | 'dispute';
+  type?: string;
+  amount?: number;
+  date?: string;
+  customer?: string;
+  jobId?: string;
+  charge?: number;
+  category?: string;
+  referenceType?: string;
+  description?: string;
 }
 
-export default function TransactionCard({ type = 'income' }: TransactionCardProps) {
+export default function TransactionCard({
+  type = 'income',
+  amount = 0,
+  date,
+  category = '',
+  charge = 0,
+  customer = '',
+  jobId = '',
+  referenceType = '',
+  description = '',
+}: TransactionCardProps) {
   return (
     <View className="flex flex-shrink-0 flex-row gap-2 rounded-[8px] border border-[#F4F4F5] bg-white p-4">
       <View className="flex-1 gap-1">
-        <Text className="font-cabinet-bold text-sm text-[#737381]">
-          {type === 'withdrawal' ? 'Withdrawal' : 'Plumber'}{' '}
-          <Text className="text-xs text-[#FF6A00]">
-            {type === 'withdrawal' ? 'WD ● #25667' : 'JOB ID ● #25667'}
-          </Text>
-        </Text>
-
-        {type === 'income' && (
-          <Text className="font-cabinet-bold text-sm text-[#737381]">
-            Alex Baker
-            <Text className="font-cabinet-bold text-sm text-[#22973B]">+₦8500</Text>
-          </Text>
-        )}
-
-        {type === 'withdrawal' && (
-          <Text className="font-cabinet-bold text-sm text-[#737381]">
-            Amount
-            <Text className="font-cabinet-bold text-sm text-[#22973B]">+₦8500</Text>
+        {referenceType !== 'dispute' && (
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            className="font-cabinet-bold text-sm text-[#737381]">
+            {type === 'withdrawal'
+              ? 'Withdrawal'
+              : type === 'referral_bonus'
+                ? 'Referral Bonus'
+                : category}{' '}
+            {type === 'referral_bonus' ? null : (
+              <Text className="text-xs text-[#FF6A00]" numberOfLines={1} ellipsizeMode="tail">
+                {type === 'withdrawal' ? 'WD ● ' : `JOB ID ● ${jobId}`}
+              </Text>
+            )}
           </Text>
         )}
 
-        {type === 'dispute' && (
-          <Text className="font-cabinet-bold text-sm text-[#737381]">
-            Alex Baker
-            <Text className="font-cabinet-bold text-sm text-[#B3031E]">+₦8500</Text>
+        {referenceType === 'dispute' && (
+          <Text
+            // numberOfLines={1}
+            // ellipsizeMode="tail"
+            className="font-cabinet-bold text-sm text-[#737381]">
+            {description}
           </Text>
         )}
+
+        {(type === 'payment_received' || type === 'earning') && (
+          <Text className="font-cabinet-bold text-sm text-[#737381]">
+            {customer}
+            <Text className="font-cabinet-bold text-sm text-[#22973B]">
+              +{formatCurrency(amount + charge)}
+            </Text>
+          </Text>
+        )}
+
+        {type === 'withdrawal' ||
+          (type === 'referral_bonus' && (
+            <Text className="font-cabinet-bold text-sm text-[#737381]">
+              Amount
+              <Text className="font-cabinet-bold text-sm text-[#22973B]">
+                +{formatCurrency(amount)}
+              </Text>
+            </Text>
+          ))}
+
+        {/* {referenceType === 'dispute' && (
+          <Text className="font-cabinet-bold text-sm text-[#737381]">
+            {customer}
+            <Text className="font-cabinet-bold text-sm text-[#B3031E]">
+              +{formatCurrency(amount)}
+            </Text>
+          </Text>
+        )} */}
       </View>
 
       <View className="flex items-end gap-1">
-        {type === 'income' && (
+        {(type === 'payment_received' || type === 'earning') && referenceType !== 'dispute' && (
           <Text className="text-sm text-[#22973B]">
-            Income <Text className="font-cabinet-bold text-sm text-[#22973B]">+₦8500</Text>
+            Income{' '}
+            <Text className="font-cabinet-bold text-sm text-[#22973B]">
+              +{formatCurrency(amount)}
+            </Text>
           </Text>
         )}
 
-        {type === 'income' && (
+        {referenceType === 'dispute' && <Text className="text-sm text-[#B3031E]">Dispute</Text>}
+
+        {(type === 'payment_received' || type === 'earning') && (
           <Text className="text-sm text-[#737381]">
-            Charges
-            <Text className="font-cabinet-bold text-sm text-[#737381]">₦425</Text>
+            Charges{' '}
+            <Text className="font-cabinet-bold text-sm text-[#737381]">
+              {formatCurrency(charge)}
+            </Text>
           </Text>
         )}
 
-        {type === 'dispute' && <Text className="text-sm text-[#B3031E]">Dispute</Text>}
-
-        <Text className="text-xs text-[#737381]">2025-11-27 17:47:27</Text>
+        <Text className="text-xs text-[#737381]">{formatDateTime(date)}</Text>
       </View>
     </View>
   );

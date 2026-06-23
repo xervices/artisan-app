@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "633890321082",
+    "project_id": "xervices-pro",
+    "storage_bucket": "xervices-pro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633890321082:android:d7a15e7271bb1cd55f8883",
+        "android_client_info": {
+          "package_name": "com.xervices.artisan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSscYE4uuLGe0jvMmAz4BeXMO2CCvI1-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

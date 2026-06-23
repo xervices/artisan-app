@@ -11,6 +11,7 @@ export default function VerifyLayout() {
   return (
     <Layout
       useBackground
+      scrollable={false}
       stickyHeader={
         <View className="pb-4">
           <AuthHeader title="Tell us about yourself" />

@@ -1,19 +1,42 @@
 import { Pressable, View } from 'react-native';
 import React from 'react';
 import { Text } from '../ui/text';
-import ActionSheet, { ScrollView, SheetManager } from 'react-native-actions-sheet';
+import ActionSheet, { ScrollView, SheetManager, SheetProps } from 'react-native-actions-sheet';
 import { router } from 'expo-router';
 import { ArrowLeft, BadgeCheck, Camera, PhoneCall } from 'lucide-react-native';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Button } from '../ui/button';
 import { Image } from 'expo-image';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 
-export function OngoingJobSheet() {
-  const snapPoints = [100];
+export function OngoingJobSheet(props: SheetProps<'ongoing-job-sheet'>) {
+  const jobId = props.payload?.id || '';
+
+  const [beforePhotos, setBeforePhotos] = React.useState<
+    { url: string; mimeType: string; isVideo?: boolean }[]
+  >([]);
+  const [afterPhotos, setAfterPhotos] = React.useState<
+    { url: string; mimeType: string; isVideo?: boolean }[]
+  >([]);
+
+  const { isLoading, data, refetch, isRefetching } = useQuery(api.getJobDetail(jobId));
+
+  const startJob = useMutation(api.startJob(jobId));
+  const cancelJob = useMutation(api.cancelJob(jobId));
+  const completeJob = useMutation(api.completeJob(jobId));
+
+  // const snapPoints = [100];
+
+  const handleOnMarkArrived = () => {
+    if (beforePhotos?.length < 1)
+      return showErrorMessage('Take before photos before marking as arrived.');
+  };
 
   return (
     <ActionSheet
-      snapPoints={snapPoints}
+      // snapPoints={snapPoints}
       initialSnapIndex={0}
       closable={false}
       closeOnPressBack={true}
@@ -55,15 +78,19 @@ export function OngoingJobSheet() {
           <View className="flex w-full flex-row">
             <View className="flex w-1/2 flex-row items-center gap-2">
               <Avatar alt="User's Avatar" className="h-6 w-6">
-                <AvatarImage source={{ uri: 'https://github.com/mrzachnugent.png' }} />
+                <AvatarImage source={{ uri: data?.user?.profile?.avatarUrl }} />
                 <AvatarFallback className="bg-primary">
-                  <Text className="font-cabinet-bold leading-none">ZN</Text>
+                  <Text className="font-cabinet-bold text-xs uppercase leading-none">
+                    {data?.user?.profile?.fullName?.substring(0, 2)}
+                  </Text>
                 </AvatarFallback>
               </Avatar>
 
               <View>
                 <View className="flex flex-row items-center">
-                  <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">Sarah Rodri</Text>
+                  <Text className="font-cabinet-bold text-[18px] text-[#1B1B1E]">
+                    {data?.user?.profile?.fullName}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -82,7 +109,7 @@ export function OngoingJobSheet() {
                 router.navigate({
                   pathname: '/chat',
                   params: {
-                    id: '1234',
+                    id: jobId,
                   },
                 });
               }}
@@ -98,78 +125,180 @@ export function OngoingJobSheet() {
           </View>
 
           <View className="flex gap-4">
-            <View className="flex gap-2">
-              <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
-                Before Photo
-              </Text>
+            {data?.status === 'paid' ? (
+              <View className="flex flex-1 gap-2">
+                <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
+                  Before Photo
+                </Text>
 
-              <View className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
-                <Camera size={24} color={'#737381'} />
+                <Pressable
+                  onPress={() => {
+                    SheetManager.hide('ongoing-job-sheet');
+                    setTimeout(() => {
+                      SheetManager.show('camera-sheet', {
+                        payload: {
+                          onSelect(value) {
+                            setBeforePhotos((prev) => {
+                              return [...prev, value];
+                            });
+                            setTimeout(() => {
+                              SheetManager.show('ongoing-job-sheet');
+                            }, 300);
+                          },
+                        },
+                      });
+                    }, 300);
+                  }}
+                  className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
+                  <Camera size={24} color={'#737381'} />
+                </Pressable>
+
+                <View className="mt-1 flex flex-row flex-wrap gap-2">
+                  {beforePhotos?.map((photo, index) => (
+                    <View key={index} className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+                      <Image
+                        source={photo?.url}
+                        style={{ width: '100%', height: '100%' }}
+                        contentFit="cover"
+                      />
+                    </View>
+                  ))}
+                </View>
               </View>
+            ) : null}
 
-              <View className="mt-1 flex flex-row flex-wrap gap-2">
-                {new Array(4).fill(0).map((_, index) => (
-                  <View key={index} className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
-                    <Image
-                      source={require('@/assets/images/sample.png')}
-                      style={{ width: '100%', height: '100%' }}
-                      contentFit="cover"
-                    />
-                  </View>
-                ))}
+            {data?.status === 'in_progress' ? (
+              <View className="flex gap-2">
+                <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
+                  After Photo
+                </Text>
+
+                <Pressable
+                  onPress={() =>
+                    SheetManager.show('camera-sheet', {
+                      payload: {
+                        onSelect(value) {
+                          setAfterPhotos((prev) => {
+                            return [...prev, value];
+                          });
+                        },
+                      },
+                    })
+                  }
+                  className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
+                  <Camera size={24} color={'#737381'} />
+                </Pressable>
+
+                <View className="mt-1 flex flex-row flex-wrap gap-2">
+                  {afterPhotos.map((photo, index) => (
+                    <View key={index} className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
+                      <Image
+                        source={photo?.url}
+                        style={{ width: '100%', height: '100%' }}
+                        contentFit="cover"
+                      />
+                    </View>
+                  ))}
+                </View>
               </View>
-            </View>
+            ) : null}
 
-            <View className="flex gap-2">
-              <Text className="font-cabinet-medium text-xs uppercase leading-none text-[#1B1B1E]">
-                After Photo
-              </Text>
-
-              <View className="flex aspect-square w-[66px] items-center justify-center rounded-[8px] border border-[#D4D4D8]">
-                <Camera size={24} color={'#737381'} />
-              </View>
-
-              <View className="mt-1 flex flex-row flex-wrap gap-2">
-                {new Array(4).fill(0).map((_, index) => (
-                  <View key={index} className="aspect-[56/46] w-14 overflow-hidden rounded-[4px]">
-                    <Image
-                      source={require('@/assets/images/sample.png')}
-                      style={{ width: '100%', height: '100%' }}
-                      contentFit="cover"
-                    />
-                  </View>
-                ))}
-              </View>
-            </View>
-
-            <View className="flex gap-4">
+            <View className="flex flex-1 gap-4">
               <Button
+                isLoading={cancelJob?.isPending}
+                disabled={cancelJob?.isPending}
                 onPress={() => {
-                  SheetManager.hideAll();
-                  router.navigate({
-                    pathname: '/jobs/dispute',
-                    params: {
-                      id: '1234',
-                    },
-                  });
+                  cancelJob?.mutate(
+                    {},
+                    {
+                      onSuccess: (res) => {
+                        showSuccessMessage('Job cancelled successfully.');
+                        refetch();
+                        SheetManager.hideAll();
+                        router.replace('/jobs');
+                      },
+                      onError: (err) => {
+                        showErrorMessage(err?.message);
+                      },
+                    }
+                  );
                 }}
                 className="flex-1 border-[#DFDFE1] bg-white">
                 <Text className="font-cabinet-extrabold text-[#737381]">Cancel offer</Text>
               </Button>
 
-              <Button
-                onPress={() => {
-                  SheetManager.hideAll();
-                  router.navigate({
-                    pathname: '/jobs/rate',
-                    params: {
-                      id: '1234',
-                    },
-                  });
-                }}
-                className="">
-                Mark Arrived
-              </Button>
+              {data?.status === 'paid' ? (
+                <Button
+                  isLoading={startJob?.isPending}
+                  disabled={startJob?.isPending}
+                  onPress={() => {
+                    startJob?.mutate(
+                      // @ts-ignore
+                      {
+                        beforePhotos,
+                      },
+                      {
+                        onSuccess: (res) => {
+                          showSuccessMessage('Job marked as started.');
+                          refetch();
+                        },
+                        onError: (err) => {
+                          showErrorMessage(err?.message);
+                        },
+                      }
+                    );
+                  }}
+                  className="">
+                  Mark Arrived
+                </Button>
+              ) : null}
+
+              {data?.status === 'in_progress' ? (
+                <Button
+                  isLoading={completeJob?.isPending}
+                  disabled={completeJob?.isPending}
+                  onPress={() => {
+                    completeJob?.mutate(
+                      // @ts-ignore
+                      {
+                        afterPhotos,
+                      },
+                      {
+                        onSuccess: (res) => {
+                          showSuccessMessage('Job marked as completed.');
+                          refetch();
+                        },
+                        onError: (err) => {
+                          showErrorMessage(err?.message);
+                        },
+                      }
+                    );
+                  }}
+                  className="">
+                  Mark complete
+                </Button>
+              ) : null}
+
+              {data?.status === 'completed' ? (
+                <>
+                  <Button className="">Submit for review</Button>
+
+                  <Button
+                    isLoading={completeJob?.isPending}
+                    disabled={completeJob?.isPending}
+                    onPress={() =>
+                      router.navigate({
+                        pathname: '/jobs/dispute',
+                        params: {
+                          id: jobId,
+                        },
+                      })
+                    }
+                    variant={'outline'}>
+                    Dispute
+                  </Button>
+                </>
+              ) : null}
             </View>
           </View>
         </View>

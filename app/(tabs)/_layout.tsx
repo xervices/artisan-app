@@ -1,37 +1,74 @@
 import { Text } from '@/components/ui/text';
+import { useBackgroundLocation } from '@/hooks/use-background-location';
+import { MarketplaceProvider } from '@/providers/use-marketplace-context';
+import { useAuthStore } from '@/store/auth-store';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { Image } from 'expo-image';
 import { Tabs } from 'expo-router';
-import { Key } from 'react';
+import { Key, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { NotificationSocketProvider } from '@/providers/notification-socket-provider';
 
 export default function TabsLayout() {
+  const { isLoggedIn } = useAuthStore();
+  const { startTracking, stopTracking } = useBackgroundLocation();
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      // Only auto-start tracking if permissions are already granted,
+      // to avoid triggering system prompt before prominent disclosure.
+      (async () => {
+        const Location = await import('expo-location');
+        const fg = await Location.getForegroundPermissionsAsync();
+        const bg = await Location.getBackgroundPermissionsAsync();
+        if (fg.granted && bg.granted) {
+          startTracking();
+        }
+      })();
+    }
+
+    return () => {
+      stopTracking();
+    };
+  }, [isLoggedIn]);
+
   return (
-    <Tabs screenOptions={{ headerShown: false }} tabBar={(props) => <MyTabBar {...props} />}>
-      <Tabs.Screen
-        name="(home)"
-        options={{
-          title: 'Home',
-        }}
-      />
-      <Tabs.Screen
-        name="jobs"
-        options={{
-          title: 'My Jobs',
-        }}
-      />
-      <Tabs.Screen
-        name="earnings"
-        options={{
-          title: 'Earnings',
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-        }}
-      />
-    </Tabs>
+    <BottomSheetModalProvider>
+      <NotificationSocketProvider>
+        <MarketplaceProvider artisanId={user?.id}>
+          <Tabs
+            screenOptions={{ headerShown: false }}
+            tabBar={(props) => <MyTabBar {...props} />}>
+            <Tabs.Screen
+              name="(home)"
+              options={{
+                title: 'Home',
+              }}
+            />
+            <Tabs.Screen
+              name="jobs"
+              options={{
+                title: 'My Jobs',
+              }}
+            />
+            <Tabs.Screen
+              name="earnings"
+              options={{
+                title: 'Earnings',
+              }}
+            />
+            <Tabs.Screen
+              name="profile"
+              options={{
+                title: 'Profile',
+              }}
+            />
+          </Tabs>
+        </MarketplaceProvider>
+      </NotificationSocketProvider>
+    </BottomSheetModalProvider>
   );
 }
 
@@ -42,6 +79,8 @@ type MyTabBarProps = {
 };
 
 function MyTabBar({ state, descriptors, navigation }: MyTabBarProps) {
+  const insets = useSafeAreaInsets();
+
   const TAB_ICONS: Record<string, { icon: any; active: any }> = {
     '(home)': {
       icon: require('@/assets/icons/home.svg'),
@@ -62,8 +101,8 @@ function MyTabBar({ state, descriptors, navigation }: MyTabBarProps) {
   };
 
   return (
-    <View className="bg-white">
-      <View className="mb-5 flex h-20 w-full flex-row items-center justify-between gap-6 bg-white px-[28px]">
+    <View style={{ paddingBottom: insets.bottom }} className="bg-white">
+      <View className="flex h-20 w-full flex-row items-center justify-center gap-[10%] bg-white">
         {state.routes.map(
           (route: { key: string | number; name: any }, index: Key | null | undefined) => {
             const { options } = descriptors[route.key];

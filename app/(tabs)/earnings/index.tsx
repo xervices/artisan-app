@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import * as React from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import * as Application from 'expo-application';
 import { Layout } from '@/components/layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,8 +11,27 @@ import { LegendList } from '@legendapp/list';
 import { BalanceCard } from '@/components/earnings/balance-card';
 import TransactionCard from '@/components/earnings/transaction-card';
 import { Button } from '@/components/ui/button';
+import { useMutation, useQueries } from '@tanstack/react-query';
+import { api } from '@/api';
+import { LoadingState } from '@/components/loading-state';
+import { copyToClipboard, formatCurrency } from '@/lib/utils';
+import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
 
 export default function Screen() {
+  const [promotions, earnings, transactions, banks, commissionRate] = useQueries({
+    queries: [
+      api.getMyPromotions(),
+      api.getMyEarnings(),
+      api.getTransactionHistory({}),
+      api.getBankAccounts(),
+      api.getCommissionRate(),
+    ],
+  });
+
+  const { mutate: withdrawBonus, isPending: isWithdrawing } = useMutation(
+    api.withdrawReferralBonus()
+  );
+
   const [value, setValue] = React.useState('earnings');
 
   return (
@@ -55,116 +74,221 @@ export default function Screen() {
           </TabsList>
 
           {/* Earnings content */}
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={
+                  earnings?.isRefetching || transactions?.isRefetching || banks?.isRefetching
+                }
+                onRefresh={() => {
+                  earnings?.refetch();
+                  transactions?.refetch();
+                  banks?.refetch();
+                  commissionRate?.refetch();
+                }}
+                tintColor={'#E15D02'}
+                colors={['#E15D02']}
+              />
+            }
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={false}>
             <TabsContent value="earnings" className="flex gap-4 pb-16 pt-4">
-              <BalanceCard />
+              {earnings?.isLoading || transactions?.isLoading || banks?.isLoading ? (
+                <LoadingState title="Loading your earnings..." />
+              ) : (
+                <>
+                  <BalanceCard
+                    balance={earnings?.data?.availableBalance}
+                    totalEarned={earnings?.data?.totalEarned}
+                    incomingPayment={earnings?.data?.pendingBalance}
+                    hasSavedBank={banks?.data && banks?.data?.length > 0}
+                    commissionRate={commissionRate?.data?.commissionValue}
+                    isPercentage={commissionRate?.data?.isPercentage}
+                  />
 
-              <View className="flex flex-row items-center justify-between">
-                <Text className="font-cabinet-medium text-xs uppercase text-[#737381]">
-                  Transaction History
-                </Text>
+                  <View className="flex flex-row items-center justify-between">
+                    <Text className="flex-1 font-cabinet-medium text-xs uppercase text-[#737381]">
+                      Transaction History
+                    </Text>
 
-                <Pressable
-                  onPress={() => router.navigate('/earnings/history')}
-                  className="mt-1 flex flex-row items-center gap-1">
-                  <Text className="font-cabinet-bold text-xs leading-none text-[#737381]">
-                    Show all
-                  </Text>
+                    <Pressable
+                      onPress={() => router.navigate('/earnings/history')}
+                      className="mt-1 flex flex-row items-center gap-1">
+                      <Text className="font-cabinet-bold text-xs leading-none text-[#737381]">
+                        Show all
+                      </Text>
 
-                  <ChevronDown size={12} />
-                </Pressable>
-              </View>
+                      <ChevronDown size={12} />
+                    </Pressable>
+                  </View>
 
-              <TransactionCard />
-              <TransactionCard type="withdrawal" />
-              <TransactionCard type="dispute" />
-              <TransactionCard />
-              <TransactionCard type="withdrawal" />
-              <TransactionCard type="dispute" />
+                  {transactions?.data?.data?.slice(0, 5)?.map((transaction) => (
+                    <TransactionCard
+                      key={transaction?.id}
+                      type={transaction?.type}
+                      amount={transaction?.amount}
+                      date={transaction?.createdAt}
+                      charge={transaction?.jobDetails?.xervicesCharge}
+                      customer={transaction?.jobDetails?.customerName}
+                      category={transaction?.jobDetails?.categoryName}
+                      jobId={transaction?.jobDetails?.jobId}
+                      referenceType={transaction?.referenceType}
+                      description={transaction?.description}
+                    />
+                  ))}
+                </>
+              )}
             </TabsContent>
           </ScrollView>
 
           {/* Promotions content */}
           <ScrollView
             contentContainerStyle={{ flexGrow: 1, paddingBottom: 60 }}
-            showsVerticalScrollIndicator={false}>
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={promotions?.isRefetching}
+                onRefresh={promotions?.refetch}
+                tintColor={'#E15D02'}
+                colors={['#E15D02']}
+              />
+            }>
             <TabsContent value="promotions" className="flex gap-4 pt-4">
-              <View className="flex gap-1">
-                <Text className="font-cabinet-medium text-xs text-[#737381]">YOUR EARNINGS</Text>
-
-                <Text className="font-cabinet-bold text-2xl text-[#737381]">₦5,200</Text>
-
-                <Button className="mt-2">Withdraw</Button>
-              </View>
-
-              <View className="flex w-full flex-row gap-4">
-                <View className="flex h-16 flex-1 items-center justify-center rounded-[8px] border border-[#DFDFE1]">
-                  <Text className="text-center font-cabinet-bold text-xl text-[#737381]">4</Text>
-                  <Text className="text-center text-xs text-[#B4B4BC]">Referrals</Text>
-                </View>
-
-                <View className="flex h-16 flex-1 items-center justify-center rounded-[8px] border border-[#DFDFE1]">
-                  <Text className="text-center font-cabinet-bold text-xl text-[#737381]">
-                    ₦1000
-                  </Text>
-                  <Text className="text-center text-xs text-[#B4B4BC]">Per referral</Text>
-                </View>
-              </View>
-
-              <View className="flex gap-2">
-                <Text className="text-xs uppercase text-[#737381]">Your Referral Code</Text>
-
-                <View className="flex h-32 w-full items-center justify-center gap-2 rounded-[8px] border border-[#DFDFE1] bg-[#F4F4F5]">
-                  <Text className="text-center text-xs text-[#737381]">
-                    Share this code with friends
-                  </Text>
-
-                  <Text className="text-center font-cabinet-bold text-xl text-[#737381]">
-                    ALEX2025
-                  </Text>
-
-                  <Button className="w-48" size={'sm'}>
-                    Copy Code
-                  </Button>
-                </View>
-              </View>
-
-              <Text className="text-center text-xs text-[#737381]">
-                Or share your referral link
-              </Text>
-
-              <View className="flex h-[52px] w-full flex-row items-center rounded-full bg-[#F4F4F5] px-2 pl-4">
-                <Text
-                  className="flex-1 font-cabinet-bold text-sm text-[#737381]"
-                  numberOfLines={1}
-                  ellipsizeMode="tail">
-                  xervices.app/ref/ALEX2025
-                </Text>
-
-                <Button className="w-16" size={'sm'}>
-                  Copy
-                </Button>
-              </View>
-
-              <View className="flex gap-2">
-                <Text className="text-xs uppercase text-[#737381]">My Discounts</Text>
-
-                <View className="flex h-28 w-full items-center justify-center gap-2 rounded-[8px] bg-[#1B1B1E]">
-                  <View className="flex h-5 items-center justify-center rounded-full bg-[#737381] px-2">
-                    <Text className="text-xs font-medium leading-none text-[#FFF4EA]">
-                      ACTIVE DISCOUNT
+              {promotions?.isLoading ? (
+                <LoadingState title="Loading Promotions..." />
+              ) : (
+                <>
+                  <View className="flex gap-1">
+                    <Text className="font-cabinet-medium text-xs text-[#737381]">
+                      YOUR EARNINGS
                     </Text>
+
+                    <Text className="font-cabinet-bold text-2xl text-[#737381]">
+                      {formatCurrency(promotions?.data?.availableReferralBalance)}
+                    </Text>
+
+                    <Button
+                      onPress={() => {
+                        if (
+                          promotions?.data?.availableReferralBalance &&
+                          promotions?.data?.availableReferralBalance > 0
+                        ) {
+                          withdrawBonus(
+                            { amount: promotions?.data?.availableReferralBalance },
+                            {
+                              onError: (err) => {
+                                showErrorMessage(err?.message);
+                              },
+                              onSuccess: () => {
+                                promotions?.refetch();
+                                earnings?.refetch();
+                                transactions?.refetch();
+                                showSuccessMessage(
+                                  'Referral bonus withdrawn to wallet successfully.'
+                                );
+                              },
+                            }
+                          );
+                        }
+                      }}
+                      disabled={
+                        isWithdrawing ||
+                        (promotions?.data?.availableReferralBalance &&
+                        promotions?.data?.availableReferralBalance > 0
+                          ? false
+                          : true)
+                      }
+                      isLoading={isWithdrawing}
+                      className="mt-2">
+                      Withdraw
+                    </Button>
                   </View>
 
-                  <Text className="text-center font-cabinet-bold text-2xl text-[#FFF4EA]">
-                    5% OFF
+                  <View className="flex w-full flex-row gap-4">
+                    <View className="flex h-16 flex-1 items-center justify-center rounded-[8px] border border-[#DFDFE1]">
+                      <Text className="text-center font-cabinet-bold text-xl text-[#737381]">
+                        {promotions?.data?.referralCount}
+                      </Text>
+                      <Text className="text-center text-xs text-[#B4B4BC]">Referrals</Text>
+                    </View>
+
+                    <View className="flex h-16 flex-1 items-center justify-center rounded-[8px] border border-[#DFDFE1]">
+                      <Text className="text-center font-cabinet-bold text-xl text-[#737381]">
+                        {formatCurrency(promotions?.data?.rewardPerReferral)}
+                      </Text>
+                      <Text className="text-center text-xs text-[#B4B4BC]">Per referral</Text>
+                    </View>
+                  </View>
+
+                  <View className="flex gap-2">
+                    <Text className="text-xs uppercase text-[#737381]">Your Referral Code</Text>
+
+                    <View className="flex h-32 w-full items-center justify-center gap-2 rounded-[8px] border border-[#DFDFE1] bg-[#F4F4F5]">
+                      <Text className="text-center text-xs text-[#737381]">
+                        Share this code with friends
+                      </Text>
+
+                      <Text className="text-center font-cabinet-bold text-xl text-[#737381]">
+                        {promotions?.data?.referralCode}
+                      </Text>
+
+                      <Button
+                        onPress={() => copyToClipboard(promotions?.data?.referralCode)}
+                        className="w-48"
+                        size={'sm'}>
+                        Copy Code
+                      </Button>
+                    </View>
+                  </View>
+
+                  <Text className="text-center text-xs text-[#737381]">
+                    Or share your referral link
                   </Text>
 
-                  <Text className="text-center text-xs text-[#FFF4EA]">
-                    Your first-time customer discount, valid for 30 days
-                  </Text>
-                </View>
-              </View>
+                  <View className="flex h-[52px] w-full flex-row items-center rounded-full bg-[#F4F4F5] px-2 pl-4">
+                    <Text
+                      className="flex-1 font-cabinet-bold text-sm text-[#737381]"
+                      numberOfLines={1}
+                      ellipsizeMode="tail">
+                      {promotions?.data?.referralLink}
+                    </Text>
+
+                    <Button
+                      onPress={() => copyToClipboard(promotions?.data?.referralLink)}
+                      className="w-16"
+                      size={'sm'}>
+                      Copy
+                    </Button>
+                  </View>
+
+                  {promotions?.data?.activeDiscounts &&
+                    promotions?.data?.activeDiscounts?.length > 0 && (
+                      <View className="flex gap-2">
+                        <Text className="text-xs uppercase text-[#737381]">My Discounts</Text>
+
+                        {promotions?.data?.activeDiscounts?.map((item, index) => (
+                          <View
+                            key={item?.id}
+                            className="flex h-28 w-full items-center justify-center gap-2 rounded-[8px] bg-[#1B1B1E]">
+                            <View className="flex h-5 items-center justify-center rounded-full bg-[#737381] px-2">
+                              <Text className="text-xs font-medium leading-none text-[#FFF4EA]">
+                                ACTIVE DISCOUNT
+                              </Text>
+                            </View>
+
+                            <Text className="text-center font-cabinet-bold text-2xl text-[#FFF4EA]">
+                              {item?.discountPercent}% OFF
+                            </Text>
+
+                            <Text className="text-center text-xs text-[#FFF4EA]">
+                              {item?.description}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                </>
+              )}
             </TabsContent>
           </ScrollView>
         </Tabs>

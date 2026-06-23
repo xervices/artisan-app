@@ -112,6 +112,14 @@ export default function Layout() {
       />
 
       <Stack.Screen
+        name="privacy"
+        options={{
+          headerShown: false,
+          title: 'Terms & conditions',
+        }}
+      />
+
+      <Stack.Screen
         name="cancellation-policy"
         options={{
           headerShown: false,

@@ -7,8 +7,13 @@ import { AuthHeader } from '@/components/auth-header';
 import { PersonalDetails } from '@/components/profile/personal-details';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CertificationDetails } from '@/components/profile/certification-details';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { RefreshControl } from 'react-native';
 
 export default function Screen() {
+  const categories = useQuery(api.getAllCategories());
+
   const [value, setValue] = React.useState('info');
 
   return (
@@ -59,6 +64,14 @@ export default function Screen() {
 
           {/* Info content */}
           <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={categories?.isRefetching}
+                onRefresh={categories?.refetch}
+                tintColor={'#E15D02'}
+                colors={['#E15D02']}
+              />
+            }
             contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
             showsVerticalScrollIndicator={false}>
             <TabsContent value="info" className="flex gap-6 pt-4">

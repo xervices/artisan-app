@@ -2,8 +2,13 @@ import { Pressable, View } from 'react-native';
 import { Text } from '../ui/text';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react-native';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { formatCurrency } from '@/lib/utils';
 
 export function OverviewCard() {
+  const { data } = useQuery(api.getMyEarnings());
+
   const [balanceVisibility, setBalanceVisibility] = useState(true);
 
   return (
@@ -17,7 +22,7 @@ export function OverviewCard() {
           <View className="flex-1">
             <Text className="text-xs text-[#FFF4EA]">Earned</Text>
             <Text className="font-cabinet-bold text-xl text-[#FFB884]">
-              {balanceVisibility ? '₦0,00' : '₦✼✼✼✼✼✼✼'}
+              {balanceVisibility ? formatCurrency(data?.availableBalance) : '₦✼✼✼✼✼✼✼'}
             </Text>
           </View>
 
@@ -41,7 +46,7 @@ export function OverviewCard() {
           <View className="h-1 w-1 rounded-full bg-[#FE6A00]" />
 
           <Text className="font-cabinet-bold text-xs text-[#FFF4EA]">
-            {balanceVisibility ? '₦0,00' : '₦✼✼✼✼✼✼✼'}
+            {balanceVisibility ? formatCurrency(data?.pendingBalance) : '₦✼✼✼✼✼✼✼'}
           </Text>
         </View>
       </View>
