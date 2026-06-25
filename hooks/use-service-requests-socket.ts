@@ -5,9 +5,10 @@ import type {
   ServiceRequestsServerToClientEvents,
   ServiceRequestData,
 } from './types';
+import { BASE_URL } from '@/api/client';
 
 // Assuming base URL from environment or constant
-const SOCKET_URL = 'https://staging-api.getxervices.com'; // Make sure this matches your server
+const SOCKET_URL = BASE_URL; // Make sure this matches your server
 type ServiceRequestSocket = Socket<
   ServiceRequestsServerToClientEvents,
   ServiceRequestsClientToServerEvents
