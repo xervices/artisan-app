@@ -131,6 +131,7 @@ export default function Screen() {
               jobId={transaction?.jobDetails?.jobId}
               referenceType={transaction?.referenceType}
               description={transaction?.description}
+              referenceId={transaction?.referenceId}
             />
           ))}
         </View>

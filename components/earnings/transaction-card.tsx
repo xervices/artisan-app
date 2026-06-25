@@ -8,6 +8,7 @@ interface TransactionCardProps {
   date?: string;
   customer?: string;
   jobId?: string;
+  referenceId?: string;
   charge?: number;
   category?: string;
   referenceType?: string;
@@ -22,6 +23,7 @@ export default function TransactionCard({
   charge = 0,
   customer = '',
   jobId = '',
+  referenceId = '',
   referenceType = '',
   description = '',
 }: TransactionCardProps) {
@@ -40,13 +42,13 @@ export default function TransactionCard({
                 : category}{' '}
             {type === 'referral_bonus' ? null : (
               <Text className="text-xs text-[#FF6A00]" numberOfLines={1} ellipsizeMode="tail">
-                {type === 'withdrawal' ? 'WD ● ' : `JOB ID ● ${jobId}`}
+                {type === 'withdrawal' ? `WD ● ${referenceId}` : `JOB ID ● ${jobId}`}
               </Text>
             )}
           </Text>
         )}
 
-        {referenceType === 'dispute' && (
+        {(referenceType === 'dispute' || referenceType === 'withdrawal') && (
           <Text
             // numberOfLines={1}
             // ellipsizeMode="tail"
@@ -106,6 +108,15 @@ export default function TransactionCard({
         )}
 
         <Text className="text-xs text-[#737381]">{formatDateTime(date)}</Text>
+
+        {referenceType === 'withdrawal' && (
+          <Text className="font-cabinet-bold text-sm text-[#737381]">
+            Amount{' '}
+            <Text className="font-cabinet-bold text-sm text-[#B3031E]">
+              -{formatCurrency(Math.abs(amount))}
+            </Text>
+          </Text>
+        )}
       </View>
     </View>
   );
