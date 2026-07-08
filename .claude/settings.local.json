@@ -8,7 +8,12 @@
       "Bash(git -C \"C:\\\\Users\\\\MOSES\\\\Documents\\\\Xervices\\\\artisan-app\" diff app.config.ts)",
       "Bash(npx tsc *)",
       "Bash(npx expo *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(git -C \"c:\\\\Users\\\\MOSES\\\\Documents\\\\Xervices\\\\artisan-app\" log --oneline -20)",
+      "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"email\\\\\":\\\\\"jackie@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")",
+      "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"emailOrPhone\\\\\":\\\\\"jackie@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")",
+      "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"emailOrPhone\\\\\":\\\\\"jan@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")",
+      "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"emailOrPhone\\\\\":\\\\\"janedoe@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")"
     ]
   }
 }
