@@ -20,6 +20,7 @@ import { LocationConsentDialog } from '@/components/location-consent-dialog';
 import { SplashScreen } from '@/components/splash-screen';
 import * as ExpoSplashScreen from 'expo-splash-screen';
 import { useTrackAppInstall } from '@/hooks/use-track-app-install';
+import { useReferralDeepLink } from '@/hooks/use-referral-deep-link';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -54,6 +55,7 @@ export default function RootLayout() {
                 <SheetProvider>
                   <Sheets />
                   <AppInstallTracker />
+                  <ReferralDeepLinkHandler />
                   <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
                   <Stack>
                     <Stack.Protected guard={isLoggedIn}>
@@ -112,5 +114,10 @@ export default function RootLayout() {
 
 function AppInstallTracker() {
   useTrackAppInstall();
+  return null;
+}
+
+function ReferralDeepLinkHandler() {
+  useReferralDeepLink();
   return null;
 }

@@ -13,7 +13,11 @@
       "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"email\\\\\":\\\\\"jackie@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")",
       "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"emailOrPhone\\\\\":\\\\\"jackie@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")",
       "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"emailOrPhone\\\\\":\\\\\"jan@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")",
-      "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"emailOrPhone\\\\\":\\\\\"janedoe@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")"
+      "Bash(curl -s -X POST https://api.getxervices.com/api/auth/login -H \"Content-Type: application/json\" -H \"X-Active-Role: artisan\" -d \"{\\\\\"emailOrPhone\\\\\":\\\\\"janedoe@mailinator.com\\\\\",\\\\\"password\\\\\":\\\\\"Pass@123\\\\\"}\")",
+      "Bash(npm view *)",
+      "Bash(claude --version)",
+      "Read(//c/Users/MOSES/.claude/**)",
+      "Bash(npm -g config get prefix)"
     ]
   }
 }

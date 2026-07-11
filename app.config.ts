@@ -11,6 +11,12 @@ const PACKAGE_NAME = 'com.xervices.artisan'; // android package name
 const APP_NAME = 'Xervices Pro'; // app name
 const SCHEME = 'xervices-pro'; // app scheme
 
+// Universal / App Links — production build only. Dev and preview builds
+// don't claim the domain at all, so they never conflict with the customer
+// app and the AASA/assetlinks files only ever need to list prod app IDs.
+const DEEP_LINK_HOST = 'www.getxervices.com';
+const REFERRAL_PATH_PREFIX = '/pro/referral';
+
 const appIconBadgeConfig: AppIconBadgeConfig = {
   enabled: process.env.APP_ENV !== 'production',
   badges: [
@@ -36,6 +42,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     googleServicesFile,
     googleMapsApiKey,
     iosGoogleMapsApiKey,
+    associatedDomains,
+    intentFilters,
   } = getDynamicAppConfig(
     (process.env.APP_ENV as 'development' | 'preview' | 'production') || 'development'
   );
@@ -62,6 +70,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ios: {
       supportsTablet: true,
       bundleIdentifier: bundleIdentifier,
+      associatedDomains,
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
         UIBackgroundModes: ['location'],
@@ -81,6 +90,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
       package: packageName,
       googleServicesFile,
+      intentFilters,
       config: {
         googleMaps: {
           apiKey: googleMapsApiKey,
@@ -192,6 +202,21 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
       googleServicesFile: './prod-google-services.json',
       googleMapsApiKey: 'AIzaSyBNpr9SSwSRuUxg9rzYAFhD7CFKqQhN9os',
       iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
+      associatedDomains: [`applinks:${DEEP_LINK_HOST}`],
+      intentFilters: [
+        {
+          action: 'VIEW',
+          autoVerify: true,
+          data: [
+            {
+              scheme: 'https',
+              host: DEEP_LINK_HOST,
+              pathPrefix: REFERRAL_PATH_PREFIX,
+            },
+          ],
+          category: ['BROWSABLE', 'DEFAULT'],
+        },
+      ],
     };
   }
 
@@ -204,6 +229,8 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
       googleServicesFile: './preview-google-services.json',
       googleMapsApiKey: 'process.env.GOOGLE_MAPS_API_KEY',
       iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
+      associatedDomains: undefined,
+      intentFilters: undefined,
     };
   }
 
@@ -215,5 +242,7 @@ export const getDynamicAppConfig = (environment: 'development' | 'preview' | 'pr
     googleServicesFile: './dev-google-services.json',
     googleMapsApiKey: 'AIzaSyBNpr9SSwSRuUxg9rzYAFhD7CFKqQhN9os',
     iosGoogleMapsApiKey: 'AIzaSyD7ji-LLXBcwYGIgMeelsFxWcfJqF7akpo',
+    associatedDomains: undefined,
+    intentFilters: undefined,
   };
 };
