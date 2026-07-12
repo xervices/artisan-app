@@ -70,7 +70,6 @@ export default function RootLayout() {
 
                     <Stack.Protected guard={!isLoggedIn && hasCompletedOnboarding}>
                       <Stack.Screen name="login" options={{ headerShown: false }} />
-                      <Stack.Screen name="register" options={{ headerShown: false }} />
                       <Stack.Screen name="verify-email" options={{ headerShown: false }} />
                       <Stack.Screen name="become-artisan" options={{ headerShown: false }} />
                       <Stack.Screen name="verify-device" options={{ headerShown: false }} />
@@ -83,6 +82,16 @@ export default function RootLayout() {
 
                     <Stack.Protected guard={!hasCompletedOnboarding}>
                       <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+                    </Stack.Protected>
+
+                    {/* Declared last on purpose. With no `index` route, expo-router lands a
+                        logged-out user on the first screen above whose guard passes, so
+                        anything ahead of `onboarding`/`login` here would steal that slot.
+                        The onboarding guard is deliberately absent — a referral deep link
+                        navigates a brand-new user straight here, and reaching the screen
+                        marks them onboarded (see the effect in `register.tsx`). */}
+                    <Stack.Protected guard={!isLoggedIn}>
+                      <Stack.Screen name="register" options={{ headerShown: false }} />
                     </Stack.Protected>
                   </Stack>
                   <Toaster
