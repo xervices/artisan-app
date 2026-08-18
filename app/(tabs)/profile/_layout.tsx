@@ -28,6 +28,20 @@ export default function Layout() {
         }}
       />
       <Stack.Screen
+        name="phone-number"
+        options={{
+          headerShown: false,
+          title: 'Phone Number',
+        }}
+      />
+      <Stack.Screen
+        name="verify-phone-number"
+        options={{
+          headerShown: false,
+          title: 'Verify',
+        }}
+      />
+      <Stack.Screen
         name="password-otp"
         options={{
           headerShown: false,

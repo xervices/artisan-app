@@ -86,6 +86,7 @@
     "react-native": "0.81.4",
     "react-native-actions-sheet": "^10.1.0",
     "react-native-compressor": "^1.18.2",
+    "react-native-css-interop": "0.2.1",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-keyboard-controller": "1.18.5",
     "react-native-maps": "1.20.1",
@@ -111,6 +112,7 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@types/react": "~19.1.10",
+    "babel-preset-expo": "^54.0.4",
     "dotenv": "^17.2.3",
     "openapi-typescript": "^7.10.1",
     "prettier": "^3.6.2",

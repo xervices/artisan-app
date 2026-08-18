@@ -183,6 +183,22 @@ export function PersonalDetails() {
           />
         </View>
 
+        <View>
+          <Label nativeID="phone">Phone Number</Label>
+          <Input
+            className="bg-white"
+            id="phone"
+            value={user?.phoneNumber || ''}
+            placeholder="Not set"
+            editable={false}
+            rightIcon={
+              <Pressable onPress={() => router.push('/profile/phone-number')}>
+                <Text className="font-cabinet-bold text-sm text-primary">Change</Text>
+              </Pressable>
+            }
+          />
+        </View>
+
         {/* <View>
           <Label nativeID="nin">NIN Number</Label>
           <Input

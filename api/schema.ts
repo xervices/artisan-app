@@ -3390,6 +3390,46 @@ export interface paths {
         patch: operations["UsersController_updateProfile"];
         trace?: never;
     };
+    "/api/users/me/phone/request-otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request OTP for phone number change
+         * @description Sends an OTP to the user email that must be provided when changing the phone number
+         */
+        post: operations["UsersController_requestPhoneChangeOtp"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/me/phone": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Change phone number
+         * @description Replace the phone number set at registration. Requires OTP verification first (call POST /users/me/phone/request-otp)
+         */
+        patch: operations["UsersController_changePhoneNumber"];
+        trace?: never;
+    };
     "/api/users/location": {
         parameters: {
             query?: never;
@@ -7791,6 +7831,18 @@ export interface components {
              * @example 100001
              */
             postalCode?: string;
+        };
+        ChangePhoneNumberDto: {
+            /**
+             * @description OTP code sent to the account email
+             * @example 123456
+             */
+            otp: string;
+            /**
+             * @description New phone number to replace the one used at registration
+             * @example +2348012345678
+             */
+            phoneNumber: string;
         };
         UpdateLocationDto: {
             /**
@@ -16373,6 +16425,86 @@ export interface operations {
             };
             /** @description Unauthorized */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_requestPhoneChangeOtp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OTP sent successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+        };
+    };
+    UsersController_changePhoneNumber: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePhoneNumberDto"];
+            };
+        };
+        responses: {
+            /** @description Phone number changed successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponseDto"];
+                };
+            };
+            /** @description Invalid or expired OTP, or invalid phone number format */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationErrorResponseDto"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponseDto"];
+                };
+            };
+            /** @description Phone number already in use */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
