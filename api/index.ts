@@ -301,6 +301,38 @@ export const api = {
       },
     };
   },
+  requestPhoneChangeOtp: () => {
+    return {
+      mutationFn: async () => {
+        const { data, error } = await apiClient.POST('/api/users/me/phone/request-otp');
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to send OTP'));
+        }
+
+        return data;
+      },
+    };
+  },
+  changePhoneNumber: () => {
+    return {
+      mutationFn: async (credentials: RequestBody<'/api/users/me/phone', 'patch'>) => {
+        const { data, error } = await apiClient.PATCH('/api/users/me/phone', {
+          body: credentials,
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to change phone number'));
+        }
+
+        if (data) {
+          useAuthStore.getState().setUser(data);
+        }
+
+        return data;
+      },
+    };
+  },
   updateLocation: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/users/location', 'patch'>) => {

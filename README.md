@@ -122,6 +122,7 @@ pnpm install
 
 # Start the dev server (Expo)
 pnpm dev          # = expo start
+npx expo start --dev-client --ios
 
 # Start with cache cleared
 pnpm start        # = expo start -c

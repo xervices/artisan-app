@@ -4,9 +4,11 @@ import { Switch } from '../ui/switch';
 import { useState } from 'react';
 import * as Haptics from 'expo-haptics';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner-native';
+import { CirclePause } from 'lucide-react-native';
 import { api } from '@/api';
 import { LoadingIndicator } from '../ui/loading-indicator';
-import { showErrorMessage, showSuccessMessage } from '@/api/helpers';
+import { showErrorMessage } from '@/api/helpers';
 
 export function AvailabilityStatus() {
   const { data, isError, isLoading, refetch, error } = useQuery(api.getCurrentArtisanProfile());
@@ -23,7 +25,19 @@ export function AvailabilityStatus() {
       {
         onSuccess: () => {
           refetch();
-          showSuccessMessage('Availability changed successfully');
+
+          if (checked) {
+            toast.success("You're now available", {
+              richColors: false,
+              style: { backgroundColor: '#F0FDF4', borderColor: '#BBF7D0', borderWidth: 1 },
+            });
+          } else {
+            toast('Job request paused', {
+              richColors: false,
+              style: { backgroundColor: '#F4F4F5', borderColor: '#E4E4E7', borderWidth: 1 },
+              icon: <CirclePause size={20} color="#737381" />,
+            });
+          }
         },
         onError: (err) => {
           showErrorMessage(err.message);
