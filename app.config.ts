@@ -173,6 +173,13 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           photosPermission: 'The app accesses your photos to let you share them with your friends.',
         },
       ],
+      [
+        '@sentry/react-native/expo',
+        {
+          organization: process.env.SENTRY_ORG,
+          project: process.env.SENTRY_PROJECT,
+        },
+      ],
     ],
     extra: {
       eas: {
