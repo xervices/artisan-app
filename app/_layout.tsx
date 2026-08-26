@@ -1,6 +1,8 @@
 import '../location-task';
 import '@/global.css';
 
+import * as Sentry from '@sentry/react-native';
+import { initSentry } from '@/lib/sentry';
 import { useAuthStore } from '@/store/auth-store';
 import { PortalHost } from '@rn-primitives/portal';
 import { useEffect, useState } from 'react';
@@ -30,7 +32,9 @@ export {
 // so it can hand off straight to the custom <SplashScreen /> with no flash.
 ExpoSplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+initSentry();
+
+function RootLayout() {
   const { colorScheme } = useColorScheme();
   const { isLoggedIn, hasCompletedOnboarding } = useAuthStore();
   const [showSplash, setShowSplash] = useState(true);
@@ -109,6 +113,8 @@ export default function RootLayout() {
     // </ThemeProvider>
   );
 }
+
+export default Sentry.wrap(RootLayout);
 
 function AppInstallTracker() {
   useTrackAppInstall();
