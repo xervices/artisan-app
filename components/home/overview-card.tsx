@@ -33,9 +33,9 @@ export function OverviewCard() {
             // HitSlop increases the touchable area without changing the layout
             hitSlop={8}>
             {balanceVisibility ? (
-              <EyeOff size={20} color="#FFB884" />
-            ) : (
               <Eye size={20} color="#FFB884" />
+            ) : (
+              <EyeOff size={20} color="#FFB884" />
             )}
           </Pressable>
         </View>

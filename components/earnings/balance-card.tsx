@@ -53,9 +53,9 @@ export function BalanceCard({
           hitSlop={8}
           className="absolute right-0 top-0">
           {balanceVisibility ? (
-            <EyeOff size={20} color="#FFB884" />
-          ) : (
             <Eye size={20} color="#FFB884" />
+          ) : (
+            <EyeOff size={20} color="#FFB884" />
           )}
         </Pressable>
       </View>
