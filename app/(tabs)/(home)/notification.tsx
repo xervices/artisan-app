@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { showErrorMessage } from '@/api/helpers';
 import { AuthHeader } from '@/components/auth-header';
 import EmptyState from '@/components/empty-state';
 import { Layout } from '@/components/layout';
@@ -12,8 +13,10 @@ import {
 import { Text } from '@/components/ui/text';
 import { formatRelativeTime } from '@/lib/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Trash2 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
-import { AppState, View } from 'react-native';
+import { AppState, Pressable, View } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 
 export default function Screen() {
   const { data, isLoading, refetch } = useQuery(api.getMyNotifications());
@@ -72,6 +75,10 @@ export default function Screen() {
                   refetch();
                   unreadCount?.refetch();
                 }}
+                onDeletedSuccessFn={() => {
+                  refetch();
+                  unreadCount?.refetch();
+                }}
               />
             ))}
           </Accordion>
@@ -90,6 +97,7 @@ interface NotificationCardProps {
   message: string;
   isRead: boolean;
   onMarkedReadSuccessFn?: () => void;
+  onDeletedSuccessFn?: () => void;
 }
 
 function NotificationCard({
@@ -99,42 +107,68 @@ function NotificationCard({
   title,
   isRead,
   onMarkedReadSuccessFn,
+  onDeletedSuccessFn,
 }: NotificationCardProps) {
   const { mutate, isPending, data } = useMutation(api.markNotificationAsRead());
+  const deleteNotification = useMutation(api.deleteNotification(id));
 
   return (
-    <AccordionItem className="rounded-[8px] bg-[#F4F4F5] px-4 py-1" value={id}>
-      <AccordionTrigger
-        onPress={() => {
-          if (!isPending && !isRead && !data) {
-            mutate(
-              // @ts-ignore
-              { notificationIds: [id] },
-              {
-                onSuccess: (res) => {
-                  onMarkedReadSuccessFn?.();
-                },
-              }
-            );
-          }
-        }}>
-        <View className="flex gap-2">
-          <View className="flex flex-row items-center gap-1">
-            <View className="flex h-4 w-4 items-center justify-center rounded-full bg-[#FE6A00]">
-              <View className="h-2 w-2 rounded-full bg-white" />
+    <Swipeable
+      overshootRight={false}
+      renderRightActions={(_progress, _translation, swipeable) => (
+        <Pressable
+          disabled={deleteNotification.isPending}
+          onPress={() => {
+            deleteNotification.mutate(undefined, {
+              onSuccess: () => {
+                onDeletedSuccessFn?.();
+              },
+              onError: (err) => {
+                showErrorMessage(err.message);
+                swipeable.close();
+              },
+            });
+          }}
+          className="ml-2 flex w-16 items-center justify-center rounded-[8px] bg-[#B3031E]">
+          <Trash2 size={20} color="#FFFFFF" />
+        </Pressable>
+      )}>
+      <AccordionItem className="rounded-[8px] bg-[#F4F4F5] px-4 py-1" value={id}>
+        <AccordionTrigger
+          onPress={() => {
+            if (!isPending && !isRead && !data) {
+              mutate(
+                // @ts-ignore
+                { notificationIds: [id] },
+                {
+                  onSuccess: (res) => {
+                    onMarkedReadSuccessFn?.();
+                  },
+                  onError: (err) => {
+                    showErrorMessage(err.message);
+                  },
+                }
+              );
+            }
+          }}>
+          <View className="flex gap-2">
+            <View className="flex flex-row items-center gap-1">
+              <View className="flex h-4 w-4 items-center justify-center rounded-full bg-[#FE6A00]">
+                <View className="h-2 w-2 rounded-full bg-white" />
+              </View>
+
+              <Text className="font-cabinet-extrabold text-sm text-primary">Xervices</Text>
+
+              <Text className="text-xs text-[#737381]">{formatRelativeTime(sentAt)}</Text>
             </View>
 
-            <Text className="font-cabinet-extrabold text-sm text-primary">Xervices</Text>
-
-            <Text className="text-xs text-[#737381]">{formatRelativeTime(sentAt)}</Text>
+            <Text className="font-cabinet-bold text-[#737381]">{title}</Text>
           </View>
-
-          <Text className="font-cabinet-bold text-[#737381]">{title}</Text>
-        </View>
-      </AccordionTrigger>
-      <AccordionContent>
-        <Text className="text-sm text-[#737381]">{message}</Text>
-      </AccordionContent>
-    </AccordionItem>
+        </AccordionTrigger>
+        <AccordionContent>
+          <Text className="text-sm text-[#737381]">{message}</Text>
+        </AccordionContent>
+      </AccordionItem>
+    </Swipeable>
   );
 }

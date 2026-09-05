@@ -1078,6 +1078,25 @@ export const api = {
       },
     };
   },
+  deleteNotification: (id: string) => {
+    return {
+      mutationFn: async () => {
+        const { data, error } = await apiClient.DELETE('/api/notifications/{id}', {
+          params: {
+            path: {
+              id,
+            },
+          },
+        });
+
+        if (error) {
+          throw new Error(getErrorMessage(error, 'Failed to delete notification.'));
+        }
+
+        return data;
+      },
+    };
+  },
   registerDeviceForPushNotification: () => {
     return {
       mutationFn: async (credentials: RequestBody<'/api/notifications/devices', 'post'>) => {

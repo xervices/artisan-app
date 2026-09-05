@@ -49,6 +49,36 @@ export default function Screen() {
     api.refreshToken()
   );
 
+  // Tracks whether becomeArtisan already succeeded, so a retry after a failed session
+  // refresh (e.g. on a slow connection) only retries the refresh, not the whole submission.
+  const [becomeArtisanSucceeded, setBecomeArtisanSucceeded] = React.useState(false);
+
+  const refreshSessionAndContinue = React.useCallback(async () => {
+    const refreshToken = await tokenStorage.getRefreshToken();
+
+    if (!refreshToken) {
+      showErrorMessage(
+        'Your Pro profile was created, but we could not refresh your session. Please log out and back in to continue.'
+      );
+      return;
+    }
+
+    refreshAccessToken(
+      { refreshToken },
+      {
+        onSuccess: () => {
+          useAuthStore.getState().setLoginState(true);
+          router.navigate('/verify/step-2');
+        },
+        onError: () => {
+          showErrorMessage(
+            'Your Pro profile was created, but we could not refresh your session. Tap Continue to try again.'
+          );
+        },
+      }
+    );
+  }, [refreshAccessToken]);
+
   const ref = React.useRef<TriggerRef>(null);
   const insets = useSafeAreaInsets();
   const contentInsets = {
@@ -66,22 +96,17 @@ export default function Screen() {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      const refreshToken = await tokenStorage.getRefreshToken();
+      // Session refresh failed last time — retry only that, not the already-successful submission.
+      if (becomeArtisanSucceeded) {
+        await refreshSessionAndContinue();
+        return;
+      }
 
       mutate(value, {
         onSuccess: (res) => {
           showSuccessMessage(res?.message);
-          if (refreshToken) {
-            refreshAccessToken(
-              { refreshToken },
-              {
-                onSuccess: () => {
-                  useAuthStore.getState().setLoginState(true);
-                  router.navigate('/verify/step-2');
-                },
-              }
-            );
-          }
+          setBecomeArtisanSucceeded(true);
+          void refreshSessionAndContinue();
         },
         onError: (err) => {
           showErrorMessage(err.message);

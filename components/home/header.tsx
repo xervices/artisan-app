@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { useAuthStore } from '@/store/auth-store';
 import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 import { api } from '@/api';
+import { showErrorMessage } from '@/api/helpers';
 import { useEffect } from 'react';
 
 export function Header() {
@@ -60,6 +61,9 @@ export function Header() {
           markAllNotifications?.mutate(undefined, {
             onSuccess: () => {
               unreadNotifications?.refetch();
+            },
+            onError: (err) => {
+              showErrorMessage(err.message);
             },
           });
           router.navigate('/notification');
