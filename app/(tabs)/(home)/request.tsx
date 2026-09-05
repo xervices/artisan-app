@@ -14,7 +14,7 @@ import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { CircleAlert, Play } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppState, Pressable, View } from 'react-native';
 import { SheetManager } from 'react-native-actions-sheet';
 import { isVideoUri, VideoThumb } from '@/components/video-thumb';
@@ -48,16 +48,30 @@ export default function Screen() {
   const sendOffer = useMutation(api.createNewOffer());
   const sendCounterOffer = useMutation(api.createCounterOffer());
 
+  // Set right before a local accept/withdraw mutation succeeds, so the socket echo of that
+  // same action (the server broadcasts to this room, including back to the actor) doesn't
+  // show a second, redundant toast + navigation. Left null (or cleared) for events actually
+  // initiated by the other party, which the socket handler still needs to surface.
+  const justActedRef = useRef<'accept' | 'reject' | null>(null);
+
   const { offers } = useMarketplaceContext({
     onOfferEvent(eventType, data) {
       artisanOffers?.refetch();
 
       if (eventType === 'offer:accepted') {
-        showSuccessMessage('Offer accepted');
+        if (justActedRef.current === 'accept') {
+          justActedRef.current = null;
+          return;
+        }
+        showSuccessMessage("Offer accepted! Waiting for the customer's payment to get started.");
         router.replace('/jobs');
       }
 
       if (eventType === 'offer:rejected' || eventType === 'offer:withdrawn') {
+        if (justActedRef.current === 'reject') {
+          justActedRef.current = null;
+          return;
+        }
         showSuccessMessage('Offer has been rejected/withdrawn by user.');
         router.back();
       }
@@ -257,6 +271,7 @@ export default function Screen() {
                           {},
                           {
                             onSuccess: () => {
+                              justActedRef.current = 'reject';
                               showSuccessMessage('Offer rejected');
                               artisanOffers.refetch();
                               service.refetch();
@@ -362,9 +377,13 @@ export default function Screen() {
                       { action: 'accept' },
                       {
                         onSuccess: () => {
-                          showSuccessMessage('Offer accepted');
+                          justActedRef.current = 'accept';
+                          showSuccessMessage(
+                            "Offer accepted! Waiting for the customer's payment to get started."
+                          );
                           artisanOffers.refetch();
                           service.refetch();
+                          router.replace('/jobs');
                         },
                         onError: (err) => {
                           showErrorMessage(err.message);
